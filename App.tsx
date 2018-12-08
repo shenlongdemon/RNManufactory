@@ -10,6 +10,8 @@ import * as React from 'react';
 import {Component} from 'react';
 import {Platform, StyleSheet, Text, View} from 'react-native';
 import {Icon} from 'native-base';
+import Config from 'react-native-config';
+
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
   android:
@@ -22,8 +24,8 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <Icon name="share" />
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
+        <Icon name='refresh' />
+        <Text style={styles.welcome}>HOST {Config.HOST}</Text>
         <Text style={styles.instructions}>To get started, edit App.js</Text>
         <Text style={styles.instructions}>{instructions}</Text>
       </View>

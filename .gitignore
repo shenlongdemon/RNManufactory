@@ -57,3 +57,4 @@ buck-out/
 .vscode
 index.android.bundle
 android/app/src/main/res/drawable*/*.*
+ios/Pods

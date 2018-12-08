@@ -60,26 +60,26 @@ export default class Login extends BaseScreen<Props, State> {
             <Grid>
               <Col size={1}></Col>
               <Col size={4}>
-                <Form>
+                <Form style={{backgroundColor: 'white'}}>
                   <Item floatingLabel>
-                    <Icon name='call' style={{color: '#ffffff'}}/>
-                    <Label style={{color: '#ffffff'}}>Phone</Label>
-                    <Input keyboardType={'phone-pad'} style={{color: '#ffffff'}}
+                    <Icon name='call' />
+                    <Label >Phone</Label>
+                    <Input keyboardType={'phone-pad'}
                            onChangeText={(text: string) => {this.setState({phone: text})}}
                            value={this.state.phone}
                     />
                   </Item>
                   <Item floatingLabel>
-                    <Icon name='key' style={{color: '#ffffff'}}/>
-                    <Label style={{color: '#ffffff'}}>Password</Label>
-                    <Input style={{color: '#ffffff'}}
+                    <Icon name='key' />
+                    <Label>Password</Label>
+                    <Input
                            secureTextEntry={true}
                            onChangeText={(text: string) => {this.setState({password: text})}}
                            value={this.state.password}/>
                   </Item>
                   
                   
-                  <Button full dark onPress={this.clickLogin} style={{marginTop: 100}}>
+                  <Button full onPress={this.clickLogin} style={{marginTop: 100}}>
                     <Text>{this.state.isProcessing ? 'Logging in ...' : 'Login'}</Text>
                   </Button>
                 

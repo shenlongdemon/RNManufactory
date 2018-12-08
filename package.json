@@ -1,0 +1,37 @@
+{
+  "name": "RNManufactory",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "del-core": "rm -rf ./package-lock.json && rm -rf ./node_modules/business_core_app_react",
+    "pull-core": "cd ./node_modules/ && git clone -b dassee https://github.com/shenlongdemon/business_core_app_react.git && cd ./business_core_app_react/ && npm install",
+    "setup-dev": "npm run del-core && npm run pull-core",
+    "preinstall": "npm run del-core",
+    "start": "npm cache clean --force && node node_modules/react-native/local-cli/cli.js start --reset-cache",
+    "test": "jest",
+    "android": "ENVFILE=.env react-native run-android",
+    "ios": "ENVFILE=.env react-native run-ios",
+    "iphone": "ENVFILE=.env react-native run-ios --device \"huong\""
+  },
+  "dependencies": {
+    "business_core_app_react": "git+https://git@github.com/shenlongdemon/business_core_app_react.git#dassee",
+    "react": "16.6.1",
+    "react-native": "0.57.7",
+    "@babel/plugin-proposal-decorators": "7.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "16.7.13",
+    "@types/react-native": "0.57.15",
+    "babel-jest": "23.6.0",
+    "jest": "23.6.0",
+    "metro-react-native-babel-preset": "0.50.0",
+    "react-native-typescript-transformer": "1.2.10",
+    "react-test-renderer": "16.6.1",
+    "typescript": "3.2.2",
+    "@babel/plugin-proposal-decorators": "7.2.0",
+    "babel-plugin-module-resolver": "3.1.1"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}

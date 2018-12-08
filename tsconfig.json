@@ -59,6 +59,6 @@
   },
   "include": [
     "src/**/*.ts*",
-    "node_modules/business-core-app/lib/**/*.ts"
+    "node_modules/business-core-app-react/lib/**/*.ts"
   ]
 }

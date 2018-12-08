@@ -6,48 +6,64 @@
  * @flow
  */
 
-import * as React from 'react';
-import {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-import {Icon} from 'native-base';
-import Config from 'react-native-config';
+import React from 'react'
+// import {GeolocationReturnType} from 'react-native';
+import Startup from './app_start/startup';
+import {app} from './src/screens/screens';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+// import {PUBLIC_TYPES, IBusinessService, FactoryInjection} from 'business_core_app_react';
 
-type Props = {};
-export default class App extends Component<Props> {
+Startup.start();
+
+const RootStack = app;
+console.disableYellowBox = true;
+
+export default class App extends React.Component {
+  // private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
+  
+  componentWillMount() {
+    // this.setupLocationTracking();
+  }
+  
+  // private setupLocationTracking(): void {
+  //
+  //   navigator.geolocation.getCurrentPosition(
+  //     async (location: GeolocationReturnType) => {
+  //       const position: Position = {
+  //         coord: {
+  //           latitude: location.coords.latitude,
+  //           longitude: location.coords.longitude,
+  //           altitude: location.coords.altitude || 0
+  //         },
+  //       };
+  //
+  //       await this.businessService.saveCurrentPosition(position);
+  //     },
+  //     (error) => this.setState({ error: error.message }),
+  //     { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
+  //   );
+  //   const config: PositionOptions = {
+  //     enableHighAccuracy: true,
+  //     maximumAge: 1000,
+  //     timeout: 20000,
+  //   };
+  //
+  //   navigator.geolocation.watchPosition(async (location: any) => {
+  //     console.log(location);
+  //     const position: Position = {
+  //       coord: {
+  //         latitude: location.coords.latitude,
+  //         longitude: location.coords.longitude,
+  //         altitude: location.coords.altitude || 0
+  //       },
+  //     };
+  //     console.log(`tracking ${JSON.stringify(position)}`);
+  //     await this.businessService.saveCurrentPosition(position);
+  //   },undefined, config);
+  //
+  // }
+  
   render() {
-    return (
-      <View style={styles.container}>
-        <Icon name='refresh' />
-        <Text style={styles.welcome}>HOST {Config.HOST}</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
-      </View>
-    );
+    return <RootStack/>;
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});

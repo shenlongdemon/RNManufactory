@@ -10,8 +10,9 @@
     "start": "npm cache clean --force && node node_modules/react-native/local-cli/cli.js start --reset-cache",
     "test": "jest",
     "android": "ENVFILE=.env react-native run-android",
-    "ios": "ENVFILE=.env react-native run-ios",
-    "iphone": "ENVFILE=.env react-native run-ios --device \"huong\""
+    "ios": "ENVFILE=.env react-native run-ios --simulator=\"iPhone 7\"",
+    "iphone": "ENVFILE=.env react-native run-ios --device \"huong\"",
+    "tslint": "tslint -p tsconfig.json"
   },
   "dependencies": {
     "@babel/plugin-proposal-decorators": "7.2.0",
@@ -19,7 +20,8 @@
     "native-base": "^2.8.1",
     "react": "16.6.1",
     "react-native": "0.57.7",
-    "react-native-config": "^0.11.7"
+    "react-native-config": "^0.11.7",
+    "react-navigation": "^3.0.6"
   },
   "devDependencies": {
     "@types/react": "16.7.13",
@@ -31,7 +33,10 @@
     "react-test-renderer": "16.6.1",
     "typescript": "3.2.2",
     "@babel/plugin-proposal-decorators": "7.2.0",
-    "babel-plugin-module-resolver": "3.1.1"
+    "babel-plugin-module-resolver": "3.1.1",
+    "tslint": "5.11.0",
+    "tslint-config-airbnb": "5.11.0",
+    "tslint-config-prettier": "1.16.0"
   },
   "jest": {
     "preset": "react-native"

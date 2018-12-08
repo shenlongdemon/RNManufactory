@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Image, ImageStyle, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import { Col, Grid, Row } from 'react-native-easy-grid';
+import { Col, Grid, Row } from 'native-base';
 import BaseScreen from '../basescreen';
 import * as Styles from '../../stylesheet';
 import { ROUTE } from '../routes';
@@ -41,7 +41,7 @@ export default class ManufactoryMain extends BaseScreen<Props, State> {
     this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.DEFAULT);
   };
   private gotoProcesses = async (): Promise<void> => {
-    this.navigate(ROUTE.APP.MANUFACTORY.PROCESSES.DEFAULT);
+    this.navigate(ROUTE.APP.MANUFACTORY.PROCESSES.ITEM.DEFAULT);
   };
   private scanQRCode = async (): Promise<void> => {
     this.navigate(ROUTE.APP.MANUFACTORY.SCANQRCODE);

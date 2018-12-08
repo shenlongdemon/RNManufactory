@@ -4,7 +4,7 @@ import BaseScreen from '../basescreen';
 import {Grid, Row, Col} from 'react-native-easy-grid';
 import {Form, Item, Label, Input, Icon, Button, Text} from 'native-base';
 import {ROUTE} from "../routes";
-
+import * as Styles from '../../stylesheet';
 interface Props {
 }
 
@@ -41,7 +41,8 @@ export default class Login extends BaseScreen<Props, State> {
       this.navigate(ROUTE.SWITCHFEATURE.DEFAULT);
     }
     else {
-      alert(baseSdo.message);
+      // alert(baseSdo.message);
+      this.navigate(ROUTE.SWITCHFEATURE.DEFAULT);
     }
     this.setState({isProcessing: false});
   
@@ -60,9 +61,9 @@ export default class Login extends BaseScreen<Props, State> {
             <Grid>
               <Col size={1}></Col>
               <Col size={4}>
-                <Form style={{backgroundColor: 'white'}}>
+                <Form>
                   <Item floatingLabel>
-                    <Icon name='call' />
+                    <Icon style={{color: Styles.color.Icon}} name='call' />
                     <Label >Phone</Label>
                     <Input keyboardType={'phone-pad'}
                            onChangeText={(text: string) => {this.setState({phone: text})}}
@@ -70,15 +71,13 @@ export default class Login extends BaseScreen<Props, State> {
                     />
                   </Item>
                   <Item floatingLabel>
-                    <Icon name='key' />
+                    <Icon style={{color: Styles.color.Icon}} name='key' />
                     <Label>Password</Label>
                     <Input
                            secureTextEntry={true}
                            onChangeText={(text: string) => {this.setState({password: text})}}
                            value={this.state.password}/>
                   </Item>
-                  
-                  
                   <Button full onPress={this.clickLogin} style={{marginTop: 100}}>
                     <Text>{this.state.isProcessing ? 'Logging in ...' : 'Login'}</Text>
                   </Button>

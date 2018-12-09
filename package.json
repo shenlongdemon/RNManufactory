@@ -17,12 +17,13 @@
   "dependencies": {
     "@babel/plugin-proposal-decorators": "7.2.0",
     "business_core_app_react": "git+https://git@github.com/shenlongdemon/business_core_app_react.git#dassee",
+    "inversify": "5.0.1",
     "native-base": "2.8.1",
     "react": "16.6.1",
     "react-native": "0.57.7",
     "react-native-config": "0.11.7",
+    "react-native-document-picker": "^2.2.0",
     "react-navigation": "3.0.6",
-    "inversify": "5.0.1",
     "reflect-metadata": "0.1.12"
   },
   "devDependencies": {

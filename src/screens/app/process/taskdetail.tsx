@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Col, Grid, Row} from 'react-native-easy-grid';
 import BaseScreen from '../../basescreen';
-import {Image, ScrollView, TouchableOpacity} from 'react-native';
+import {ScrollView} from 'react-native';
 import {
   CONSTANTS,
   DynProperty,
@@ -12,12 +12,11 @@ import {
   Task
 } from 'business_core_app_react';
 import {PARAMS} from '../../../common/index';
-import {Button, Text, Icon, ActionSheet, Item, Input, Label} from 'native-base';
+import {ActionSheet, Button, Icon, Input, Item, Label, Text, Thumbnail} from 'native-base';
 import * as Styles from '../../../stylesheet';
 // import ImagePicker from 'react-native-image-picker';
-import * as IMAGE from '../../../assets';
 // import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
-// import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+import {DocumentPicker, DocumentPickerUtil} from 'react-native-document-picker';
 
 interface Props {
 }
@@ -50,12 +49,12 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
       } else if (p.type === DynPropertyType.COMBOBOX) {
         d[`${p.id}`] = d[`${p.id}`] || (p.value !== CONSTANTS.STR_EMPTY ? p.value : data[0]);
       } else if (p.type === DynPropertyType.IMAGE) {
-        d[`${p.id}uri`] =
-          d[`${p.id}uri`] ||
+        d[`${p.id}`] =
+          d[`${p.id}`] ||
           (p.value !== CONSTANTS.STR_EMPTY ? this.businessService.getLinkImage(p.value) : CONSTANTS.STR_EMPTY);
       }
       else if (p.type === DynPropertyType.FILE) {
-        d[`${p.id}uri`] = d[`${p.id}uri`] || (p.value !== CONSTANTS.STR_EMPTY ? this.businessService.getLinkImage(p.value) : CONSTANTS.STR_EMPTY);
+        d[`${p.id}`] = d[`${p.id}`] || (p.value !== CONSTANTS.STR_EMPTY ? this.businessService.getLinkImage(p.value) : CONSTANTS.STR_EMPTY);
       }
     });
     
@@ -65,7 +64,8 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
       data: d
     };
     this.componentDidFocus = this.componentDidFocus.bind(this);
-    this.pickImage = this.pickImage.bind(this);
+    this.pickFile = this.pickFile.bind(this);
+    
   }
   
   private save = async (): Promise<void> => {
@@ -114,7 +114,7 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
   private genText = (p: DynProperty): any => {
     return (
       <Row style={Styles.styleSheet.rowInput}>
-        <Item floatingLabel style={{flex: 1}}>
+        <Item inlineLabel style={{flex: 1}}>
           <Label>{p.title}</Label>
           <Input
             value={this.state.data[`${p.id}`]}
@@ -168,25 +168,25 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     }
   };
   
-  private pickImage = (p: DynProperty): void => {
-  }
   private pickFile = (p: DynProperty): void => {
-    // DocumentPicker.show({
-    //   filetype: [DocumentPickerUtil.allFiles()],
-    // },(error,res) => {
-    //   // Android
-    //   console.log(
-    //     res.uri,
-    //     res.type, // mime type
-    //     res.fileName,
-    //     res.fileSize
-    //   );
-    //   let data = this.state.data;
-    //   data[`${p.id}uri`] = res.uri;
-    //   data[`${p.id}data`] = res.data;
-    //
-    //   this.setState({data: data});
-    // });
+    DocumentPicker.show({
+      filetype: [p.type === DynPropertyType.FILE ? DocumentPickerUtil.pdf() : DocumentPickerUtil.images()],
+    }, (error, res) => {
+      if (error) {
+        return;
+      }
+      // Android
+      console.log(
+        res.uri,
+        res.type, // mime type
+        res.fileName,
+        res.fileSize
+      );
+      let data = this.state.data;
+      data[`${p.id}`] = res.uri;
+      data[`${p.id}data`] = `${res.type} - ${Math.round(res.fileSize / 1024000)} Mb`;
+      this.setState({data: data});
+    });
   };
   
   private showCombobox = (p: DynProperty): void => {
@@ -226,62 +226,46 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
   };
   
   private genFile = (p: DynProperty): any => {
-    if (p.type !== DynPropertyType.FILE) {
+    if (p.type !== DynPropertyType.FILE && p.type !== DynPropertyType.IMAGE) {
       return null;
     }
-    let useData: boolean = false;
-    const data: any = this.state.data[`${p.id}data`];
-    let uri: string = this.state.data[`${p.id}uri`] || CONSTANTS.STR_EMPTY;
-    if (uri !== CONSTANTS.STR_EMPTY && !uri.startsWith('http')) {
-      uri = CONSTANTS.STR_EMPTY;
-      useData = true;
-    }
-    return (
-      <Row style={Styles.styleSheet.rowControl}>
-        <Button transparent block onPress={(_e) => this.pickFile(p)} iconRight>
-          <Text uppercase={false}
-                style={{color: Styles.color.Text}}>{p.title + ': '}</Text>
-          <Text uppercase={false}
-                style={{color: Styles.color.Text}}>
-            {this.state.data[`${p.id}uri`] === CONSTANTS.STR_EMPTY ? 'Pick a file ...' : this.state.data[`${p.id}uri`]}</Text>
-          <Icon style={{color: Styles.color.Icon}} name={'attach'}/>
-        </Button>
-      </Row>
-    );
-  };
-  
-  private genImages = (p: DynProperty): any => {
-    if (p.type !== DynPropertyType.IMAGE) {
-      return null;
-    }
-    let useData: boolean = false;
-    const data: any = this.state.data[`${p.id}data`];
-    let uri: string = this.state.data[`${p.id}uri`] || CONSTANTS.STR_EMPTY;
-    if (uri !== CONSTANTS.STR_EMPTY && !uri.startsWith('http')) {
-      uri = CONSTANTS.STR_EMPTY;
-      useData = true;
-    }
+    const uri: string = this.state.data[`${p.id}`] || CONSTANTS.STR_EMPTY;
     
-    return (
-      
-      <Row style={{height: 100}}>
+    const row: any = (
+      <Row style={(p.type === DynPropertyType.IMAGE && uri !== CONSTANTS.STR_EMPTY ? Styles.styleSheet.rowThumbnail : Styles.styleSheet.rowControl)}>
+        <Grid>
+          <Row style={Styles.styleSheet.rowControl}>
+            <Button transparent block onPress={(_e) => this.pickFile(p)} iconRight>
+              <Text uppercase={false}
+                    style={{color: Styles.color.Text}}>{p.title + ': '}</Text>
+              <Text uppercase={false}
+                    style={{color: Styles.color.Text}}>
+                {
+                  uri === CONSTANTS.STR_EMPTY ?
+                    (p.type === DynPropertyType.FILE ? 'Pick a file ...' : 'Pick an image ...')
+                    : (
+                      uri.startsWith('http') ?
+                        (p.type === DynPropertyType.IMAGE ? 'Image file' : 'PDF file')
+                        : this.state.data[`${p.id}data`]
+                    )
+                }
+              </Text>
+              <Icon style={{color: Styles.color.Icon}} name={p.type === DynPropertyType.FILE ? 'attach' : 'images'}/>
+            </Button>
+          </Row>
+          <Row style={{flex:1, flexDirection:'row', justifyContent:'flex-end', alignItems: 'center'}}>
+            <Thumbnail square large source={{uri: uri}}/>
+          </Row>
+        </Grid>
+       
         
-        <Text style={Styles.styleSheet.label}> {p.title}</Text>
-        <TouchableOpacity style={{height: 100}} onPress={() => this.pickImage(p)}>
-          <Image
-            style={{height: 100, width: 100}}
-            resizeMode={'contain'}
-            source={
-              useData
-                ? {uri: `data:image/png;base64,${data}`}
-                : uri === CONSTANTS.STR_EMPTY
-                ? IMAGE.photo
-                : {uri: uri}
-            }
-          />
-        </TouchableOpacity>
       </Row>
     );
+    
+   
+    
+    return row ;
+    
   };
   
   render() {
@@ -304,7 +288,7 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     });
     const images: any = this.state.item.properties.map((p: DynProperty) => {
       if (p.type === DynPropertyType.IMAGE) {
-        return this.genImages(p);
+        return this.genFile(p);
       }
     });
     

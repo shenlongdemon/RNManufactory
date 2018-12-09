@@ -72,9 +72,15 @@ const styleSheet = StyleSheet.create({
     flex: 1,
     height: 60,
   },
+  rowThumbnail: {
+    flex: 1,
+    height: 100,
+    marginTop:10,
+    marginBottom:10
+  },
   rowInput: {
     flex: 1,
-    height: 70,
+    height: 60,
   },
   row: {
     height: 70

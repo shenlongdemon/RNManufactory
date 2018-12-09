@@ -12,7 +12,7 @@ import Startup from './app_start/startup';
 import {app} from './src/screens/screens';
 // import material from './native-base-theme/variables/material';
 // import {PUBLIC_TYPES, IBusinessService, FactoryInjection} from 'business_core_app_react';
-import {StyleProvider } from 'native-base';
+import {StyleProvider, Root} from 'native-base';
 import custom from './native-base-theme/variables/custom';
 import getBaseTheme from './native-base-theme/components';
 import myTheme from './theme';
@@ -75,9 +75,11 @@ export default class App extends React.Component {
   // }
   
   render() {
-    return(
-    <StyleProvider style={theme}>
-      <RootStack/>
-    </StyleProvider>);
+    return (
+      <Root>
+        <StyleProvider style={theme}>
+          <RootStack/>
+        </StyleProvider>
+      </Root>);
   }
 }

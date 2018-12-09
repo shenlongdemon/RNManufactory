@@ -69,11 +69,19 @@ const styleSheet = StyleSheet.create({
     height: 70
   },
   rowControl: {
-    height: 100,
+    flex: 1,
+    height: 60,
+  },
+  rowInput: {
+    flex: 1,
+    height: 70,
   },
   row: {
     height: 70
   },
+  icon: {
+    color: color.Icon
+  }
 });
 
 

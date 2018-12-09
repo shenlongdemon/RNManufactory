@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Col, Grid, Row} from 'react-native-easy-grid';
 import BaseScreen from '../../basescreen';
-import {Image, ScrollView, Text, TouchableOpacity} from 'react-native';
+import {Image, ScrollView, TouchableOpacity} from 'react-native';
 import {
   CONSTANTS,
   DynProperty,
@@ -11,22 +11,21 @@ import {
   PUBLIC_TYPES,
   Task
 } from 'business_core_app_react';
-import {PARAMS} from "../../../common/index";
-import * as Styles from "../../../stylesheet";
-import ImagePicker from 'react-native-image-picker';
-import * as IMAGE from "../../../assets";
-import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
-
+import {PARAMS} from '../../../common/index';
+import {Button, Text, Icon, ActionSheet, Item, Input, Label} from 'native-base';
+import * as Styles from '../../../stylesheet';
+// import ImagePicker from 'react-native-image-picker';
+import * as IMAGE from '../../../assets';
+// import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
+// import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
 
 interface Props {
-
 }
 
 interface State {
   item: Task;
   isLoading: boolean;
-  data: any
+  data: any;
 }
 
 export default class TaskDetailScreen extends BaseScreen<Props, State> {
@@ -44,17 +43,18 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
           d[`${p.id}${t}`] = p.value === CONSTANTS.STR_EMPTY ? false : p.value.includes(t);
         });
         d[`${p.id}`] = p.value;
-      }
-      else if (p.type === DynPropertyType.TEXT) {
+      } else if (p.type === DynPropertyType.TEXT) {
         d[`${p.id}`] = d[`${p.id}`] || p.value;
-      }
-      else if (p.type === DynPropertyType.RADIO) {
+      } else if (p.type === DynPropertyType.RADIO) {
         d[`${p.id}`] = d[`${p.id}`] || (p.value !== CONSTANTS.STR_EMPTY ? p.value : data[0]);
-      }
-      else if (p.type === DynPropertyType.COMBOBOX) {
+      } else if (p.type === DynPropertyType.COMBOBOX) {
         d[`${p.id}`] = d[`${p.id}`] || (p.value !== CONSTANTS.STR_EMPTY ? p.value : data[0]);
+      } else if (p.type === DynPropertyType.IMAGE) {
+        d[`${p.id}uri`] =
+          d[`${p.id}uri`] ||
+          (p.value !== CONSTANTS.STR_EMPTY ? this.businessService.getLinkImage(p.value) : CONSTANTS.STR_EMPTY);
       }
-      else if (p.type === DynPropertyType.IMAGE) {
+      else if (p.type === DynPropertyType.FILE) {
         d[`${p.id}uri`] = d[`${p.id}uri`] || (p.value !== CONSTANTS.STR_EMPTY ? this.businessService.getLinkImage(p.value) : CONSTANTS.STR_EMPTY);
       }
     });
@@ -70,21 +70,21 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
   
   private save = async (): Promise<void> => {
     alert(JSON.stringify(this.state.data));
-  }
+  };
   
   private setCheckbox = (p: DynProperty, name: string): void => {
     let data = this.state.data;
-    const value: boolean = (data[`${p.id}${name}`] || false ) as boolean;
+    const value: boolean = (data[`${p.id}${name}`] || false) as boolean;
     data[`${p.id}${name}`] = !value;
-  
+    
     let str: string[] = [];
-    p.items.split(',').forEach((t: string, i: number) => {
-      const isChecked: boolean = (data[`${p.id}${t}`] || false ) as boolean;
+    p.items.split(',').forEach((t: string, _index: number) => {
+      const isChecked: boolean = (data[`${p.id}${t}`] || false) as boolean;
       if (isChecked) {
         str.push(t);
       }
     });
-  
+    
     data[`${p.id}`] = str.join(', ');
     
     this.setState({data: data});
@@ -102,45 +102,34 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     this.setState({data: data});
   };
   
-  private setCombobox = (p: DynProperty, index: number, value: string): void => {
+  private setCombobox = (p: DynProperty, _index: number, value: string): void => {
     let data = this.state.data;
     data[`${p.id}`] = value;
     this.setState({data: data});
   };
   
   componentDidFocus = async (): Promise<void> => {
-  }
+  };
   
   private genText = (p: DynProperty): any => {
-    return (<Row style={Styles.styleSheet.rowControl}>
-        <Grid>
-          <Col>
-            <Hoshi
-              {...Styles.props.field}
-              label={p.title}
-              onChangeText={(text) => {
-                this.setText(p, text)
-              }}
-              value={this.state.data[`${p.id}`]}
-            />
-          </Col>
-        </Grid>
+    return (
+      <Row style={Styles.styleSheet.rowInput}>
+        <Item floatingLabel style={{flex: 1}}>
+          <Label>{p.title}</Label>
+          <Input
+            value={this.state.data[`${p.id}`]}
+            onChangeText={(text: string) => {
+              this.setText(p, text)
+            }}
+          />
+          <Icon style={Styles.styleSheet.icon} name='create'/>
+        </Item>
       </Row>
-    )
-  }
+    );
+  };
   
   private genCheckboxItem = (p: DynProperty, title: string): any => {
-    return (
-      <CheckBox
-        containerStyle={{backgroundColor: Styles.color.Background, borderColor: Styles.color.Background}}
-        title={title}
-        textStyle={Styles.styleSheet.label}
-        checked={(this.state.data[`${p.id}${title}`] || false) as boolean}
-        onPress={() => {
-          this.setCheckbox(p, title);
-        }}
-      />
-    )
+    return null;
   };
   
   private genCheckbox = (p: DynProperty): any => {
@@ -152,218 +141,89 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     const data: string[] = p.items.split(',');
     if (data.length > 2) {
       return (
-        <Row style={{height: (data.length + 1) * (Styles.styleSheet.rowControl)}}>
+        <Row style={{height: (data.length + 1) * Styles.styleSheet.rowControl}}>
           <Grid>
-            {
-              label
-            }
-            {
-              data.map((t: string) => {
-                return (
-                  <Row>
-                    {
-                      this.genCheckboxItem(p, t)
-                    }
-                  </Row>
-                );
-              })
-            }
+            {label}
+            {data.map((t: string) => {
+              return <Row>{this.genCheckboxItem(p, t)}</Row>;
+            })}
           </Grid>
         </Row>
       );
-    }
-    else {
+    } else {
       return (
-        <Row style={{height: 2 * (Styles.styleSheet.rowControl)}}>
+        <Row style={{height: 2 * Styles.styleSheet.rowControl}}>
           <Grid>
-            
             {label}
             <Row style={Styles.styleSheet.rowControl}>
               <Grid>
-                {
-                  data.map((t: string) => {
-                    return (
-                      <Col>
-                        {
-                          this.genCheckboxItem(p, t)
-                        }
-                      </Col>
-                    );
-                  })
-                }
+                {data.map((t: string) => {
+                  return <Col>{this.genCheckboxItem(p, t)}</Col>;
+                })}
               </Grid>
             </Row>
           </Grid>
         </Row>
-      )
+      );
     }
-    
-  }
-  
-  private genRadio = (p: DynProperty): any => {
-    const label: any = (
-      <Row style={Styles.styleSheet.rowControl}>
-        <Text style={Styles.styleSheet.label}> {p.title}</Text>
-      </Row>
-    );
-    const data: { label: string, value: number }[] = p.items.split(',').map((t: string, index: number) => {
-      return {label: t, value: index}
-    });
-    
-    return (
-      <Row style={{height: (data.length > 2 ? data.length : 2) * (Styles.styleSheet.rowControl)}}>
-        <Grid>
-          {
-            label
-          }
-          <Row>
-            <RadioForm
-              formHorizontal={data.length <= 2}
-              animation={true}
-            >
-              {
-                data.map((obj, i) => {
-                  return (
-                    <RadioButton labelHorizontal={true} key={i} style={{width: 200}}>
-                      <RadioButtonInput
-                        obj={obj}
-                        index={i}
-                        isSelected={this.state.data[`${p.id}`] === obj.label}
-                        onPress={() => {
-                          this.setRadio(p, obj.label);
-                        }}
-                        borderWidth={1}
-                        buttonInnerColor={'#e74c3c'}
-                        buttonOuterColor={'#2196f3'}
-                        buttonSize={20}
-                        buttonOuterSize={20}
-                        buttonStyle={{}}
-                        buttonWrapStyle={{marginLeft: 10}}
-                      />
-                      <RadioButtonLabel
-                        obj={obj}
-                        index={i}
-                        labelHorizontal={true}
-                        onPress={() => {
-                          this.setRadio(p, obj.label);
-                        }}
-                        labelStyle={{fontSize: 20, color: '#2ecc71'}}
-                        labelWrapStyle={{}}
-                      />
-                    </RadioButton>
-                  )
-                })}
-            
-            </RadioForm>
-            
-            
-            {/*<RadioForm*/}
-            {/*radio_props={data}*/}
-            {/*initial={0}*/}
-            {/*formHorizontal={data.length <= 2}*/}
-            {/*labelHorizontal={true}*/}
-            {/*animation={true}*/}
-            {/*onPress={(value) => {}}*/}
-            {/*labelColor={Styles.color.Text}*/}
-            {/*style={[Styles.styleSheet.label, {width: 100}]}*/}
-            {/*buttonColor={Styles.color.Text}*/}
-            {/*selectedLabelColor={Styles.color.Text}*/}
-            {/*/>*/}
-          </Row>
-        </Grid>
-      </Row>
-    );
-  }
-  
+  };
   
   private pickImage = (p: DynProperty): void => {
-    const options = {
-      title: p.title,
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
-    
-    ImagePicker.showImagePicker(options, (response: {
-      customButton: string;
-      didCancel: boolean;
-      error: string;
-      data: string;
-      uri: string;
-      origURL?: string;
-      isVertical: boolean;
-      width: number;
-      height: number;
-      fileSize: number;
-      type?: string;
-      fileName?: string;
-      path?: string;
-      latitude?: number;
-      longitude?: number;
-      timestamp?: string;
-    }) => {
-      console.log('Response = ', response);
-      
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        
-        // You can also display the image using data:
-        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-        let data = this.state.data;
-        data[`${p.id}uri`] = response.uri;
-        data[`${p.id}data`] = response.data;
-        this.setState({data: data});
-      }
-    });
-    
   }
-  
   private pickFile = (p: DynProperty): void => {
-    DocumentPicker.show({
-      filetype: [DocumentPickerUtil.allFiles()],
-    },(error,res) => {
-      // Android
-      console.log(
-        res.uri,
-        res.type, // mime type
-        res.fileName,
-        res.fileSize
-      );
-      let data = this.state.data;
-      data[`${p.id}uri`] = res.uri;
-      data[`${p.id}data`] = res.data;
-      
-      this.setState({data: data});
-    });
-    
-  }
+    // DocumentPicker.show({
+    //   filetype: [DocumentPickerUtil.allFiles()],
+    // },(error,res) => {
+    //   // Android
+    //   console.log(
+    //     res.uri,
+    //     res.type, // mime type
+    //     res.fileName,
+    //     res.fileSize
+    //   );
+    //   let data = this.state.data;
+    //   data[`${p.id}uri`] = res.uri;
+    //   data[`${p.id}data`] = res.data;
+    //
+    //   this.setState({data: data});
+    // });
+  };
+  
+  private showCombobox = (p: DynProperty): void => {
+    const data: string[] = p.items.split(',');
+    data.push('Cancel');
+    ActionSheet.show(
+      {
+        options: data,
+        cancelButtonIndex: data.length - 1,
+        title: p.title
+      },
+      (buttonIndex: number) => {
+        if (buttonIndex < data.length - 1) {
+          this.setCombobox(p, buttonIndex, data[buttonIndex]);
+        }
+      }
+    );
+  };
   
   private genCombobox = (p: DynProperty): any => {
-    if (p.type !== DynPropertyType.COMBOBOX) {
+    if (p.type !== DynPropertyType.COMBOBOX && p.type !== DynPropertyType.RADIO) {
       return null;
     }
-    const data: string[] = p.items.split(',');
-    
-    return (<Row style={Styles.styleSheet.rowControl}>
-        <Grid>
-          <Col>
-            <ModalDropdown
-              options={data}
-              defaultValue={this.state.data[`${p.id}`]}
-              textStyle={Styles.styleSheet.label}
-              onSelect={(idx, value) => this.setCombobox(p, idx, value)}
-            />
-          </Col>
-        </Grid>
+    return (
+      <Row style={Styles.styleSheet.rowControl}>
+        
+        <Button transparent block onPress={(_e) => this.showCombobox(p)} iconRight>
+          <Text uppercase={false}
+                style={{color: Styles.color.Text}}>{p.title + ': '}</Text>
+          <Text uppercase={false}
+                style={{color: Styles.color.Text}}>{this.state.data[`${p.id}`]}</Text>
+          <Icon style={{color: Styles.color.Icon}} name={'arrow-dropdown'}/>
+        </Button>
+      
       </Row>
-    )
-  }
+    );
+  };
   
   private genFile = (p: DynProperty): any => {
     if (p.type !== DynPropertyType.FILE) {
@@ -376,16 +236,19 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
       uri = CONSTANTS.STR_EMPTY;
       useData = true;
     }
-    return (<Row style={{height: 100}}>
-        <Text style={Styles.styleSheet.label}> {p.title}</Text>
-        <TouchableOpacity style={{height: 100}} onPress={() => this.pickFile(p)}>
-          <Image style={{height: 100, width: 100}} resizeMode={'contain'}
-                 source={IMAGE.photo}
-          />
-        </TouchableOpacity>
+    return (
+      <Row style={Styles.styleSheet.rowControl}>
+        <Button transparent block onPress={(_e) => this.pickFile(p)} iconRight>
+          <Text uppercase={false}
+                style={{color: Styles.color.Text}}>{p.title + ': '}</Text>
+          <Text uppercase={false}
+                style={{color: Styles.color.Text}}>
+            {this.state.data[`${p.id}uri`] === CONSTANTS.STR_EMPTY ? 'Pick a file ...' : this.state.data[`${p.id}uri`]}</Text>
+          <Icon style={{color: Styles.color.Icon}} name={'attach'}/>
+        </Button>
       </Row>
     );
-  }
+  };
   
   private genImages = (p: DynProperty): any => {
     if (p.type !== DynPropertyType.IMAGE) {
@@ -399,30 +262,38 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
       useData = true;
     }
     
-    return (<Row style={{height: 100}}>
+    return (
+      
+      <Row style={{height: 100}}>
+        
         <Text style={Styles.styleSheet.label}> {p.title}</Text>
         <TouchableOpacity style={{height: 100}} onPress={() => this.pickImage(p)}>
-          <Image style={{height: 100, width: 100}} resizeMode={'contain'}
-                 source={useData ? {uri: `data:image/png;base64,${data}`} : (uri === CONSTANTS.STR_EMPTY ? IMAGE.photo : {uri: uri})}
+          <Image
+            style={{height: 100, width: 100}}
+            resizeMode={'contain'}
+            source={
+              useData
+                ? {uri: `data:image/png;base64,${data}`}
+                : uri === CONSTANTS.STR_EMPTY
+                ? IMAGE.photo
+                : {uri: uri}
+            }
           />
         </TouchableOpacity>
       </Row>
     );
-  }
+  };
   
   render() {
     const controls: any[] = this.state.item.properties.map((p: DynProperty) => {
       if (p.type === DynPropertyType.TEXT) {
         return this.genText(p);
-      }
-      else if (p.type === DynPropertyType.COMBOBOX) {
+      } else if (p.type === DynPropertyType.COMBOBOX) {
         return this.genCombobox(p);
-      }
-      else if (p.type === DynPropertyType.CHECKBOX) {
+      } else if (p.type === DynPropertyType.CHECKBOX) {
         return this.genCheckbox(p);
-      }
-      else if (p.type === DynPropertyType.RADIO) {
-        return this.genRadio(p);
+      } else if (p.type === DynPropertyType.RADIO) {
+        return this.genCombobox(p);
       }
     });
     
@@ -444,24 +315,16 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
             <Row style={{height: 150}}>
               <Grid>
                 <Row>
-                  <Button title={'Save'} onPress={this.save}/>
+                  <Button onPress={this.save}>
+                    <Text>Save</Text>
+                  </Button>
                 </Row>
-                <Row style={Styles.styleSheet.rowControl}>
-                
-                </Row>
+                <Row style={Styles.styleSheet.rowControl}/>
               </Grid>
             </Row>
-            {
-              controls
-            }
-            {
-              files
-            }
-            
-            {
-              images
-            }
-          
+            {controls}
+            {files}
+            {images}
           </Grid>
         </ScrollView>
       </BaseScreen>

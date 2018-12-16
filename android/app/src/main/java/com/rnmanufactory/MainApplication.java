@@ -3,6 +3,7 @@ package com.rnmanufactory;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.polidea.reactnativeble.BlePackage;
 import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
@@ -26,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new BlePackage(),
             new ReactNativeDocumentPicker(),
             new RNGestureHandlerPackage(),
             new ReactNativeConfigPackage()

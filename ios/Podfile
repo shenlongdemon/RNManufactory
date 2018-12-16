@@ -31,6 +31,9 @@ target 'RNManufactory' do
 
   pod 'react-native-document-picker', :path => '../node_modules/react-native-document-picker'
 
+  pod 'react-native-ble-plx', :path => '../node_modules/react-native-ble-plx'
+  pod 'react-native-ble-plx-swift', :path => '../node_modules/react-native-ble-plx'
+
 end
 post_install do |installer|
     installer.pods_project.targets.each do |target|

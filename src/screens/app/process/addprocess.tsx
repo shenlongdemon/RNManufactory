@@ -19,7 +19,7 @@ import * as Styles from '../../../stylesheet';
 import {ROUTE} from "../../routes";
 import {Button, Icon, Input, Item, Label, Text, Textarea} from "native-base";
 import Utils from "../../../common/utils";
-
+import BluetoothItem from '../../../components/listitem/bluetoothitem';
 interface Props {
 }
 
@@ -52,6 +52,8 @@ export default class AddProcess extends BasesSreen<Props, State> {
     this.createMaterial = this.createMaterial.bind(this);
     this.pickImage = this.pickImage.bind(this);
     this.pickBluetooth = this.pickBluetooth.bind(this);
+    this.receiveBluetooth = this.receiveBluetooth.bind(this);
+  
     this.state = {
       name: CONSTANTS.STR_EMPTY,
       bluetooth: null,
@@ -90,13 +92,15 @@ export default class AddProcess extends BasesSreen<Props, State> {
     });
   }
   
-  private received = async (data: any, _type: BluetoothItemType, _extraData: any | null): Promise<void> => {
-    this,this.setState({bluetooth: data as Bluetooth})
-  }
+  
+  
+  receiveBluetooth = async (bluetooth: Bluetooth, _type: BluetoothItemType, _extraData: any | null): Promise<void> => {
+    this.setState({bluetooth: bluetooth});
+  };
   
   private pickBluetooth = async (): Promise<void> => {
     
-    this.navigateFunc(ROUTE.APP.SHARE.BLUETOOTH, BluetoothItemType.BLUETOOTH, this.received);
+    this.navigateFunc(ROUTE.APP.SHARE.BLUETOOTH, BluetoothItemType.BLUETOOTH, this.receiveBluetooth);
   }
   
   
@@ -128,6 +132,7 @@ export default class AddProcess extends BasesSreen<Props, State> {
     return (
       <BasesSreen {...{...this.props, componentDidFocus: this.componentDidFocus, isLoading: this.state.isLoading}}>
         <Grid>
+          <Row style={{height: 20}}></Row>
           <Row style={{height: 100}}>
             <Grid>
               <Col style={{justifyContent: 'center', flex: 1, flexDirection: 'column', alignItems: 'center'}}>
@@ -158,7 +163,9 @@ export default class AddProcess extends BasesSreen<Props, State> {
           <Row style={{height: Styles.styles.row.height}}>
             <Grid>
               <Col style={{justifyContent: 'center', flex: 1, flexDirection: 'column', alignItems: 'center'}}>
-                <Text style={Styles.styleSheet.label}>Select Bluetooth what will follow this material</Text>
+                <Text style={Styles.styleSheet.label}>
+                  Select Bluetooth what will follow this material
+                </Text>
               </Col>
               <Col style={{width: 50}}>
                 <TouchableOpacity style={[styles.button, {justifyContent: 'flex-start'}]} onPress={this.pickBluetooth}>
@@ -169,6 +176,14 @@ export default class AddProcess extends BasesSreen<Props, State> {
               </Col>
             </Grid>
           </Row>
+          {
+            this.state.bluetooth &&
+            <Row style={{height:70}}>
+              <TouchableOpacity style={{flex:1, backgroundColor:Styles.color.BackgroundListItemHighlight}} onPress={() => {this.setState({bluetooth: null})}}>
+                <BluetoothItem item={this.state.bluetooth} index={0} />
+              </TouchableOpacity>
+            </Row>
+          }
           <Row style={{height: 10}}></Row>
           
           <Row style={{height: 40}}>

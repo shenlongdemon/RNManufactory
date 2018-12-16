@@ -6,6 +6,7 @@ import BaseItem from './baseitem';
 import IBaseItem from './ibaseitem';
 import {FactoryInjection, IBusinessService, Material, PUBLIC_TYPES} from 'business_core_app_react';
 import * as Styles from '../../stylesheet';
+import {Thumbnail} from "native-base";
 
 interface Props extends IBaseItem<Material> {
 
@@ -44,7 +45,7 @@ export default class ProcessItem extends BaseItem<Material, State> {
           </Col>
           
           <Col size={2} style={{justifyContent:'center'}}>
-            <Image source={{uri: this.businessService.getLinkImage(this.props.item.imageUrl)}} style={{width: 70, height: 70}}/>
+            <Thumbnail source={{uri: this.businessService.getLinkImage(this.props.item.imageUrl)}} style={{width: 80, height: 80}}/>
           </Col>
           
           <Col size={2} style={{justifyContent:'center'}}>

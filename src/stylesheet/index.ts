@@ -3,6 +3,7 @@ import {StyleSheet} from "react-native";
 
 const color = {
   Background: '#00',
+  BackgroundListItemHighlight: 'rgba(255, 255, 255, 0.1)',
   Icon: '#ffffff',
   Indicator: 'rgba(255, 255, 255, 0.5)',
   Red: '#ff0000',

@@ -9,6 +9,7 @@ import SwitchFeature from './switctfeature';
 // import UserMain from "./main/usermain";
 import ManufactoryMain from './app/manufactorymain';
 import AddProcess from "./app/process/addprocess";
+import BluetoothScannerScreen from "./shared/bluetoothscanner";
 // import GoodsScreen from "./main/goods";
 // import ProcessesScreen from "./main/process/processes";
 //
@@ -54,7 +55,9 @@ const manufactoryStack = RNN.createStackNavigator(
     addprocess: AddProcess,
     // goodsdetail: goodsTab,
     // qrscanner: QRCodeScannerScreen,
-    // bluetooth: BluetoothScannerScreen
+    bluetooth: {
+      screen: BluetoothScannerScreen
+    }
   },
   {
     initialRouteName: 'main',
@@ -68,7 +71,7 @@ const manufactoryStack = RNN.createStackNavigator(
         alignSelf: 'center',
         justifyContent: 'center',
         fontWeight: Styles.styles.Navigation.FontWeight,
-        width: '80%'
+        width: '90%'
       }
     }
   }

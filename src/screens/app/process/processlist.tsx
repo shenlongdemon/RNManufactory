@@ -96,7 +96,7 @@ export default class ProcessList extends BaseScreen<Props, State> {
                     this.clickListItem(data!, Number(rowID));
                   }}
                   key={data!.id}
-                  style={{ paddingRight: 0,
+                  style={{ paddingRight: 0,paddingLeft: 0,
                     backgroundColor: Number(rowID) % 2 === 0 ? Styles.color.Background : 'rgba(255, 255, 255, 0.1)'
                   }}
                 >

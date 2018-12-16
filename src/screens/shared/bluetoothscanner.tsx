@@ -2,11 +2,11 @@ import * as React from 'react';
 import {Platform, RefreshControl} from 'react-native';
 import {Bluetooth, FactoryInjection, IBusinessService, LOGGER, PUBLIC_TYPES} from 'business_core_app_react';
 import BasesSreen from "../basescreen";
-import {BleError, BleManager, Device, LogLevel} from 'react-native-ble-plx';
+import {BleError, BleManager, Device} from 'react-native-ble-plx';
 import {BluetoothItemType, PARAMS} from "../../common";
 import Utils from '../../common/utils';
 import * as Styles from "../../stylesheet";
-import {Col, Grid, List, ListItem, Row} from "native-base";
+import {Button, Grid, Icon, List, ListItem, Row, Text} from "native-base";
 import BluetoothItem from '../../components/listitem/bluetoothitem';
 
 interface Props {
@@ -23,10 +23,19 @@ interface BluetoothData {
 }
 
 export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
+  static navigationOptions = ({navigation}) => {
+    return {
+      title: 'Scanning bluetooth around',
+      headerRight: (
+        <Button onPress={navigation.getParam(PARAMS.HANDLE_RIGHT_HEADER_BUTTON)}>
+          <Icon name={'sync' } style={{color: Styles.color.Icon }}/>
+        </Button>
+      ),
+    };
+  };
   private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
   private bleManager!: BleManager;
   private timeout!: any;
-  
   constructor(props) {
     super(props);
     this.state = {
@@ -43,7 +52,9 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
   }
   
   componentDidMount = async (): Promise<void> => {
-  
+    const data: any = {};
+    data[PARAMS.HANDLE_RIGHT_HEADER_BUTTON] = this.startScan;
+    this.setSellNavigateParam(data);
   }
   
   componentWillUnmount = async (): Promise<void> => {
@@ -78,12 +89,8 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
       });
       if (index < 0) {
         devices.push(device);
-        
+        console.log(device);
       }
-      
-      LOGGER.log(device + ' ' + devices.length);
-      
-      
     });
     
     this.timeout = setTimeout(async (): Promise<void> => {
@@ -93,7 +100,7 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
         return {item: ble, type: BluetoothItemType.BLUETOOTH};
       });
       this.setState({devices: list, isLoading: false});
-    }, 15000);
+    }, 8000);
     
   }
   
@@ -155,8 +162,8 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
                   }}
                   key={data.item.id}
                   style={{
-                    paddingRight: 0,
-                    backgroundColor: Number(rowID) % 2 === 0 ? Styles.color.Background : 'rgba(255, 255, 255, 0.1)'
+                    paddingRight: 0, paddingLeft: 0,
+                    backgroundColor: Number(rowID) % 2 === 0 ? Styles.color.Background : Styles.color.BackgroundListItemHighlight
                   }}
                 >
                   {

@@ -1,6 +1,7 @@
 import {Toast} from "native-base";
 import {Bluetooth, Position, CONSTANTS} from 'business_core_app_react';
 import {Device} from 'react-native-ble-plx';
+import {Platform} from "react-native";
 
 export default class Utils {
   static showErrorToast = (message: string): void => {
@@ -34,11 +35,11 @@ export default class Utils {
   static mappingBLEDevices = (devices: Device[], currentPosition: Position): Bluetooth[] => {
     const bluetooths: Bluetooth[] = devices.map((device: Device, _index: number) => {
       const distance: number = Utils.getBLEBeaconDistance(device.rssi || 0);
+      const mac: string =  Platform.OS === 'ios' ? `${Date.now()}` : device.id;
       const blu: Bluetooth = {
-        mac: device.id,
+        mac: mac,
         id: device.id,
-        name: device.name || CONSTANTS.STR_EMPTY,
-        localName: device.localName,
+        name: device.name || (device.localName || (device.manufacturerData || CONSTANTS.STR_EMPTY)) ,
         proximityUUID: device.id,
         position: {...currentPosition, distance: distance}
       }

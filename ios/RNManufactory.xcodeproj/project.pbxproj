@@ -28,6 +28,7 @@
 		2710F21B214F4E50ADA8B4FD /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0F532A33C2DB460D855521CF /* MaterialCommunityIcons.ttf */; };
 		40A9ACE6A2104241B482E157 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 929484749A704519B377108F /* Zocial.ttf */; };
 		44D70772C7F9E268227D15B5 /* Pods_RNManufactory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 55D8C07D4B8EE0D345205358 /* Pods_RNManufactory.framework */; };
+		7400726F21C6A53E001EC5E2 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7400726E21C6A53D001EC5E2 /* File.swift */; };
 		7431FD8521BD823600CA46DD /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7431FD8321BD822300CA46DD /* libRNDocumentPicker.a */; };
 		74F505CC21BB825300F36835 /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 74F505C921BB824600F36835 /* libReactNativeConfig.a */; };
 		7E2924DF22D94192B1937146 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CAFA5D8EDF2D4AB0823634EF /* Octicons.ttf */; };
@@ -363,6 +364,8 @@
 		5CC50FC9889044A78B7E32BE /* RNGestureHandler.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNGestureHandler.xcodeproj; path = "../node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj"; sourceTree = "<group>"; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		68AE78BB6F2747F9978D3B63 /* Roboto_medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Roboto_medium.ttf; path = "../node_modules/native-base/Fonts/Roboto_medium.ttf"; sourceTree = "<group>"; };
+		7400726D21C6A53D001EC5E2 /* RNManufactory-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RNManufactory-Bridging-Header.h"; sourceTree = "<group>"; };
+		7400726E21C6A53D001EC5E2 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		7431FD5721BD822200CA46DD /* RNDocumentPicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDocumentPicker.xcodeproj; path = "../node_modules/react-native-document-picker/ios/RNDocumentPicker.xcodeproj"; sourceTree = "<group>"; };
 		7431FD8621BD92B700CA46DD /* RNManufactory.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = RNManufactory.entitlements; path = RNManufactory/RNManufactory.entitlements; sourceTree = "<group>"; };
 		74F505C321BB824600F36835 /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
@@ -649,6 +652,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				7400726E21C6A53D001EC5E2 /* File.swift */,
 				13B07FAE1A68108700A75B9A /* RNManufactory */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* RNManufactoryTests */,
@@ -657,6 +661,7 @@
 				08B428AB3F064FBBA8B52D05 /* Resources */,
 				48C94360ED980B3EF53C7460 /* Pods */,
 				7431FD1C21BC5C1000CA46DD /* Recovered References */,
+				7400726D21C6A53D001EC5E2 /* RNManufactory-Bridging-Header.h */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -714,7 +719,11 @@
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = AJFJJYR4NW;
+						LastSwiftMigration = 1000;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
@@ -1149,6 +1158,8 @@
 				"${BUILT_PRODUCTS_DIR}/Folly/folly.framework",
 				"${BUILT_PRODUCTS_DIR}/React/React.framework",
 				"${BUILT_PRODUCTS_DIR}/glog/glog.framework",
+				"${BUILT_PRODUCTS_DIR}/react-native-ble-plx/react_native_ble_plx.framework",
+				"${BUILT_PRODUCTS_DIR}/react-native-ble-plx-swift/react_native_ble_plx_swift.framework",
 				"${BUILT_PRODUCTS_DIR}/react-native-config/react_native_config.framework",
 				"${BUILT_PRODUCTS_DIR}/react-native-document-picker/react_native_document_picker.framework",
 				"${BUILT_PRODUCTS_DIR}/yoga/yoga.framework",
@@ -1161,6 +1172,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/folly.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_ble_plx.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_ble_plx_swift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_config.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_document_picker.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/yoga.framework",
@@ -1200,6 +1213,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				7400726F21C6A53E001EC5E2 /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1224,6 +1238,7 @@
 			baseConfigurationReference = DFD617A1707EFFB606EB030F /* Pods-RNManufactory.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = RNManufactory/RNManufactory.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
@@ -1246,6 +1261,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = RNManufactory;
+				SWIFT_OBJC_BRIDGING_HEADER = "RNManufactory-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1255,6 +1273,7 @@
 			baseConfigurationReference = B19B5954F7BCA9A176F0662D /* Pods-RNManufactory.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = RNManufactory/RNManufactory.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AJFJJYR4NW;
@@ -1276,6 +1295,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = RNManufactory;
+				SWIFT_OBJC_BRIDGING_HEADER = "RNManufactory-Bridging-Header.h";
+				SWIFT_VERSION = 4.2;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

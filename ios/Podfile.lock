@@ -8,6 +8,10 @@ PODS:
   - glog (0.3.5)
   - React (0.57.7):
     - React/Core (= 0.57.7)
+  - react-native-ble-plx (1.0.1):
+    - React
+    - react-native-ble-plx-swift
+  - react-native-ble-plx-swift (1.0.1)
   - react-native-config (0.11.7):
     - React
   - react-native-document-picker (2.2.0):
@@ -50,6 +54,8 @@ DEPENDENCIES:
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - react-native-ble-plx (from `../node_modules/react-native-ble-plx`)
+  - react-native-ble-plx-swift (from `../node_modules/react-native-ble-plx`)
   - react-native-config (from `../node_modules/react-native-config`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - React/Core (from `../node_modules/react-native`)
@@ -74,6 +80,10 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
   React:
     :path: "../node_modules/react-native"
+  react-native-ble-plx:
+    :path: "../node_modules/react-native-ble-plx"
+  react-native-ble-plx-swift:
+    :path: "../node_modules/react-native-ble-plx"
   react-native-config:
     :path: "../node_modules/react-native-config"
   react-native-document-picker:
@@ -87,10 +97,12 @@ SPEC CHECKSUMS:
   Folly: c89ac2d5c6ab169cd7397ef27485c44f35f742c7
   glog: e8acf0ebbf99759d3ff18c86c292a5898282dcde
   React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
+  react-native-ble-plx: 7ad27c5a97bdb07ca77cf92badacd990e350c32c
+  react-native-ble-plx-swift: 283d93356064625d8d825b0814203628afe381f0
   react-native-config: 8c2a92aa66a6cec1a23d9eda7ba6fcf31a63ace5
   react-native-document-picker: e7934f6a3c898a1b62fa68b1f09371beef6ac51a
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: c706817d6fc2cd91d6831a6fd34e33d8e3c31bad
+PODFILE CHECKSUM: 9acacc650ce4a6f857497b5f9651b83056e953db
 
 COCOAPODS: 1.5.3

@@ -1,3 +1,5 @@
+import ProcessList from "./app/process/processlist";
+
 const RNN = require('react-navigation');
 import * as Styles from '../stylesheet';
 import Loading from './loading';
@@ -6,6 +8,7 @@ import SwitchFeature from './switctfeature';
 //
 // import UserMain from "./main/usermain";
 import ManufactoryMain from './app/manufactorymain';
+import AddProcess from "./app/process/addprocess";
 // import GoodsScreen from "./main/goods";
 // import ProcessesScreen from "./main/process/processes";
 //
@@ -15,7 +18,7 @@ import ManufactoryMain from './app/manufactorymain';
 // import AddProcess from './main/process/addprocess';
 // import QRCodeScannerScreen from "./main/shared/qrcodescanner";
 // import BluetoothScannerScreen from "./main/shared/bluetoothscanner";
-import TaskDetailScreen from './app/process/taskdetail';
+// import TaskDetailScreen from './app/process/taskdetail';
 
 // const goodsTab = RNN.createTabNavigator(
 //   {
@@ -40,15 +43,15 @@ const manufactoryStack = RNN.createStackNavigator(
   {
     main: ManufactoryMain,
     // goodses: GoodsScreen,
-    // processes: {
-    //   screen: ProcessesScreen,
-    //   navigationOptions: {
-    //     title: 'Processes List'
-    //   }
-    // },
+    processes: {
+      screen: ProcessList,
+      navigationOptions: {
+        title: 'Processes List'
+      }
+    },
     // processdetail: ProcessDetail,
-    taskdetail: TaskDetailScreen
-    // addprocess: AddProcess,
+    // taskdetail: TaskDetailScreen
+    addprocess: AddProcess,
     // goodsdetail: goodsTab,
     // qrscanner: QRCodeScannerScreen,
     // bluetooth: BluetoothScannerScreen

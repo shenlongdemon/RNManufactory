@@ -7,13 +7,8 @@ import {ROUTE} from '../routes';
 import * as IMAGES from '../../assets';
 import {PARAMS, BluetoothItemType} from '../../common';
 import {
-  BLEDevice,
-  FactoryInjection,
-  IProcessService,
-  Material,
-  MaterialDetailDto,
-  PUBLIC_TYPES,
-  Task
+  Bluetooth,
+  Material
 } from 'business_core_app_react';
 
 interface Props {
@@ -23,7 +18,6 @@ interface State {
 }
 
 export default class ManufactoryMain extends BaseScreen<Props, State> {
-  private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
   
   constructor(props: Props) {
     super(props);
@@ -41,10 +35,10 @@ export default class ManufactoryMain extends BaseScreen<Props, State> {
   
   
   receive = async (data: any, type: BluetoothItemType, _extraData: any | null): Promise<void> => {
-    if (type === BluetoothItemType.bleDevice) {
-      const bleDevice: BLEDevice = data as BLEDevice;
-      alert(bleDevice.id);
-    } else if (type === BluetoothItemType.magerial) {
+    if (type === BluetoothItemType.BLUETOOTH) {
+      const bluetooth: Bluetooth = data as Bluetooth;
+      alert(bluetooth.id);
+    } else if (type === BluetoothItemType.MATERIAL) {
       const material: Material = data as Material;
       const patam: any = {};
       parent[PARAMS.ITEM] = material;
@@ -53,18 +47,13 @@ export default class ManufactoryMain extends BaseScreen<Props, State> {
   };
   
   private gotoBluetooth = async (): Promise<void> => {
-    this.navigateFunc(ROUTE.APP.MANUFACTORY.BLUETOOTH, BluetoothItemType.all, this.receive);
+    this.navigateFunc(ROUTE.APP.MANUFACTORY.BLUETOOTH, BluetoothItemType.ALL, this.receive);
   };
   private gotoGoods = async (): Promise<void> => {
     this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.DEFAULT);
   };
   private gotoProcesses = async (): Promise<void> => {
-    const dto: MaterialDetailDto = await this.processService.getMaterialDetail('12121');
-    const tasks: Task[] = dto.material!.tasks;
-    const task = tasks[0];
-    const data: any = [];
-    data[PARAMS.ITEM] = task;
-    this.navigate(ROUTE.APP.MANUFACTORY.PROCESSES.ITEM.TASK.DEFAULT, data);
+    this.navigate(ROUTE.APP.MANUFACTORY.PROCESSES.DEFAULT);
   };
   private scanQRCode = async (): Promise<void> => {
     this.navigate(ROUTE.APP.MANUFACTORY.SCANQRCODE);

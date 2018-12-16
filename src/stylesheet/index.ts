@@ -45,6 +45,7 @@ const styles = {
   ],
   row : {
     height: 70,
+    heightDescription: 150,
     backgroundColor: '#0000ff'
   }
 };

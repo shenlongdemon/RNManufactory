@@ -1,15 +1,31 @@
 import * as React from 'react';
-import {ImageBackground, EmitterSubscription} from 'react-native';
+import {ImageBackground, EmitterSubscription, Modal} from 'react-native';
 import * as IMAGE from '../assets';
 // import {Grid, Row} from 'react-native-easy-grid';
 // import * as Styles from '../stylesheet';
 
 import {PARAMS} from "../common";
+import {Container, Grid, Row} from "native-base";
+import {
+  // BallIndicator,
+  // BarIndicator,
+  // DotIndicator,
+  // MaterialIndicator,
+  // PacmanIndicator,
+  // PulseIndicator,
+  // SkypeIndicator,
+  UIActivityIndicator,
+  //WaveIndicator,
+} from 'react-native-indicators';
+import * as Styles from '../stylesheet';
 
 interface INavitation {
   setParams(data: any);
+  
   navigate(route: string, data?: any);
+  
   goBack();
+  
   push(route: string);
 }
 
@@ -33,7 +49,7 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
     
   }
   
-  navigateFunc =  (routeName: string, data: any | null, func: (data: any, type: number, extraData: any | null) => Promise<void> | null ): void => {
+  navigateFunc = (routeName: string, data: any | null, func: (data: any, type: number, extraData: any | null) => Promise<void> | null): void => {
     if (this.props.navigation) {
       const param: any = {};
       param[PARAMS.CALLBACK_FUNCTION] = func;
@@ -82,7 +98,7 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
   
   sleep = (second: number): void => {
     const current = new Date().getTime();
-    while(true) {
+    while (true) {
       if (new Date().getTime() - current > second * 1000) {
         break;
       }
@@ -106,19 +122,28 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
   
   render() {
     return (
-      <ImageBackground source={IMAGE.background}
-                       style={{flex: 1, justifyContent: 'center', width: '100%', height: '100%'}}>
-        {this.props.children}
-        {/*<Modal isVisible={this.props.isLoading || false}>*/}
-          {/*<Grid style={{flex: 1}}>*/}
-            {/*<Row></Row>*/}
-            {/*<Row style={{justifyContent: 'center'}}>*/}
-              {/*<UIActivityIndicator color={Styles.color.Icon} size={70} count={12}/>*/}
-            {/*</Row>*/}
-            {/*<Row></Row>*/}
-          {/*</Grid>*/}
-        {/*</Modal>*/}
-      </ImageBackground>
+      <Container>
+        <ImageBackground
+          source={IMAGE.background}
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            width: '100%',
+            height: '100%'
+          }}
+        >
+          {this.props.children}
+          <Modal visible={this.props.isLoading || false} transparent={true}>
+            <Grid style={{flex: 1, backgroundColor: Styles.color.Background}}>
+              <Row></Row>
+              <Row style={{justifyContent: 'center'}}>
+                <UIActivityIndicator color={Styles.color.Icon} size={70} count={12}/>
+              </Row>
+              <Row></Row>
+            </Grid>
+          </Modal>
+        </ImageBackground>
+      </Container>
     );
   }
 }

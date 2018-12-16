@@ -11,7 +11,7 @@ import {
   PUBLIC_TYPES,
   Task
 } from 'business_core_app_react';
-import {PARAMS} from '../../../common/index';
+import {PARAMS} from '../../../common';
 import {ActionSheet, Button, Icon, Input, Item, Label, Text, Thumbnail} from 'native-base';
 import * as Styles from '../../../stylesheet';
 // import ImagePicker from 'react-native-image-picker';
@@ -38,7 +38,7 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     task!.properties.forEach((p: DynProperty) => {
       const data: string[] = p.items.split(',');
       if (p.type === DynPropertyType.CHECKBOX) {
-        data.forEach((t: string, i: number) => {
+        data.forEach((t: string, _i: number) => {
           d[`${p.id}${t}`] = p.value === CONSTANTS.STR_EMPTY ? false : p.value.includes(t);
         });
         d[`${p.id}`] = p.value;
@@ -72,29 +72,29 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     alert(JSON.stringify(this.state.data));
   };
   
-  private setCheckbox = (p: DynProperty, name: string): void => {
-    let data = this.state.data;
-    const value: boolean = (data[`${p.id}${name}`] || false) as boolean;
-    data[`${p.id}${name}`] = !value;
-    
-    let str: string[] = [];
-    p.items.split(',').forEach((t: string, _index: number) => {
-      const isChecked: boolean = (data[`${p.id}${t}`] || false) as boolean;
-      if (isChecked) {
-        str.push(t);
-      }
-    });
-    
-    data[`${p.id}`] = str.join(', ');
-    
-    this.setState({data: data});
-  };
-  
-  private setRadio = (p: DynProperty, label: string): void => {
-    let data = this.state.data;
-    data[`${p.id}`] = label;
-    this.setState({data: data});
-  };
+  // private setCheckbox = (p: DynProperty, name: string): void => {
+  //   let data = this.state.data;
+  //   const value: boolean = (data[`${p.id}${name}`] || false) as boolean;
+  //   data[`${p.id}${name}`] = !value;
+  //
+  //   let str: string[] = [];
+  //   p.items.split(',').forEach((t: string, _index: number) => {
+  //     const isChecked: boolean = (data[`${p.id}${t}`] || false) as boolean;
+  //     if (isChecked) {
+  //       str.push(t);
+  //     }
+  //   });
+  //
+  //   data[`${p.id}`] = str.join(', ');
+  //
+  //   this.setState({data: data});
+  // };
+  //
+  // private setRadio = (p: DynProperty, label: string): void => {
+  //   let data = this.state.data;
+  //   data[`${p.id}`] = label;
+  //   this.setState({data: data});
+  // };
   
   private setText = (p: DynProperty, text: string): void => {
     let data = this.state.data;
@@ -128,7 +128,7 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     );
   };
   
-  private genCheckboxItem = (p: DynProperty, title: string): any => {
+  private genCheckboxItem = (_p: DynProperty, _title: string): any => {
     return null;
   };
   
@@ -168,13 +168,28 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     }
   };
   
-  private pickFile = (p: DynProperty): void => {
+  private pickFile = async (p: DynProperty): Promise<void> => {
+    
+    try {
+      const res = await DocumentPicker.show({
+        type: [DocumentPickerUtil.allFiles()]
+      })
+      alert(JSON.stringify(res));
+    }
+    catch (e) {
+      alert('error' + e);
+  
+    }
+    
     DocumentPicker.show({
       filetype: [p.type === DynPropertyType.FILE ? DocumentPickerUtil.pdf() : DocumentPickerUtil.images()],
     }, (error, res) => {
       if (error) {
+        alert('error' + error);
         return;
       }
+      alert(res);
+  
       // Android
       console.log(
         res.uri,
@@ -235,7 +250,7 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
       <Row style={(p.type === DynPropertyType.IMAGE && uri !== CONSTANTS.STR_EMPTY ? Styles.styleSheet.rowThumbnail : Styles.styleSheet.rowControl)}>
         <Grid>
           <Row style={Styles.styleSheet.rowControl}>
-            <Button transparent block onPress={(_e) => this.pickFile(p)} iconRight>
+            <Button transparent block onPress={ async (_e) => await this.pickFile(p)} iconRight>
               <Text uppercase={false}
                     style={{color: Styles.color.Text}}>{p.title + ': '}</Text>
               <Text uppercase={false}

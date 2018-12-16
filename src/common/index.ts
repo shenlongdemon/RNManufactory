@@ -4,10 +4,10 @@ const PARAMS = {
   CALLBACK_FUNCTION: 'callback_function',
 };
 enum BluetoothItemType {
-  all = 0,
-  bleDevice = 1,
-  magerial = 2,
-  product = 3
+  ALL = 0,
+  BLUETOOTH = 1,
+  MATERIAL = 2,
+  PRODUCT = 3
 };
 
 export {PARAMS, BluetoothItemType};

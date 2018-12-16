@@ -2,7 +2,7 @@ import * as React from 'react';
 import {IAuthService, FactoryInjection, PUBLIC_TYPES, BaseDto, CONSTANTS} from 'business_core_app_react';
 import BaseScreen from '../basescreen';
 import {Grid, Row, Col} from 'react-native-easy-grid';
-import {Form, Item, Label, Input, Icon, Button, Text} from 'native-base';
+import {Form, Item, Label, Input, Icon, Button, Text, Toast} from 'native-base';
 import {ROUTE} from "../routes";
 import * as Styles from '../../stylesheet';
 interface Props {
@@ -41,9 +41,15 @@ export default class Login extends BaseScreen<Props, State> {
       this.navigate(ROUTE.SWITCHFEATURE.DEFAULT);
     }
     else {
-      // alert(baseSdo.message);
-      this.navigate(ROUTE.SWITCHFEATURE.DEFAULT);
+      Toast.show({
+        text: baseSdo.message,
+        buttonText: "OK",
+        position: "bottom",
+        type: 'danger',
+        duration:5000
+      });
     }
+  
     this.setState({isProcessing: false});
   
   }

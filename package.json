@@ -11,7 +11,7 @@
     "test": "jest",
     "android": "ENVFILE=.env react-native run-android",
     "ios": "ENVFILE=.env react-native run-ios --simulator=\"iPhone 7\"",
-    "iphone": "ENVFILE=.env react-native run-ios --device \"huong\"",
+    "iphone": "ENVFILE=.env react-native run-ios --device \"CO7VF2D1G1HW’s iPhone\"",
     "tslint": "tslint -p tsconfig.json"
   },
   "dependencies": {
@@ -23,6 +23,8 @@
     "react-native": "0.57.7",
     "react-native-config": "0.11.7",
     "react-native-document-picker": "^2.2.0",
+    "react-native-indicators": "^0.13.0",
+    "react-native-modal": "7.0.1",
     "react-navigation": "3.0.6",
     "reflect-metadata": "0.1.12"
   },

@@ -9,7 +9,7 @@ import {
   FactoryInjection,
   IBusinessService,
   PUBLIC_TYPES,
-  Task
+  Process
 } from 'business_core_app_react';
 import {PARAMS} from '../../../common';
 import {ActionSheet, Button, Icon, Input, Item, Label, Text, Thumbnail} from 'native-base';
@@ -22,7 +22,7 @@ interface Props {
 }
 
 interface State {
-  item: Task;
+  item: Process;
   isLoading: boolean;
   data: any;
 }
@@ -32,12 +32,14 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
   
   constructor(props: Props) {
     super(props);
-    const task: Task | null = this.getParam<Task>(PARAMS.ITEM, null);
+    const task: Process | null = this.getParam<Process>(PARAMS.ITEM, null);
     
     const d: any = {};
-    task!.properties.forEach((p: DynProperty) => {
-      const data: string[] = p.items.split(',');
+    task!.dynProperties.forEach((p: DynProperty) => {
+      const data: string[] = this.separateItems(p);
       if (p.type === DynPropertyType.CHECKBOX) {
+        // value : Red,White
+        // detail: CBK_1Red = true
         data.forEach((t: string, _i: number) => {
           d[`${p.id}${t}`] = p.value === CONSTANTS.STR_EMPTY ? false : p.value.includes(t);
         });
@@ -72,30 +74,6 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     alert(JSON.stringify(this.state.data));
   };
   
-  // private setCheckbox = (p: DynProperty, name: string): void => {
-  //   let data = this.state.data;
-  //   const value: boolean = (data[`${p.id}${name}`] || false) as boolean;
-  //   data[`${p.id}${name}`] = !value;
-  //
-  //   let str: string[] = [];
-  //   p.items.split(',').forEach((t: string, _index: number) => {
-  //     const isChecked: boolean = (data[`${p.id}${t}`] || false) as boolean;
-  //     if (isChecked) {
-  //       str.push(t);
-  //     }
-  //   });
-  //
-  //   data[`${p.id}`] = str.join(', ');
-  //
-  //   this.setState({data: data});
-  // };
-  //
-  // private setRadio = (p: DynProperty, label: string): void => {
-  //   let data = this.state.data;
-  //   data[`${p.id}`] = label;
-  //   this.setState({data: data});
-  // };
-  
   private setText = (p: DynProperty, text: string): void => {
     let data = this.state.data;
     data[`${p.id}`] = text;
@@ -128,40 +106,107 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     );
   };
   
-  private genCheckboxItem = (_p: DynProperty, _title: string): any => {
-    return null;
+  private separateItems = (p: DynProperty): string[] => {
+    return p.items.split(',');
+  }
+  
+  private setCheckBox = (p: DynProperty, title: string, value: boolean): void => {
+    let data = this.state.data;
+    data[`${p.id}${title}`] = value;
+    this.setState({data: data});
+  }
+  
+  private genCheckboxItem = (p: DynProperty, title: string, _index: number): any => {
+    const value: boolean = this.state.data[`${p.id}${title}`] as boolean;
+    return (
+      <Button iconLeft transparent onPress={() => this.setCheckBox(p, title, !value)}>
+        <Icon name={value ? 'checkbox' : 'square'} style={{color: Styles.color.Icon}}/>
+        <Text uppercase={false} style={{color: Styles.color.Text}}>{title}</Text>
+      </Button>
+    );
   };
   
   private genCheckbox = (p: DynProperty): any => {
-    const label: any = (
-      <Row style={Styles.styleSheet.rowControl}>
-        <Text style={Styles.styleSheet.label}> {p.title}</Text>
-      </Row>
-    );
-    const data: string[] = p.items.split(',');
+    
+    const data: string[] = this.separateItems(p);
     if (data.length > 2) {
       return (
-        <Row style={{height: (data.length + 1) * Styles.styleSheet.rowControl}}>
+        <Row style={{height: (data.length) * Styles.styles.row.heightControl}}>
           <Grid>
-            {label}
-            {data.map((t: string) => {
-              return <Row>{this.genCheckboxItem(p, t)}</Row>;
-            })}
+            <Col style={{justifyContent: 'center'}}>
+              <Text style={[Styles.styleSheet.label, {alignSelf: 'center', width: '100%'}]}> {p.title}</Text>
+            </Col>
+            <Col style={{flexDirection: 'column'}}>
+              <Grid>
+                {data.map((t: string, index: number) => {
+                  return <Row>{this.genCheckboxItem(p, t, index)}</Row>;
+                })}
+              </Grid>
+            </Col>
           </Grid>
         </Row>
       );
     } else {
       return (
-        <Row style={{height: 2 * Styles.styleSheet.rowControl}}>
+        <Row style={{height: Styles.styles.row.heightControl}}>
           <Grid>
-            {label}
-            <Row style={Styles.styleSheet.rowControl}>
+            <Col style={{flexDirection: 'row'}}>
+              <Text style={[Styles.styleSheet.label, {alignSelf: 'center'}]}> {p.title}</Text>
+              {data.map((t: string, index: number) => {
+                return this.genCheckboxItem(p, t, index);
+              })}
+            </Col>
+          </Grid>
+        </Row>
+      );
+    }
+  };
+  
+  private setRadio = (p: DynProperty, title: string): void => {
+    let data = this.state.data;
+    data[`${p.id}`] = title;
+    this.setState({data: data});
+  }
+  
+  private genRadioItem = (p: DynProperty, title: string, _index: number): any => {
+    const value: boolean = (this.state.data[`${p.id}`] as string) === title;
+    return (
+      <Button iconLeft transparent onPress={() => this.setRadio(p, title)}>
+        <Icon name={value ? 'radio-button-on' : 'radio-button-off'} style={{color: Styles.color.Icon}}/>
+        <Text uppercase={false} style={{color: Styles.color.Text}}>{title}</Text>
+      </Button>
+    );
+  };
+  
+  private genRadio = (p: DynProperty): any => {
+    const data: string[] = this.separateItems(p);
+    if (data.length > 2) {
+      return (
+        <Row style={{height: (data.length) * Styles.styles.row.heightControl}}>
+          <Grid>
+            <Col style={{justifyContent: 'center'}}>
+              <Text style={[Styles.styleSheet.label, {alignSelf: 'center', width: '100%'}]}> {p.title}</Text>
+            </Col>
+            <Col style={{flexDirection: 'column'}}>
               <Grid>
-                {data.map((t: string) => {
-                  return <Col>{this.genCheckboxItem(p, t)}</Col>;
+                {data.map((t: string, index: number) => {
+                  return <Row>{this.genRadioItem(p, t, index)}</Row>;
                 })}
               </Grid>
-            </Row>
+            </Col>
+          </Grid>
+        </Row>
+      );
+    } else {
+      return (
+        <Row style={{height: Styles.styles.row.heightControl}}>
+          <Grid>
+            <Col style={{flexDirection: 'row'}}>
+              <Text style={[Styles.styleSheet.label, {alignSelf: 'center'}]}> {p.title}</Text>
+              {data.map((t: string, index: number) => {
+                return this.genRadioItem(p, t, index);
+              })}
+            </Col>
           </Grid>
         </Row>
       );
@@ -170,26 +215,23 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
   
   private pickFile = async (p: DynProperty): Promise<void> => {
     
-    try {
-      const res = await DocumentPicker.show({
-        type: [DocumentPickerUtil.allFiles()]
-      })
-      alert(JSON.stringify(res));
-    }
-    catch (e) {
-      alert('error' + e);
-  
-    }
+    // try {
+    //   const res = await DocumentPicker.show({
+    //     type: [DocumentPickerUtil.allFiles()]
+    //   })
+    //   alert(JSON.stringify(res));
+    // }
+    // catch (e) {
+    //   alert('error' + e);
+    //
+    // }
     
     DocumentPicker.show({
       filetype: [p.type === DynPropertyType.FILE ? DocumentPickerUtil.pdf() : DocumentPickerUtil.images()],
     }, (error, res) => {
       if (error) {
-        alert('error' + error);
         return;
       }
-      alert(res);
-  
       // Android
       console.log(
         res.uri,
@@ -199,7 +241,14 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
       );
       let data = this.state.data;
       data[`${p.id}`] = res.uri;
-      data[`${p.id}data`] = `${res.type} - ${Math.round(res.fileSize / 1024000)} Mb`;
+      let size : number = Math.round(res.fileSize / 1024000);
+      let sizeType : string = 'Mb';
+      if (res.fileSize < 1024000) {
+        size = Math.round(res.fileSize / 1024);
+        sizeType = 'Kb';
+      }
+      
+      data[`${p.id}data`] = `${res.type} - ${size} ${sizeType}`;
       this.setState({data: data});
     });
   };
@@ -226,16 +275,19 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
       return null;
     }
     return (
-      <Row style={Styles.styleSheet.rowControl}>
-        
-        <Button transparent block onPress={(_e) => this.showCombobox(p)} iconRight>
-          <Text uppercase={false}
-                style={{color: Styles.color.Text}}>{p.title + ': '}</Text>
-          <Text uppercase={false}
-                style={{color: Styles.color.Text}}>{this.state.data[`${p.id}`]}</Text>
-          <Icon style={{color: Styles.color.Icon}} name={'arrow-dropdown'}/>
-        </Button>
-      
+      <Row style={{height: Styles.styles.row.heightControl}}>
+        <Grid>
+          <Col size={1} style={{justifyContent: 'center'}}>
+            <Text style={[Styles.styleSheet.label, {alignSelf: 'center', width: '100%'}]}> {p.title}</Text>
+          </Col>
+          <Col size={2}>
+            <Button transparent  onPress={(_e) => this.showCombobox(p)} iconRight>
+              <Text uppercase={false}
+                    style={{color: Styles.color.Text}}>{this.state.data[`${p.id}`]}</Text>
+              <Icon style={{color: Styles.color.Icon}} name={'arrow-dropdown'}/>
+            </Button>
+          </Col>
+        </Grid>
       </Row>
     );
   };
@@ -247,10 +299,11 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     const uri: string = this.state.data[`${p.id}`] || CONSTANTS.STR_EMPTY;
     
     const row: any = (
-      <Row style={(p.type === DynPropertyType.IMAGE && uri !== CONSTANTS.STR_EMPTY ? Styles.styleSheet.rowThumbnail : Styles.styleSheet.rowControl)}>
+      <Row
+        style={(p.type === DynPropertyType.IMAGE && uri !== CONSTANTS.STR_EMPTY ? Styles.styleSheet.rowThumbnail : Styles.styleSheet.rowControl)}>
         <Grid>
           <Row style={Styles.styleSheet.rowControl}>
-            <Button transparent block onPress={ async (_e) => await this.pickFile(p)} iconRight>
+            <Button transparent block onPress={async (_e) => await this.pickFile(p)} iconRight>
               <Text uppercase={false}
                     style={{color: Styles.color.Text}}>{p.title + ': '}</Text>
               <Text uppercase={false}
@@ -259,7 +312,7 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
                   uri === CONSTANTS.STR_EMPTY ?
                     (p.type === DynPropertyType.FILE ? 'Pick a file ...' : 'Pick an image ...')
                     : (
-                      uri.startsWith('http') ?
+                      !uri.startsWith('content') ?
                         (p.type === DynPropertyType.IMAGE ? 'Image file' : 'PDF file')
                         : this.state.data[`${p.id}data`]
                     )
@@ -268,23 +321,17 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
               <Icon style={{color: Styles.color.Icon}} name={p.type === DynPropertyType.FILE ? 'attach' : 'images'}/>
             </Button>
           </Row>
-          <Row style={{flex:1, flexDirection:'row', justifyContent:'flex-end', alignItems: 'center'}}>
+          <Row style={{flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
             <Thumbnail square large source={{uri: uri}}/>
           </Row>
         </Grid>
-       
-        
       </Row>
     );
-    
-   
-    
-    return row ;
-    
+    return row;
   };
   
   render() {
-    const controls: any[] = this.state.item.properties.map((p: DynProperty) => {
+    const controls: any[] = this.state.item.dynProperties.map((p: DynProperty) => {
       if (p.type === DynPropertyType.TEXT) {
         return this.genText(p);
       } else if (p.type === DynPropertyType.COMBOBOX) {
@@ -292,16 +339,16 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
       } else if (p.type === DynPropertyType.CHECKBOX) {
         return this.genCheckbox(p);
       } else if (p.type === DynPropertyType.RADIO) {
-        return this.genCombobox(p);
+        return this.genRadio(p);
       }
     });
     
-    const files: any = this.state.item.properties.map((p: DynProperty) => {
+    const files: any = this.state.item.dynProperties.map((p: DynProperty) => {
       if (p.type === DynPropertyType.FILE) {
         return this.genFile(p);
       }
     });
-    const images: any = this.state.item.properties.map((p: DynProperty) => {
+    const images: any = this.state.item.dynProperties.map((p: DynProperty) => {
       if (p.type === DynPropertyType.IMAGE) {
         return this.genFile(p);
       }

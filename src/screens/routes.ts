@@ -18,16 +18,19 @@ export const ROUTE = {
           DEFAULT: 'goodsdetail'
         }
       },
-      PROCESSES: {
-        DEFAULT: 'processes',
+      MATERIALS: {
+        DEFAULT: 'materials',
         ITEM: {
-          DEFAULT: 'processdetail',
-          TASK: {
-            DEFAULT: 'taskdetail',
+          DEFAULT: 'materialdetail',
+          PROCESS: {
+            DEFAULT: 'processdetail',
+            TASK: {
+              DEFAULT: 'taskdetail'
+            }
           },
         },
         ADD_iTEM: {
-          DEFAULT: 'addprocess'
+          DEFAULT: 'addmaterial'
         },
         
       },

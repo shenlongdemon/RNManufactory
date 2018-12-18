@@ -1,10 +1,11 @@
 import {ErrorResult} from "business_core_app_react";
+import Utils from "../src/common/utils";
 
-const handleBusinessError = (_error: ErrorResult): void => {
-    debugger
+const handleBusinessError = (error: ErrorResult): void => {
+  Utils.showErrorToast(error.message);
 }
-const handleExceptionError = (_error: ErrorResult): void => {
-    debugger
+const handleExceptionError = (error: ErrorResult): void => {
+  Utils.showErrorToast(error.message);
 }
 const generateHeader = async (): Promise<any> => {
 

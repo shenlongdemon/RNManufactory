@@ -46,6 +46,7 @@ const styles = {
   ],
   row : {
     height: 70,
+    heightControl: 50,
     heightDescription: 150,
     backgroundColor: '#0000ff'
   }
@@ -53,7 +54,8 @@ const styles = {
 
 const styleSheet = StyleSheet.create({
   label: {
-    color: color.Text
+    color: color.Text,
+    
   },
   identifier: {
     color: color.Identifier

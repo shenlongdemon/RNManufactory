@@ -4,17 +4,19 @@ import {Col, Grid} from 'react-native-easy-grid';
 import * as IMAGE from '../../assets';
 import BaseItem from './baseitem';
 import IBaseItem from './ibaseitem';
-import {Process} from 'business_core_app_react';
+import {FactoryInjection, IBusinessService, Material, PUBLIC_TYPES} from 'business_core_app_react';
 import * as Styles from '../../stylesheet';
+import {Thumbnail} from "native-base";
 
-interface Props extends IBaseItem<Process> {
+interface Props extends IBaseItem<Material> {
 
 }
 
 interface State {
 }
 
-export default class ProcessItem extends BaseItem<Process, State> {
+export default class MaterialItem extends BaseItem<Material, State> {
+  private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
   
   constructor(props: Props) {
     super(props);
@@ -22,6 +24,10 @@ export default class ProcessItem extends BaseItem<Process, State> {
   
   componentDidMount = (): void => {
   
+  }
+  
+  private formatDate(time: number): string {
+    return this.businessService.toDateString(time);
   }
   
   render() {
@@ -39,13 +45,13 @@ export default class ProcessItem extends BaseItem<Process, State> {
           </Col>
           
           <Col size={2} style={{justifyContent:'center'}}>
-            {/*<Thumbnail source={{uri: this.businessService.getLinkImage(this.props.item.imageUrl)}} style={{width: 80, height: 80}}/>*/}
+            <Thumbnail source={{uri: this.businessService.getLinkImage(this.props.item.imageUrl)}} style={{width: 80, height: 80}}/>
           </Col>
           
           <Col size={2} style={{justifyContent:'center'}}>
             
             <Text style={[Styles.styleSheet.label, {alignSelf: 'flex-end'}]}>
-              {/*Modified at{'\n'}{this.formatDate(this.props.item.updatedAt)}*/}
+              Modified at{'\n'}{this.formatDate(this.props.item.updatedAt)}
             </Text>
           
           </Col>

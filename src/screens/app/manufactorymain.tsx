@@ -8,7 +8,8 @@ import * as IMAGES from '../../assets';
 import {PARAMS, BluetoothItemType} from '../../common';
 import {
   Bluetooth,
-  Material
+  Material,
+  IProcessService, FactoryInjection, PUBLIC_TYPES, MaterialDetailDto
 } from 'business_core_app_react';
 
 interface Props {
@@ -19,6 +20,7 @@ interface State {
 
 export default class ManufactoryMain extends BaseScreen<Props, State> {
   
+  private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
   constructor(props: Props) {
     super(props);
     this.gotoGoods = this.gotoGoods.bind(this);
@@ -42,7 +44,7 @@ export default class ManufactoryMain extends BaseScreen<Props, State> {
       const material: Material = data as Material;
       const patam: any = {};
       parent[PARAMS.ITEM] = material;
-      this.navigate(ROUTE.APP.MANUFACTORY.PROCESSES.ITEM.DEFAULT, patam);
+      this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.DEFAULT, patam);
     }
   };
   
@@ -50,10 +52,14 @@ export default class ManufactoryMain extends BaseScreen<Props, State> {
     this.navigateFunc(ROUTE.APP.MANUFACTORY.BLUETOOTH, BluetoothItemType.ALL, this.receive);
   };
   private gotoGoods = async (): Promise<void> => {
-    this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.DEFAULT);
+    const dto: MaterialDetailDto = await this.processService.getMaterialDetail('');
+    const patam: any = {};
+    patam[PARAMS.ITEM] = dto.material!.processes[0];
+    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.DEFAULT, patam);
+    // this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.DEFAULT);
   };
   private gotoProcesses = async (): Promise<void> => {
-    this.navigate(ROUTE.APP.MANUFACTORY.PROCESSES.DEFAULT);
+    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.DEFAULT);
   };
   private scanQRCode = async (): Promise<void> => {
     this.navigate(ROUTE.APP.MANUFACTORY.SCANQRCODE);

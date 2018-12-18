@@ -1,4 +1,4 @@
-import ProcessList from "./app/process/processlist";
+import MaterialList from "./app/process/materiallist";
 
 const RNN = require('react-navigation');
 import * as Styles from '../stylesheet';
@@ -8,8 +8,10 @@ import SwitchFeature from './switctfeature';
 //
 // import UserMain from "./main/usermain";
 import ManufactoryMain from './app/manufactorymain';
-import AddProcess from "./app/process/addprocess";
+import AddMaterial from "./app/process/addmaterial";
 import BluetoothScannerScreen from "./shared/bluetoothscanner";
+import MaterialDetail from "./app/process/materialdetail";
+import TaskDetailScreen from "./app/process/taskdetail";
 // import GoodsScreen from "./main/goods";
 // import ProcessesScreen from "./main/process/processes";
 //
@@ -44,15 +46,15 @@ const manufactoryStack = RNN.createStackNavigator(
   {
     main: ManufactoryMain,
     // goodses: GoodsScreen,
-    processes: {
-      screen: ProcessList,
+    materials: {
+      screen: MaterialList,
       navigationOptions: {
         title: 'Processes List'
       }
     },
-    // processdetail: ProcessDetail,
-    // taskdetail: TaskDetailScreen
-    addprocess: AddProcess,
+    materialdetail: MaterialDetail,
+    taskdetail: TaskDetailScreen,
+    addmaterial: AddMaterial,
     // goodsdetail: goodsTab,
     // qrscanner: QRCodeScannerScreen,
     bluetooth: {

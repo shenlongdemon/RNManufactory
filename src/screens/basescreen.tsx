@@ -49,7 +49,7 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
     
   }
   
-  navigateFunc = (routeName: string, data: any | null, func: (data: any, type: number, extraData: any | null) => Promise<void> | null): void => {
+  navigateFunc = (routeName: string, data: any | null = null, func: ((data: any, type: number, extraData: any | null) => Promise<void>) | null = null ): void => {
     if (this.props.navigation) {
       const param: any = {};
       param[PARAMS.CALLBACK_FUNCTION] = func;

@@ -49,7 +49,7 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
     
   }
   
-  navigateFunc = (routeName: string, data: any | null = null, func: ((data: any, type: number, extraData: any | null) => Promise<void>) | null = null ): void => {
+  navigateFunc = (routeName: string, data: any | null = null, func: ((data: any, type: number, extraData: any | null) => Promise<void>) | null = null): void => {
     if (this.props.navigation) {
       const param: any = {};
       param[PARAMS.CALLBACK_FUNCTION] = func;
@@ -123,6 +123,7 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
   render() {
     return (
       <Container>
+        
         <ImageBackground
           source={IMAGE.background}
           style={{
@@ -132,6 +133,7 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
             height: '100%'
           }}
         >
+          
           {this.props.children}
           <Modal visible={this.props.isLoading || false} transparent={true}>
             <Grid style={{flex: 1, backgroundColor: Styles.color.Background}}>
@@ -143,6 +145,7 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
             </Grid>
           </Modal>
         </ImageBackground>
+      
       </Container>
     );
   }

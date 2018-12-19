@@ -45,8 +45,6 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
   }
   
   
-  
-  
   componentDidMount = async (): Promise<void> => {
   
   }
@@ -65,9 +63,9 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
   }
   
   private clickListItem = (item: Process, _index: number): void => {
-    const data: any = {};
-    data[PARAMS.ITEM] = item;
-    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.DEFAULT, data)
+    const patam: any = {};
+    patam[PARAMS.ITEM] = {process: item, materialId: this.state.material.id};
+    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.DEFAULT, patam);
   }
   
   private componentDidFocus = async (): Promise<void> => {
@@ -83,7 +81,7 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
           </Row>
           <Row>
             <List
-              style={{flex:1, backgroundColor: Styles.color.Background}}
+              style={{flex: 1, backgroundColor: Styles.color.Background}}
               refreshControl={
                 <RefreshControl
                   refreshing={this.state.isLoading}
@@ -98,25 +96,26 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
               disableRightSwipe={true}
               dataArray={this.state.material.processes}
               renderRow={(data: Process, _sectionID: string | number, rowID: string | number, _rowMap?: any) => (
-      
+                
                 <ListItem
                   onPress={() => {
                     this.clickListItem(data!, Number(rowID));
                   }}
                   key={data!.id}
-                  style={{ paddingRight: 0,paddingLeft: 0,
+                  style={{
+                    paddingRight: 0, paddingLeft: 0, borderBottomWidth: 0,
                     backgroundColor: Number(rowID) % 2 === 0 ? Styles.color.Background : 'rgba(255, 255, 255, 0.1)'
                   }}
                 >
                   <Grid>
                     <Col>
                       <ProcessItem item={data} index={Number(rowID)}
-                                    onClickHandle={this.clickListItem}/>
+                                   onClickHandle={this.clickListItem}/>
                     </Col>
                   </Grid>
                 </ListItem>
               )}
-  
+            
             />
           </Row>
         </Grid>

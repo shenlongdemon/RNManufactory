@@ -10,6 +10,8 @@ const color = {
   Text: '#ffffff',
   TextNegative: '#000000',
   Identifier: '#138dd1',
+  Progress: '#00b300',
+  Link: '#4ea3ff',
   rtxt: {
     background: 'rgba(53, 53, 53, 0.5)'
   },
@@ -48,7 +50,9 @@ const styles = {
     height: 70,
     heightControl: 50,
     heightDescription: 150,
-    backgroundColor: '#0000ff'
+    backgroundColor: '#0000ff',
+    heightThumbnail: 200,
+    heightInput: 60
   }
 };
 
@@ -78,7 +82,7 @@ const styleSheet = StyleSheet.create({
   },
   rowThumbnail: {
     flex: 1,
-    height: 100,
+    height: 200,
     marginTop:10,
     marginBottom:10
   },

@@ -45,7 +45,7 @@ export default class MaterialItem extends BaseItem<Material, State> {
           </Col>
           
           <Col size={2} style={{justifyContent:'center'}}>
-            <Thumbnail source={{uri: this.businessService.getLinkImage(this.props.item.imageUrl)}} style={{width: 80, height: 80}}/>
+            <Thumbnail source={{uri: this.businessService.getLink(this.props.item.imageUrl)}} style={{width: 80, height: 80}}/>
           </Col>
           
           <Col size={2} style={{justifyContent:'center'}}>

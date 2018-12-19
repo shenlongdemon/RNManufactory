@@ -21,6 +21,7 @@ interface State {
 export default class ManufactoryMain extends BaseScreen<Props, State> {
   
   private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
+  
   constructor(props: Props) {
     super(props);
     this.gotoGoods = this.gotoGoods.bind(this);
@@ -54,7 +55,7 @@ export default class ManufactoryMain extends BaseScreen<Props, State> {
   private gotoGoods = async (): Promise<void> => {
     const dto: MaterialDetailDto = await this.processService.getMaterialDetail('');
     const patam: any = {};
-    patam[PARAMS.ITEM] = dto.material!.processes[0];
+    patam[PARAMS.ITEM] = {process: dto.material!.processes[0], materialId: dto.material!.id};
     this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.DEFAULT, patam);
     // this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.DEFAULT);
   };

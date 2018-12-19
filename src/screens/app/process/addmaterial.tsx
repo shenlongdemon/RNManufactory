@@ -17,9 +17,10 @@ import {Grid, Row, Col} from 'react-native-easy-grid';
 import * as IMAGE from '../../../assets';
 import * as Styles from '../../../stylesheet';
 import {ROUTE} from "../../routes";
-import {Button, Icon, Input, Item, Label, Text, Textarea} from "native-base";
+import {Button, Content, Icon, Input, Item, Label, Text, Textarea} from "native-base";
 import Utils from "../../../common/utils";
 import BluetoothItem from '../../../components/listitem/bluetoothitem';
+
 interface Props {
 }
 
@@ -53,7 +54,7 @@ export default class AddMaterial extends BasesSreen<Props, State> {
     this.pickImage = this.pickImage.bind(this);
     this.pickBluetooth = this.pickBluetooth.bind(this);
     this.receiveBluetooth = this.receiveBluetooth.bind(this);
-  
+    
     this.state = {
       name: CONSTANTS.STR_EMPTY,
       bluetooth: null,
@@ -93,7 +94,6 @@ export default class AddMaterial extends BasesSreen<Props, State> {
   }
   
   
-  
   receiveBluetooth = async (bluetooth: Bluetooth, _type: BluetoothItemType, _extraData: any | null): Promise<void> => {
     this.setState({bluetooth: bluetooth});
   };
@@ -131,75 +131,81 @@ export default class AddMaterial extends BasesSreen<Props, State> {
   render() {
     return (
       <BasesSreen {...{...this.props, componentDidFocus: this.componentDidFocus, isLoading: this.state.isLoading}}>
-        <Grid>
-          <Row style={{height: 20}}></Row>
-          <Row style={{height: 100}}>
-            <Grid>
-              <Col style={{justifyContent: 'center', flex: 1, flexDirection: 'column', alignItems: 'center'}}>
-                <Text style={Styles.styleSheet.label}>Please tap on frame to pick an image</Text>
-              </Col>
-              <Col style={{width: 100}}>
-                <TouchableOpacity style={[styles.button, {justifyContent: 'flex-start'}]} onPress={this.pickImage}>
-                  <Image resizeMode={'contain'}
-                         source={this.state.imageUri === CONSTANTS.STR_EMPTY ? IMAGE.photo : {uri: this.state.imageUri}}
-                         style={styles.image as ImageStyle}/>
-                </TouchableOpacity>
-              </Col>
-            </Grid>
-          </Row>
-          <Row style={{height: Styles.styles.row.height}}>
-            <Item inlineLabel style={{flex: 1}}>
-              <Label>Name</Label>
-              <Input
-                value={this.state.name}
-                onChangeText={(text: string) => {
-                  this.setState({name: text});
-                }}
-              />
-              <Icon style={Styles.styleSheet.icon} name='create'/>
-            </Item>
-          </Row>
-          <Row style={{height: 20}}></Row>
-          <Row style={{height: Styles.styles.row.height}}>
-            <Grid>
-              <Col style={{justifyContent: 'center', flex: 1, flexDirection: 'column', alignItems: 'center'}}>
-                <Text style={Styles.styleSheet.label}>
-                  Select Bluetooth what will follow this material
-                </Text>
-              </Col>
-              <Col style={{width: 50}}>
-                <TouchableOpacity style={[styles.button, {justifyContent: 'flex-start'}]} onPress={this.pickBluetooth}>
-                  <Image resizeMode={'contain'}
-                         source={IMAGE.bluetooth}
-                         style={styles.icon as ImageStyle}/>
-                </TouchableOpacity>
-              </Col>
-            </Grid>
-          </Row>
-          {
-            this.state.bluetooth &&
-            <Row style={{height:70}}>
-              <TouchableOpacity style={{flex:1, backgroundColor:Styles.color.BackgroundListItemHighlight}} onPress={() => {this.setState({bluetooth: null})}}>
-                <BluetoothItem item={this.state.bluetooth} index={0} />
-              </TouchableOpacity>
+        <Content>
+          <Grid>
+            <Row style={{height: 20}}></Row>
+            <Row style={{height: 100}}>
+              <Grid>
+                <Col style={{justifyContent: 'center', flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+                  <Text style={Styles.styleSheet.label}>Please tap on frame to pick an image</Text>
+                </Col>
+                <Col style={{width: 100}}>
+                  <TouchableOpacity style={[styles.button, {justifyContent: 'flex-start'}]} onPress={this.pickImage}>
+                    <Image resizeMode={'contain'}
+                           source={this.state.imageUri === CONSTANTS.STR_EMPTY ? IMAGE.photo : {uri: this.state.imageUri}}
+                           style={styles.image as ImageStyle}/>
+                  </TouchableOpacity>
+                </Col>
+              </Grid>
             </Row>
-          }
-          <Row style={{height: 10}}></Row>
-          
-          <Row style={{height: 40}}>
-            <Text style={Styles.styleSheet.label}>Description</Text>
-          </Row>
-          <Row>
+            <Row style={{height: Styles.styles.row.height}}>
+              <Item inlineLabel style={{flex: 1}}>
+                <Label>Name</Label>
+                <Input
+                  value={this.state.name}
+                  onChangeText={(text: string) => {
+                    this.setState({name: text});
+                  }}
+                />
+                <Icon style={Styles.styleSheet.icon} name='create'/>
+              </Item>
+            </Row>
+            <Row style={{height: 20}}></Row>
+            <Row style={{height: Styles.styles.row.height}}>
+              <Grid>
+                <Col style={{justifyContent: 'center', flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+                  <Text style={Styles.styleSheet.label}>
+                    Select Bluetooth what will follow this material
+                  </Text>
+                </Col>
+                <Col style={{width: 50}}>
+                  <TouchableOpacity style={[styles.button, {justifyContent: 'flex-start'}]}
+                                    onPress={this.pickBluetooth}>
+                    <Image resizeMode={'contain'}
+                           source={IMAGE.bluetooth}
+                           style={styles.icon as ImageStyle}/>
+                  </TouchableOpacity>
+                </Col>
+              </Grid>
+            </Row>
+            {
+              this.state.bluetooth &&
+              <Row style={{height: 70}}>
+                <TouchableOpacity style={{flex: 1, backgroundColor: Styles.color.BackgroundListItemHighlight}}
+                                  onPress={() => {
+                                    this.setState({bluetooth: null})
+                                  }}>
+                  <BluetoothItem item={this.state.bluetooth} index={0}/>
+                </TouchableOpacity>
+              </Row>
+            }
+            <Row style={{height: 10}}></Row>
+            
+            <Row style={{height: 40}}>
+              <Text style={Styles.styleSheet.label}>Description</Text>
+            </Row>
+            <Row>
             <Textarea
               value={this.state.description}
               onChangeText={(text: string) => {
                 this.setState({description: text});
               }}
-              style={{borderColor: '#777777', borderWidth:1, flex: 1}}
+              style={{borderColor: '#777777', borderWidth: 1, flex: 1}}
               rowSpan={10}
               placeholder={"Please fill description"}/>
-          </Row>
-        </Grid>
+            </Row>
+          </Grid>
+        </Content>
       </BasesSreen>
     );
   }

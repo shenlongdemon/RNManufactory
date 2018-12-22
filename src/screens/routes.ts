@@ -25,8 +25,12 @@ export const ROUTE = {
           PROCESS: {
             DEFAULT: 'processdetail',
             TASK: {
-              DEFAULT: 'taskdetail'
-            }
+              DEFAULT: 'taskdetail',
+              WORKERS: {
+                DEFAULT: 'workers'
+              },
+            },
+            
           },
         },
         ADD_iTEM: {

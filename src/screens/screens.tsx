@@ -12,6 +12,7 @@ import AddMaterial from "./app/process/addmaterial";
 import BluetoothScannerScreen from "./shared/bluetoothscanner";
 import MaterialDetail from "./app/process/materialdetail";
 import TaskDetailScreen from "./app/process/taskdetail";
+import AssignedWorkers from "./app/process/assignedworkers";
 // import GoodsScreen from "./main/goods";
 // import ProcessesScreen from "./main/process/processes";
 //
@@ -59,6 +60,9 @@ const manufactoryStack = RNN.createStackNavigator(
     // qrscanner: QRCodeScannerScreen,
     bluetooth: {
       screen: BluetoothScannerScreen
+    },
+    workers: {
+      screen: AssignedWorkers
     }
   },
   {

@@ -30,7 +30,13 @@ interface State {
  */
 export default class MaterialDetail extends BasesSreen<Props, State> {
   private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
-  
+  static navigationOptions = ({navigation}) => {
+    const material: Material | null = navigation.getParam(PARAMS.ITEM);
+    const title: string = material ? material.name : '';
+    return {
+      title: title,
+    };
+  };
   constructor(props: Props) {
     super(props);
     this.componentDidFocus = this.componentDidFocus.bind(this);
@@ -63,9 +69,9 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
   }
   
   private clickListItem = (item: Process, _index: number): void => {
-    const patam: any = {};
-    patam[PARAMS.ITEM] = {process: item, materialId: this.state.material.id};
-    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.DEFAULT, patam);
+    const param: any = {};
+    param[PARAMS.ITEM] = {process: item, materialId: this.state.material.id};
+    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.DEFAULT, param);
   }
   
   private componentDidFocus = async (): Promise<void> => {

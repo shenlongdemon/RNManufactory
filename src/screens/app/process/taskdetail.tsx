@@ -14,12 +14,13 @@ import {
   UpdateProcessDto
 } from 'business_core_app_react';
 import {PARAMS} from '../../../common';
-import {ActionSheet, Button, Content, Icon, Input, Item, Label, Text} from 'native-base';
+import {ActionSheet, Badge, Button, Content, Icon, Input, Item, Label, Text} from 'native-base';
 import * as Styles from '../../../stylesheet';
 // import ImagePicker from 'react-native-image-picker';
 // import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import {DocumentPicker, DocumentPickerUtil} from 'react-native-document-picker';
 import Utils from "../../../common/utils";
+import {ROUTE} from "../../routes";
 
 interface Props {
 }
@@ -39,6 +40,18 @@ interface Param {
 export default class TaskDetailScreen extends BaseScreen<Props, State> {
   private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
   private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
+  static navigationOptions = ({navigation}) => {
+    const param: Param | null = navigation.getParam(PARAMS.ITEM);
+    const title: string = param ? param.process.name : '';
+    return {
+      title: title,
+      headerRight: (
+        <Button onPress={navigation.getParam(PARAMS.HANDLE_RIGHT_HEADER_BUTTON)}>
+          <Icon name={'save'} type={'FontAwesome'} style={{color: Styles.color.Icon, fontSize: 35}}/>
+        </Button>
+      ),
+    };
+  };
   
   constructor(props: Props) {
     super(props);
@@ -75,9 +88,15 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     };
     this.componentDidFocus = this.componentDidFocus.bind(this);
     this.pickFile = this.pickFile.bind(this);
+    this.save = this.save.bind(this);
+    this.workerClick = this.workerClick.bind(this);
     
   }
-  
+  componentDidMount = async (): Promise<void> => {
+    const data: any = {};
+    data[PARAMS.HANDLE_RIGHT_HEADER_BUTTON] = this.save;
+    this.setSellNavigateParam(data);
+  }
   private save = async (): Promise<void> => {
     // this.setState({isLoading: true});
     const process: Process = this.buildUpProcess();
@@ -90,6 +109,16 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
       Utils.showErrorToast(dto.message);
     }
   };
+  
+  workerClick = async () : Promise<void> => {
+   
+    const param: any = {};
+    param[PARAMS.ITEM] = {
+      materialId: this.state.materialId,
+      processId: this.state.item.id
+    };
+    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.WORKERS.DEFAULT, param);
+  }
   
   private buildUpProcess = (): Process => {
     const process: Process = this.state.item;
@@ -407,16 +436,33 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
       <BaseScreen {...{...this.props, componentDidFocus: this.componentDidFocus, isLoading: this.state.isLoading}}>
         <Content>
           <Grid style={{flex: 1}}>
-            <Row style={{height: 150}}>
+            <Row style={{height: 70}}>
               <Grid>
                 <Row>
-                  <Button onPress={this.save}>
-                    <Text>Save</Text>
-                  </Button>
                 </Row>
-                <Row style={Styles.styleSheet.rowControl}/>
+                <Row style={{height: Styles.styles.row.heightControl}}>
+                  <Grid>
+                    <Col>
+                      <Button onPress={this.save} iconLeft full bordered light>
+                        <Icon name={'checkmark-circle'} style={{color: Styles.color.Done}}/>
+                        <Text uppercase={false} style={{widht: '100%', textAlign: 'center'}}>
+                          Close {this.state.item.name}
+                        </Text>
+                      </Button>
+                    </Col>
+                    <Col style={{width: 90, flexDirection:'row', justifyContent: 'center'}}>
+                      <Button onPress={this.workerClick} badge={true} style={{width: 70}} >
+                        <Icon name={'person'} style={{color: Styles.color.Icon, fontSize:50}}/>
+                        { this.state.item.workers.length > 0 && <Badge success style={{ marginLeft: -30, marginTop: -10 }}>
+                          <Text style={{color: Styles.color.Text}}>51</Text>
+                        </Badge>}
+                      </Button>
+                    </Col>
+                  </Grid>
+                </Row>
               </Grid>
             </Row>
+            <Row style={{height: 50}}></Row>
             <Row>
               <ScrollView>
                 <Grid>

@@ -3,7 +3,7 @@ import {Text, TouchableOpacity} from 'react-native';
 import {Col, Grid, Row} from 'react-native-easy-grid';
 import BaseItem from './baseitem';
 import IBaseItem from './ibaseitem';
-import {FactoryInjection, IBusinessService, Process, PUBLIC_TYPES} from 'business_core_app_react';
+import {FactoryInjection, IBusinessService, Process, ProcessStatus, PUBLIC_TYPES} from 'business_core_app_react';
 import * as Styles from '../../stylesheet';
 import {Icon} from "native-base";
 
@@ -25,7 +25,9 @@ export default class ProcessItem extends BaseItem<Process, State> {
   }
   
   render() {
-    
+    const statusIcon: string = this.props.item.status === ProcessStatus.IN_PROGRESS ? 'spinner' : (
+      this.props.item.status === ProcessStatus.DONE ? 'check-circle' : ''
+    );
     return (
       // @ts-ignore
       <BaseItem {...this.props} >
@@ -52,7 +54,7 @@ export default class ProcessItem extends BaseItem<Process, State> {
           </Col>
           
           <Col size={2} style={{justifyContent:'flex-start', flexDirection:'row'}}>
-            <Icon name={'spinner'} type={'FontAwesome'} style={{fontSize:25, color: Styles.color.Progress}} />
+            <Icon name={statusIcon} type={'FontAwesome'} style={{fontSize:25, color: Styles.color.Progress}} />
           </Col>
           
           <Col size={4} >

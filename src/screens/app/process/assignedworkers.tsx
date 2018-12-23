@@ -11,6 +11,7 @@ import {
 } from 'business_core_app_react';
 import BasesSreen from "../../basescreen";
 import WorkerItem from "../../../components/listitem/workeritem";
+import {ROUTE} from "../../routes";
 
 interface Props {
 }
@@ -56,7 +57,8 @@ export default class AssignedWorkers extends BaseScreen<Props, State> {
   
   }
   clickAssignWorker = async () : Promise<void> => {
-    
+    // open qr scan
+    this.navigate(ROUTE.APP.SHARE.QRCODE)
   }
   
   private loadData = async (): Promise<void> => {

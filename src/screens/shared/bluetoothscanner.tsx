@@ -6,7 +6,7 @@ import {BleError, BleManager, Device} from 'react-native-ble-plx';
 import {BluetoothItemType, PARAMS} from "../../common";
 import Utils from '../../common/utils';
 import * as Styles from "../../stylesheet";
-import {Button, Grid, Icon, List, ListItem, Row, Text} from "native-base";
+import {Button, Grid, Icon, List, ListItem, Row} from "native-base";
 import BluetoothItem from '../../components/listitem/bluetoothitem';
 
 interface Props {

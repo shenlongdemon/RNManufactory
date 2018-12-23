@@ -12,6 +12,14 @@ PODS:
     - React
     - react-native-ble-plx-swift
   - react-native-ble-plx-swift (1.0.1)
+  - react-native-camera (1.6.4):
+    - React
+    - react-native-camera/RCT (= 1.6.4)
+    - react-native-camera/RN (= 1.6.4)
+  - react-native-camera/RCT (1.6.4):
+    - React
+  - react-native-camera/RN (1.6.4):
+    - React
   - react-native-config (0.11.7):
     - React
   - react-native-document-picker (2.2.0):
@@ -48,6 +56,10 @@ PODS:
     - React/Core
     - React/fishhook
     - React/RCTBlob
+  - ReactNativePermissions (1.1.1):
+    - React
+  - RNVectorIcons (4.6.0):
+    - React
   - yoga (0.57.7.React)
 
 DEPENDENCIES:
@@ -56,6 +68,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - react-native-ble-plx (from `../node_modules/react-native-ble-plx`)
   - react-native-ble-plx-swift (from `../node_modules/react-native-ble-plx`)
+  - react-native-camera (from `../node_modules/react-native-camera`)
   - react-native-config (from `../node_modules/react-native-config`)
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - React/Core (from `../node_modules/react-native`)
@@ -65,6 +78,8 @@ DEPENDENCIES:
   - React/RCTNetwork (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
+  - ReactNativePermissions (from `../node_modules/react-native-permissions`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -84,10 +99,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-ble-plx"
   react-native-ble-plx-swift:
     :path: "../node_modules/react-native-ble-plx"
+  react-native-camera:
+    :path: "../node_modules/react-native-camera"
   react-native-config:
     :path: "../node_modules/react-native-config"
   react-native-document-picker:
     :path: "../node_modules/react-native-document-picker"
+  ReactNativePermissions:
+    :path: "../node_modules/react-native-permissions"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -99,10 +120,13 @@ SPEC CHECKSUMS:
   React: 1fe0eb13d90b625d94c3b117c274dcfd2e760e11
   react-native-ble-plx: 7ad27c5a97bdb07ca77cf92badacd990e350c32c
   react-native-ble-plx-swift: 283d93356064625d8d825b0814203628afe381f0
+  react-native-camera: eac1e8cc7523273a2a11956d0e5dac08296cf4b0
   react-native-config: 8c2a92aa66a6cec1a23d9eda7ba6fcf31a63ace5
   react-native-document-picker: e7934f6a3c898a1b62fa68b1f09371beef6ac51a
+  ReactNativePermissions: 9f2d9c45c98800795e6c2ed330e25d11a66a8169
+  RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: 9acacc650ce4a6f857497b5f9651b83056e953db
+PODFILE CHECKSUM: ceaa53d84771cc3547c89facd33ec22cad723900
 
 COCOAPODS: 1.5.3

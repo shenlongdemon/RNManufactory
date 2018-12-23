@@ -14,6 +14,12 @@ export default class Utils {
     });
   }
   
+  static showToast = (message: string): void => {
+    Toast.show({
+      text: message,
+      position: "bottom"
+    });
+  }
   
   
   static getBLEBeaconDistance = (RSSI: number): number => {

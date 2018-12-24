@@ -9,9 +9,11 @@ import {
   FactoryInjection,
   IBusinessService,
   IProcessService,
-  Process,
+  Process, ProcessStatus,
   PUBLIC_TYPES,
-  UpdateProcessDto
+  UpdateProcessDto,
+  ProcessDto,
+  BaseDto
 } from 'business_core_app_react';
 import {PARAMS} from '../../../common';
 import {ActionSheet, Badge, Button, Content, Icon, Input, Item, Label, Text} from 'native-base';
@@ -27,13 +29,12 @@ interface Props {
 
 interface State {
   item: Process;
-  materialId: string;
   isLoading: boolean;
   data: any;
 }
 
 interface Param {
-  process: Process,
+  processId: string,
   materialId: string;
 }
 
@@ -41,8 +42,8 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
   private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
   private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
   static navigationOptions = ({navigation}) => {
-    const param: Param | null = navigation.getParam(PARAMS.ITEM);
-    const title: string = param ? param.process.name : '';
+    const process: Process | null = navigation.getParam(PARAMS.ITEM);
+    const title: string = process ? process.name : '';
     return {
       title: title,
       headerRight: (
@@ -52,37 +53,27 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
       ),
     };
   };
-  
+  private materialId: string = CONSTANTS.STR_EMPTY;
+  private processId: string = CONSTANTS.STR_EMPTY;
   constructor(props: Props) {
     super(props);
     const param: Param | null = this.getParam<Param>(PARAMS.ITEM, null);
+    this.materialId = param!.materialId;
+    this.processId = param!.processId;
     const d: any = {};
-    param!.process.dynProperties.forEach((p: DynProperty) => {
-      const data: string[] = this.separateItems(p);
-      if (p.type === DynPropertyType.CHECKBOX) {
-        // value : Red,White
-        // detail: CBK_1Red = true
-        data.forEach((t: string, _i: number) => {
-          d[`${p.id}${t}`] = p.value === CONSTANTS.STR_EMPTY ? false : p.value.includes(t);
-        });
-        d[`${p.id}`] = p.value;
-      } else if (p.type === DynPropertyType.TEXT) {
-        d[`${p.id}`] = d[`${p.id}`] || p.value;
-      } else if (p.type === DynPropertyType.RADIO) {
-        d[`${p.id}`] = d[`${p.id}`] || (p.value !== CONSTANTS.STR_EMPTY ? p.value : data[0]);
-      } else if (p.type === DynPropertyType.COMBOBOX) {
-        d[`${p.id}`] = d[`${p.id}`] || (p.value !== CONSTANTS.STR_EMPTY ? p.value : data[0]);
-      } else if (p.type === DynPropertyType.IMAGE) {
-        d[`${p.id}`] = d[`${p.id}`] || (p.value !== CONSTANTS.STR_EMPTY ? p.value : CONSTANTS.STR_EMPTY);
-      }
-      else if (p.type === DynPropertyType.FILE) {
-        d[`${p.id}`] = d[`${p.id}`] || (p.value !== CONSTANTS.STR_EMPTY ? p.value : CONSTANTS.STR_EMPTY);
-      }
-    });
     
     this.state = {
-      item: param!.process,
-      materialId: param!.materialId,
+      item: {
+        index: 0,
+        id: CONSTANTS.STR_EMPTY,
+        name: CONSTANTS.STR_EMPTY,
+        code: CONSTANTS.STR_EMPTY,
+        status: ProcessStatus.TODO,
+        workers: [],
+        activities: [],
+        updateAt: 0,
+        dynProperties: []
+      },
       isLoading: false,
       data: d
     };
@@ -90,17 +81,61 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     this.pickFile = this.pickFile.bind(this);
     this.save = this.save.bind(this);
     this.workerClick = this.workerClick.bind(this);
-    
+    this.doneTask = this.doneTask.bind(this);
+    this.loadProcess();
   }
+  
+  componentDidFocus = async (): Promise<void> => {
+    await this.loadProcess();
+  };
+  
   componentDidMount = async (): Promise<void> => {
     const data: any = {};
     data[PARAMS.HANDLE_RIGHT_HEADER_BUTTON] = this.save;
     this.setSellNavigateParam(data);
   }
+  
+  private loadProcess = async (): Promise<void> => {
+    if (this.state.isLoading) {
+      return;
+    }
+    await this.setState({isLoading: true});
+    const dto: ProcessDto = await this.processService.getProcess(this.materialId, this.processId);
+    await this.setState({isLoading: false});
+  
+    if (dto.isSuccess && dto.process) {
+      const d: any = {};
+  
+      dto.process!.dynProperties.forEach((p: DynProperty) => {
+        const data: string[] = this.separateItems(p);
+        if (p.type === DynPropertyType.CHECKBOX) {
+          // value : Red,White
+          // detail: CBK_1Red = true
+          data.forEach((t: string, _i: number) => {
+            d[`${p.id}${t}`] = p.value === CONSTANTS.STR_EMPTY ? false : p.value.includes(t);
+          });
+          d[`${p.id}`] = p.value;
+        } else if (p.type === DynPropertyType.TEXT) {
+          d[`${p.id}`] = d[`${p.id}`] || p.value;
+        } else if (p.type === DynPropertyType.RADIO) {
+          d[`${p.id}`] = d[`${p.id}`] || (p.value !== CONSTANTS.STR_EMPTY ? p.value : data[0]);
+        } else if (p.type === DynPropertyType.COMBOBOX) {
+          d[`${p.id}`] = d[`${p.id}`] || (p.value !== CONSTANTS.STR_EMPTY ? p.value : data[0]);
+        } else if (p.type === DynPropertyType.IMAGE) {
+          d[`${p.id}`] = d[`${p.id}`] || (p.value !== CONSTANTS.STR_EMPTY ? p.value : CONSTANTS.STR_EMPTY);
+        }
+        else if (p.type === DynPropertyType.FILE) {
+          d[`${p.id}`] = d[`${p.id}`] || (p.value !== CONSTANTS.STR_EMPTY ? p.value : CONSTANTS.STR_EMPTY);
+        }
+      });
+      await this.setState({data: d, item: dto.process!})
+    }
+  };
+  
   private save = async (): Promise<void> => {
-    // this.setState({isLoading: true});
+    this.setState({isLoading: true});
     const process: Process = this.buildUpProcess();
-    const dto: UpdateProcessDto = await this.processService.updateProcessDynProperties(this.state.materialId, process.id, process.dynProperties);
+    const dto: UpdateProcessDto = await this.processService.updateProcessDynProperties(this.materialId, process.id, process.dynProperties);
     this.setState({isLoading: false});
     if (dto.isSuccess) {
       this.goBack();
@@ -110,15 +145,24 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     }
   };
   
-  workerClick = async () : Promise<void> => {
-   
+  
+  private doneTask = async (): Promise<void> => {
+    this.setState({isLoading: true});
+    const dto: BaseDto = await this.processService.doneProcess(this.materialId, this.processId);
+    this.setState({isLoading: false});
+    if (dto.isSuccess) {
+      this.goBack();
+    }
+  };
+  
+  workerClick = async (): Promise<void> => {
     const param: any = {};
     param[PARAMS.ITEM] = {
-      materialId: this.state.materialId,
+      materialId: this.materialId,
       processId: this.state.item.id
     };
     this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.WORKERS.DEFAULT, param);
-  }
+  };
   
   private buildUpProcess = (): Process => {
     const process: Process = this.state.item;
@@ -152,7 +196,7 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     });
     
     return process;
-  }
+  };
   
   private setText = (p: DynProperty, text: string): void => {
     let data = this.state.data;
@@ -166,8 +210,6 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     this.setState({data: data});
   };
   
-  componentDidFocus = async (): Promise<void> => {
-  };
   
   private genText = (p: DynProperty): any => {
     return (
@@ -188,13 +230,13 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
   
   private separateItems = (p: DynProperty): string[] => {
     return p.items.split(',');
-  }
+  };
   
   private setCheckBox = (p: DynProperty, title: string, value: boolean): void => {
     let data = this.state.data;
     data[`${p.id}${title}`] = value;
     this.setState({data: data});
-  }
+  };
   
   private genCheckboxItem = (p: DynProperty, title: string, _index: number): any => {
     const value: boolean = this.state.data[`${p.id}${title}`] as boolean;
@@ -443,18 +485,19 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
                 <Row style={{height: Styles.styles.row.heightControl}}>
                   <Grid>
                     <Col>
-                      <Button onPress={this.save} iconLeft full bordered light>
+                      <Button onPress={this.doneTask} iconLeft full bordered light>
                         <Icon name={'checkmark-circle'} style={{color: Styles.color.Done}}/>
                         <Text uppercase={false} style={{widht: '100%', textAlign: 'center'}}>
                           Close {this.state.item.name}
                         </Text>
                       </Button>
                     </Col>
-                    <Col style={{width: 90, flexDirection:'row', justifyContent: 'center'}}>
-                      <Button onPress={this.workerClick} badge={true} style={{width: 70}} >
-                        <Icon name={'person'} style={{color: Styles.color.Icon, fontSize:50}}/>
-                        { this.state.item.workers.length > 0 && <Badge success style={{ marginLeft: -30, marginTop: -10 }}>
-                          <Text style={{color: Styles.color.Text}}>51</Text>
+                    <Col style={{width: 90, flexDirection: 'row', justifyContent: 'center'}}>
+                      <Button onPress={this.workerClick} badge={true} style={{width: 70}}>
+                        <Icon name={'person'} style={{color: Styles.color.Icon, fontSize: 50}}/>
+                        {this.state.item.workers.length > 0 &&
+                        <Badge style={{backgroundColor: Styles.color.Background, marginLeft: -30, marginTop: -10}}>
+                          <Text style={{color: Styles.color.Text}}>{this.state.item.workers.length}</Text>
                         </Badge>}
                       </Button>
                     </Col>

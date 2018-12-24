@@ -28,7 +28,11 @@ export const ROUTE = {
             TASK: {
               DEFAULT: 'taskdetail',
               WORKERS: {
-                DEFAULT: 'workers'
+                DEFAULT: 'workers',
+                ACTIVITIES: {
+                  DEFAULT: 'activities',
+                  ADD_ACTIVITY : 'addactivity'
+                },
               },
             },
             

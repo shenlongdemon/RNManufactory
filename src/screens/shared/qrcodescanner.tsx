@@ -12,11 +12,11 @@ import {
   ObjectByCodeDto,
   ObjectType,
   PUBLIC_TYPES,
-  UserInfo
+  User
 } from 'business_core_app_react';
 import MaterialItem from "../../components/listitem/materialitem";
 import UserItem from "../../components/listitem/useritem";
-import {BluetoothItemType, PARAMS} from "../../common";
+import { PARAMS} from "../../common";
 
 interface Props {
 }
@@ -46,6 +46,7 @@ export default class QRCodeScannerScreen extends BasesSreen<Props, State> {
     };
     this.componentDidFocus = this.componentDidFocus.bind(this);
     this.onSuccess = this.onSuccess.bind(this);
+    this.clickListItem = this.clickListItem.bind(this);
     
   }
   
@@ -95,12 +96,12 @@ export default class QRCodeScannerScreen extends BasesSreen<Props, State> {
     if (this.state.object) {
       if (this.state.object.type === ObjectType.material) {
         control = (
-          <MaterialItem onClickHandle={this.clickListItem} item={this.state.object.item as Material} index={0}/>
+          <MaterialItem item={this.state.object.item as Material} index={0} />
         );
       }
       else if (this.state.object.type === ObjectType.user) {
         control = (
-          <UserItem onClickHandle={this.clickListItem} item={this.state.object.item as UserInfo} index={0}/>
+          <UserItem  onClickHandle={async () => await this.clickListItem(this.state.object, 0)} item={this.state.object.item as User} index={0}/>
         );
       }
     }
@@ -110,7 +111,7 @@ export default class QRCodeScannerScreen extends BasesSreen<Props, State> {
   render() {
     return (
       <BasesSreen {...{...this.props, isLoading: this.state.isProcess, componentDidFocus: this.componentDidFocus}}>
-        <Grid>
+        <Grid style={{flex:1}}>
           <Row>
             <QRCodeScanner
               ref={(node) => {
@@ -121,7 +122,7 @@ export default class QRCodeScannerScreen extends BasesSreen<Props, State> {
           </Row>
           {
             this.state.object &&
-            <Row style={{height: 100}}>
+            <Row style={{height: 100, backgroundColor: 'blue'}}>
               {
                 this.renderObject()
               }

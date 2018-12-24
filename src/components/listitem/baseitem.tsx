@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View} from 'react-native';
+import {View, TouchableHighlight} from 'react-native';
 import IBaseItem from './ibaseitem';
 
 export default class BaseItem<TItem, S> extends React.Component<IBaseItem<TItem>, S> {
@@ -17,9 +17,16 @@ export default class BaseItem<TItem, S> extends React.Component<IBaseItem<TItem>
   
   render() {
     return (
-      <View style={{flex: 1, width: '100%', height: '100%'}}>
-        {this.props.children}
-      </View>
-    );
+      
+      this.props.onClickHandle ?
+        <TouchableHighlight onPress={this.onClick} style={{flex: 1, width: '100%', height: '100%'}}>
+          <View style={{flex: 1, width: '100%', height: '100%'}}>{this.props.children}</View>
+        </TouchableHighlight>
+        :
+        <View style={{flex: 1, width: '100%', height: '100%'}}>
+          {this.props.children}
+        </View>
+    )
+      ;
   }
 }

@@ -5,8 +5,7 @@ import * as Styles from '../stylesheet';
 import Loading from './loading';
 import Login from './auth/login';
 import SwitchFeature from './switctfeature';
-//
-// import UserMain from "./main/usermain";
+
 import ManufactoryMain from './app/manufactorymain';
 import AddMaterial from "./app/process/addmaterial";
 import BluetoothScannerScreen from "./shared/bluetoothscanner";
@@ -14,36 +13,9 @@ import MaterialDetail from "./app/process/materialdetail";
 import TaskDetailScreen from "./app/process/taskdetail";
 import AssignedWorkers from "./app/process/assignedworkers";
 import QRCodeScannerScreen from "./shared/qrcodescanner";
-// import GoodsScreen from "./main/goods";
-// import ProcessesScreen from "./main/process/processes";
-//
-// import GoodsInfoScreen from "./main/itemtabs/info";
-// import GoodsHistoryScreen from "./main/itemtabs/history";
-// import ProcessDetail from "./main/process/processdetail";
-// import AddProcess from './main/process/addprocess';
-// import QRCodeScannerScreen from "./main/shared/qrcodescanner";
-// import BluetoothScannerScreen from "./main/shared/bluetoothscanner";
-// import TaskDetailScreen from './app/process/taskdetail';
+import AddActivity from "./app/process/activities/addactivity";
+import Activitieslist from "./app/process/activities/activitieslist";
 
-// const goodsTab = RNN.createTabNavigator(
-//   {
-//     info: GoodsInfoScreen,
-//     history: GoodsHistoryScreen
-//   },
-//   {
-//     initialRouteName: 'info'
-//   }
-// );
-//
-// const userStack = RNN.createStackNavigator(
-//   {
-//     main: UserMain,
-//   },
-//   {
-//     initialRouteName: 'main'
-//   }
-// );
-//
 const manufactoryStack = RNN.createStackNavigator(
   {
     main: ManufactoryMain,
@@ -57,8 +29,7 @@ const manufactoryStack = RNN.createStackNavigator(
     materialdetail: MaterialDetail,
     taskdetail: TaskDetailScreen,
     addmaterial: AddMaterial,
-    // goodsdetail: goodsTab,
-    // qrscanner: QRCodeScannerScreen,
+    activities: Activitieslist,
     bluetooth: {
       screen: BluetoothScannerScreen
     },
@@ -67,7 +38,13 @@ const manufactoryStack = RNN.createStackNavigator(
     },
     workers: {
       screen: AssignedWorkers
-    }
+    },
+    addactivity: {
+      screen: AddActivity,
+      navigationOptions: {
+        title: 'Add Activity'
+      }
+    },
   },
   {
     initialRouteName: 'main',

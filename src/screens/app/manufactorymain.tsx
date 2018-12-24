@@ -9,7 +9,7 @@ import {PARAMS, BluetoothItemType} from '../../common';
 import {
   Bluetooth,
   Material,
-  IProcessService, FactoryInjection, PUBLIC_TYPES, MaterialDetailDto
+  IProcessService, FactoryInjection, PUBLIC_TYPES
 } from 'business_core_app_react';
 
 interface Props {
@@ -53,10 +53,14 @@ export default class ManufactoryMain extends BaseScreen<Props, State> {
     this.navigateFunc(ROUTE.APP.MANUFACTORY.BLUETOOTH, BluetoothItemType.ALL, this.receive);
   };
   private gotoGoods = async (): Promise<void> => {
-    const dto: MaterialDetailDto = await this.processService.getMaterialDetail('');
-    const patam: any = {};
-    patam[PARAMS.ITEM] = {process: dto.material!.processes[0], materialId: dto.material!.id};
-    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.DEFAULT, patam);
+    const data: any = {
+      materialId: '5930806e-575c-4b92-b1ec-d58a0de048be',
+      processId: '78d3948c-156f-4a4a-94cf-adbf09267b0e',
+      workerId: 'b748cb28-df2b-4a75-b817-c0b6835de3ac'
+    };
+    const param: any = {};
+    param[PARAMS.ITEM] = data;
+    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.WORKERS.ACTIVITIES.ADD_ACTIVITY, param)
     // this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.DEFAULT);
   };
   private gotoProcesses = async (): Promise<void> => {

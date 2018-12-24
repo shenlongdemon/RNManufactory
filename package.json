@@ -28,6 +28,7 @@
     "react-native-indicators": "^0.13.0",
     "react-native-modal": "7.0.1",
     "react-native-qrcode-scanner": "^1.1.0",
+    "react-native-simple-dialogs": "^1.0.0",
     "react-navigation": "3.0.6",
     "reflect-metadata": "0.1.12"
   },

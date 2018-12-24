@@ -3,18 +3,18 @@ import {Text, TouchableOpacity} from 'react-native';
 import {Col, Grid, Row} from 'react-native-easy-grid';
 import BaseItem from './baseitem';
 import IBaseItem from './ibaseitem';
-import {FactoryInjection, IBusinessService, Process, ProcessStatus, PUBLIC_TYPES} from 'business_core_app_react';
+import {FactoryInjection, IBusinessService, Material, PUBLIC_TYPES} from 'business_core_app_react';
 import * as Styles from '../../stylesheet';
 import {Icon} from "native-base";
 
-interface Props extends IBaseItem<Process> {
+interface Props extends IBaseItem<Material> {
 
 }
 
 interface State {
 }
 
-export default class ProcessItem extends BaseItem<Process, State> {
+export default class MaterialCodeItem extends BaseItem<Material, State> {
   private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
   constructor(props: Props) {
     super(props);
@@ -22,16 +22,12 @@ export default class ProcessItem extends BaseItem<Process, State> {
   
   componentDidMount = (): void => {
   
-  };
+  }
   
   render() {
-    const statusIcon: string = this.props.item.status === ProcessStatus.IN_PROGRESS ? 'spinner' : (
-      this.props.item.status === ProcessStatus.DONE ? 'check-circle' : ''
-    );
-    const color: any = this.props.item.status === ProcessStatus.IN_PROGRESS ? Styles.color.InProgress : (
-      this.props.item.status === ProcessStatus.DONE ? Styles.color.Done : Styles.color.Icon
-    );
+    
     return (
+      // @ts-ignore
       <BaseItem {...this.props} >
         <Grid style={{height: 50}}>
           <Col size={2} style={{justifyContent:'center'}}>
@@ -43,32 +39,29 @@ export default class ProcessItem extends BaseItem<Process, State> {
                 justifyContent:'center',
                 width:50,
                 height:50,
-                backgroundColor: 'rgba(255,255,255,0.2)',
                 borderRadius:50,
               }}
             >
-              <Icon name={'settings'} style={{fontSize:40, color: color}} />
+              <Icon name={'qrcode'} type={'FontAwesome'} style={{fontSize:40, color: Styles.color.Red}} />
             </TouchableOpacity>
           </Col>
           
-          <Col size={7} style={{justifyContent:'center'}}>
-            <Text style={[Styles.styleSheet.label, {marginLeft: 10, fontSize: 20}]}>{this.props.item.name}</Text>
-          </Col>
-          
-          <Col size={2} style={{justifyContent:'center'}}>
-            <Icon name={statusIcon} type={'FontAwesome'} style={{marginRight: 20, fontSize:25, color: Styles.color.Progress}} />
+          <Col size={9} style={{justifyContent:'center'}}>
+            <Text style={[Styles.styleSheet.label, {marginLeft: 10, fontSize: 20}]}>
+              GEN QR Code
+            </Text>
           </Col>
           
           <Col size={4} >
            <Grid>
              <Row style={{justifyContent: 'flex-start', flexDirection:'row'}}>
                <Text style={{color: Styles.color.Text, fontSize: 18}}>
-                 {this.businessService.toDateString(this.props.item.updateAt)}
+                 {this.businessService.toDateString(this.props.item.updatedAt)}
                </Text>
              </Row>
              <Row style={{justifyContent: 'flex-start', flexDirection:'row'}}>
                <Text style={{color: Styles.color.Text, fontSize: 18}}>
-                 {this.businessService.toTimeString(this.props.item.updateAt)}
+                 {this.businessService.toTimeString(this.props.item.updatedAt)}
                </Text>
              </Row>
            </Grid>

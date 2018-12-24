@@ -9,5 +9,9 @@ enum BluetoothItemType {
   MATERIAL = 2,
   PRODUCT = 3
 };
+enum FileType {
+  IMAGE = 0,
+  FILE = 1,
+};
 
-export {PARAMS, BluetoothItemType};
+export {PARAMS, BluetoothItemType, FileType};

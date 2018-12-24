@@ -14,8 +14,9 @@ import {ROUTE} from "../../routes";
 import Utils from "../../../common/utils";
 import * as Styles from "../../../stylesheet";
 import {RefreshControl} from "react-native";
-import {Col, List, ListItem} from "native-base";
+import {Col, List, ListItem, View} from "native-base";
 import ProcessItem from "../../../components/listitem/processitem";
+import MaterialCodeItem from "../../../components/listitem/materialcodeitem";
 
 interface Props {
 }
@@ -23,6 +24,16 @@ interface Props {
 interface State {
   material: Material;
   isLoading: boolean;
+}
+
+enum TemplateItemType {
+  PROCESS = 1,
+  MATERIAL = 2
+}
+
+interface TemplateItem {
+  item: any;
+  type: TemplateItemType
 }
 
 /**
@@ -37,6 +48,7 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
       title: title,
     };
   };
+  
   constructor(props: Props) {
     super(props);
     this.componentDidFocus = this.componentDidFocus.bind(this);
@@ -47,7 +59,7 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
   }
   
   componentWillMount = async (): Promise<void> => {
-    await this.loadData();
+  
   }
   
   
@@ -56,6 +68,9 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
   }
   
   private loadData = async (): Promise<void> => {
+    if (this.state.isLoading) {
+      return;
+    }
     this.setState({isLoading: true});
     const res: MaterialDetailDto = await this.processService.getMaterialDetail(this.state.material.id);
     this.setState({isLoading: false});
@@ -68,17 +83,48 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
     }
   }
   
-  private clickListItem = (item: Process, _index: number): void => {
-    const param: any = {};
-    param[PARAMS.ITEM] = {process: item, materialId: this.state.material.id};
-    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.DEFAULT, param);
+  private clickListItem = (item: TemplateItem, _index: number): void => {
+    if (item.type === TemplateItemType.PROCESS) {
+      const process: Process = item.item as Process;
+      const param: any = {};
+      param[PARAMS.ITEM] = {processId: process.id, materialId: this.state.material.id};
+      this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.DEFAULT, param);
+    }
   }
   
   private componentDidFocus = async (): Promise<void> => {
+    await this.loadData();
+  }
   
+  private genTemplateItems = (): TemplateItem[] => {
+    
+    const list: TemplateItem[] = this.state.material.processes.map((process: Process): TemplateItem => {
+      return {
+        item: process,
+        type: TemplateItemType.PROCESS
+      };
+    });
+    const lastFinishProcessIndex: number = this.processService.getLastFinishProcessIndex(this.state.material.processes);
+    if (list.length > 0) {
+      list.splice(lastFinishProcessIndex, 0, {
+        item: this.state.material,
+        type: TemplateItemType.MATERIAL
+      });
+    }
+    return list
+  }
+  private genListItem = (data: TemplateItem, index: number): any => {
+    if (data.type === TemplateItemType.PROCESS) {
+      return (<ProcessItem item={data.item as Process} index={index}/>);
+    }
+    else if (data.type === TemplateItemType.MATERIAL) {
+      return (<MaterialCodeItem item={data.item as Material} index={index}/>);
+    }
+    else return (<View/>);
   }
   
   render() {
+    const list: TemplateItem[] = this.genTemplateItems();
     return (
       <BasesSreen {...{...this.props, isLoading: this.state.isLoading, componentDidFocus: this.componentDidFocus}}>
         <Grid>
@@ -100,14 +146,14 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
               swipeToOpenPercent={80}
               disableLeftSwipe={true}
               disableRightSwipe={true}
-              dataArray={this.state.material.processes}
-              renderRow={(data: Process, _sectionID: string | number, rowID: string | number, _rowMap?: any) => (
+              dataArray={list}
+              renderRow={(data: TemplateItem, _sectionID: string | number, rowID: string | number, _rowMap?: any) => (
                 
                 <ListItem
                   onPress={() => {
                     this.clickListItem(data!, Number(rowID));
                   }}
-                  key={data!.id}
+                  key={data.item.id}
                   style={{
                     paddingRight: 0, paddingLeft: 0, borderBottomWidth: 0,
                     backgroundColor: Number(rowID) % 2 === 0 ? Styles.color.Background : 'rgba(255, 255, 255, 0.1)'
@@ -115,8 +161,10 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
                 >
                   <Grid>
                     <Col>
-                      <ProcessItem item={data} index={Number(rowID)}
-                                   onClickHandle={this.clickListItem}/>
+                      {
+                        this.genListItem(data, Number(rowID))
+                      }
+                    
                     </Col>
                   </Grid>
                 </ListItem>
@@ -128,4 +176,6 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
       </BasesSreen>
     );
   }
+  
+  
 }

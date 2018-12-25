@@ -6,7 +6,7 @@
     "del-core": "rm -rf ./package-lock.json && rm -rf ./node_modules/business_core_app_react",
     "pull-core": "cd ./node_modules/ && git clone -b dassee https://github.com/shenlongdemon/business_core_app_react.git && cd ./business_core_app_react/ && npm install",
     "setup-dev": "npm run del-core && npm run pull-core",
-    "preinstall": "npm run del-core",
+    "preinstallwqw": "npm run del-core",
     "start": "npm cache clean --force && node node_modules/react-native/local-cli/cli.js start --reset-cache",
     "test": "jest",
     "android": "ENVFILE=.env react-native run-android",
@@ -17,6 +17,7 @@
   "dependencies": {
     "@babel/plugin-proposal-decorators": "7.2.0",
     "business_core_app_react": "git+https://git@github.com/shenlongdemon/business_core_app_react.git#dassee",
+    "i": "^0.3.6",
     "inversify": "5.0.1",
     "native-base": "2.8.1",
     "react": "16.6.1",
@@ -27,8 +28,11 @@
     "react-native-document-picker": "^2.2.0",
     "react-native-indicators": "^0.13.0",
     "react-native-modal": "7.0.1",
+    "react-native-progress": "^3.5.0",
     "react-native-qrcode-scanner": "^1.1.0",
+    "react-native-qrcode-svg": "5.1.1",
     "react-native-simple-dialogs": "^1.0.0",
+    "react-native-svg": "^8.0.10",
     "react-navigation": "3.0.6",
     "reflect-metadata": "0.1.12"
   },

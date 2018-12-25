@@ -8,15 +8,15 @@ import {
   PUBLIC_TYPES,
   IProcessService, MaterialDetailDto,
   Process
-} from "business_core_app_react";
+} from 'business_core_app_react';
 import {PARAMS} from "../../../common";
 import {ROUTE} from "../../routes";
-import Utils from "../../../common/utils";
 import * as Styles from "../../../stylesheet";
 import {RefreshControl} from "react-native";
 import {Col, List, ListItem, View} from "native-base";
 import ProcessItem from "../../../components/listitem/processitem";
 import MaterialCodeItem from "../../../components/listitem/materialcodeitem";
+import * as Progress from 'react-native-progress';
 
 interface Props {
 }
@@ -24,6 +24,7 @@ interface Props {
 interface State {
   material: Material;
   isLoading: boolean;
+  doneProcess: number;
 }
 
 enum TemplateItemType {
@@ -54,7 +55,7 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
     this.componentDidFocus = this.componentDidFocus.bind(this);
     const item: Material | null = this.getParam<Material>(PARAMS.ITEM, null);
     item!.processes = [];
-    this.state = {material: item!, isLoading: false};
+    this.state = {material: item!, isLoading: false, doneProcess: 0};
     
   }
   
@@ -68,6 +69,8 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
   }
   
   private loadData = async (): Promise<void> => {
+    this.setState({doneProcess: 0.0})
+  
     if (this.state.isLoading) {
       return;
     }
@@ -75,10 +78,11 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
     const res: MaterialDetailDto = await this.processService.getMaterialDetail(this.state.material.id);
     this.setState({isLoading: false});
     if (res.isSuccess) {
-      this.setState({material: res.material!});
+      
+      const finishInPercent: number = this.processService.calcFinishedInPercen(res.material!.processes);
+      await this.setState({material: res.material!, doneProcess: finishInPercent});
     }
     else {
-      Utils.showErrorToast(res.message);
       this.goBack();
     }
   }
@@ -89,6 +93,12 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
       const param: any = {};
       param[PARAMS.ITEM] = {processId: process.id, materialId: this.state.material.id};
       this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.DEFAULT, param);
+    }
+    else if (item.type === TemplateItemType.MATERIAL) {
+      const material: Material = item.item as Material;
+      const param: any = {};
+      param[PARAMS.ITEM] = {code: material.code};
+      this.navigate(ROUTE.APP.SHARE.QRCODEDISPLAY, param);
     }
   }
   
@@ -129,7 +139,20 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
       <BasesSreen {...{...this.props, isLoading: this.state.isLoading, componentDidFocus: this.componentDidFocus}}>
         <Grid>
           <Row style={{height: 100}}>
-          
+            <Grid>
+              <Col></Col>
+              <Col style={{width:100, justifyContent: 'center'}}>
+                <Progress.Circle
+                  showsText={true}
+                  progress={this.state.doneProcess}
+                  size={90}
+                  color={Styles.color.Progress}
+                  borderColor={Styles.color.Progress}
+                  thickness={3}/>
+              </Col>
+            </Grid>
+            
+
           </Row>
           <Row>
             <List

@@ -8,8 +8,7 @@ import * as IMAGES from '../../assets';
 import {PARAMS, BluetoothItemType} from '../../common';
 import {
   Bluetooth,
-  Material,
-  IProcessService, FactoryInjection, PUBLIC_TYPES
+  Material
 } from 'business_core_app_react';
 
 interface Props {
@@ -19,8 +18,6 @@ interface State {
 }
 
 export default class ManufactoryMain extends BaseScreen<Props, State> {
-  
-  private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
   
   constructor(props: Props) {
     super(props);

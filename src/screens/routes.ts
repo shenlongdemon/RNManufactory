@@ -7,6 +7,7 @@ export const ROUTE = {
     SHARE: {
       BLUETOOTH: 'bluetooth',
       QRCODE: 'qrcode',
+      QRCODEDISPLAY: 'qrcodedisplay',
     },
     USER: {
       DEFAULT: 'user',
@@ -44,8 +45,8 @@ export const ROUTE = {
         
       },
       SCANQRCODE: 'qrcode',
-      BLUETOOTH: 'bluetooth'
-      
+      BLUETOOTH: 'bluetooth',
+      QRCODEDISPLAY: 'qrcodedisplay'
     },
   },
 }

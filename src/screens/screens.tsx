@@ -15,6 +15,7 @@ import AssignedWorkers from "./app/process/assignedworkers";
 import QRCodeScannerScreen from "./shared/qrcodescanner";
 import AddActivity from "./app/process/activities/addactivity";
 import Activitieslist from "./app/process/activities/activitieslist";
+import QRCodeDisplay from "./shared/qrcodedisplay";
 
 const manufactoryStack = RNN.createStackNavigator(
   {
@@ -35,6 +36,9 @@ const manufactoryStack = RNN.createStackNavigator(
     },
     qrcode: {
       screen: QRCodeScannerScreen
+    },
+    qrcodedisplay: {
+      screen: QRCodeDisplay
     },
     workers: {
       screen: AssignedWorkers

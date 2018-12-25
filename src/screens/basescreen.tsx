@@ -123,7 +123,6 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
   render() {
     return (
       <Container>
-        
         <ImageBackground
           source={IMAGE.background}
           style={{
@@ -133,7 +132,6 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
             height: '100%'
           }}
         >
-          
           {this.props.children}
           <Modal visible={this.props.isLoading || false} transparent={true}>
             <Grid style={{flex: 1, backgroundColor: Styles.color.Background}}>

@@ -11,6 +11,7 @@ const icoGoods = require('./ico_goods.png');
 const grayAdd = require('./gray_add.png');
 const photo = require('./photo.png');
 const bluetooth = require('./bluetooth.png');
+const logo = require('./logo.png');
 export {
   background,
   profile,
@@ -24,5 +25,6 @@ export {
   icoGoods,
   grayAdd,
   photo,
-  bluetooth
+  bluetooth,
+  logo
 };

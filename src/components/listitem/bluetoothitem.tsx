@@ -33,11 +33,13 @@ export default class BluetoothItem extends BaseItem<Bluetooth, State> {
           </Col>
           <Col>
             <Grid>
-              <Row style={{justifyContent: 'flex-start'}}>
+              <Row style={{flexDirection: 'row', justifyContent:'space-between'}}>
                 <Text style={Styles.styleSheet.label}>{this.props.item.name}</Text>
+                <Text style={[Styles.styleSheet.label]}>{this.props.item.mac}</Text>
               </Row>
-              <Row style={{justifyContent: 'flex-end'}}>
-                <Text style={[Styles.styleSheet.identifier]}>{this.props.item.mac}</Text>
+              <Row style={{flexDirection: 'row', justifyContent:'space-between'}}>
+                <Text style={[Styles.styleSheet.identifier]}>{this.props.item.id}</Text>
+                <Text style={[Styles.styleSheet.identifier, {alignContent: 'flex-end'}]}>{this.props.item.proximityUUID}</Text>
               </Row>
             </Grid>
           </Col>

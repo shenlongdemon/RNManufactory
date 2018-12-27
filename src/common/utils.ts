@@ -10,7 +10,7 @@ export default class Utils {
       buttonText: "OK",
       position: "bottom",
       type: 'danger',
-      duration:5000
+      duration: 5000
     });
   }
   
@@ -41,14 +41,24 @@ export default class Utils {
   static mappingBLEDevices = (devices: Device[], currentPosition: Position): Bluetooth[] => {
     const bluetooths: Bluetooth[] = devices.map((device: Device, _index: number) => {
       const distance: number = Utils.getBLEBeaconDistance(device.rssi || 0);
-      const mac: string =  Platform.OS === 'ios' ? `${Date.now()}` : device.id;
+      let serviceId: string = CONSTANTS.STR_EMPTY;
+      const serviceData: any | null = device.serviceData;
+      if (serviceData) {
+        const keys: string[] = Object.getOwnPropertyNames(serviceData);
+        if (keys.length > 0) {
+          serviceId = keys[0];
+        }
+      }
+      const mac: string = Platform.OS === 'ios' ? CONSTANTS.STR_EMPTY : device.id;
+      const id: string = Platform.OS === 'ios' ? CONSTANTS.STR_EMPTY : serviceId;
+      const proximityUUID: string = Platform.OS === 'ios' ? CONSTANTS.STR_EMPTY : CONSTANTS.STR_EMPTY;
       const blu: Bluetooth = {
         mac: mac,
-        id: device.id,
-        name: device.name || (device.localName || (device.manufacturerData || CONSTANTS.STR_EMPTY)) ,
-        proximityUUID: device.id,
+        id: id,
+        name: device.name || (device.localName || device.manufacturerData),
+        proximityUUID: proximityUUID,
         position: {...currentPosition, distance: distance}
-      }
+      };
       return blu;
     });
     return bluetooths;

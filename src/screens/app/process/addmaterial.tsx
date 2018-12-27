@@ -10,9 +10,10 @@ import {
   IProcessService,
   CreateMaterialDto,
   CONSTANTS,
-  Bluetooth
+  Bluetooth,
+  ObjectType
 } from "business_core_app_react";
-import {PARAMS, BluetoothItemType} from "../../../common";
+import {PARAMS} from "../../../common";
 import {Grid, Row, Col} from 'react-native-easy-grid';
 import * as IMAGE from '../../../assets';
 import * as Styles from '../../../stylesheet';
@@ -44,7 +45,6 @@ export default class AddMaterial extends BasesSreen<Props, State> {
       ),
     };
   };
-  // private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
   private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
   
   constructor(props: Props) {
@@ -91,23 +91,23 @@ export default class AddMaterial extends BasesSreen<Props, State> {
         });
       }
     });
-  }
+  };
   
   
-  receiveBluetooth = async (bluetooth: Bluetooth, _type: BluetoothItemType, _extraData: any | null): Promise<void> => {
+  receiveBluetooth = async (bluetooth: Bluetooth, _type: ObjectType, _extraData: any | null): Promise<void> => {
     this.setState({bluetooth: bluetooth});
   };
   
   private pickBluetooth = async (): Promise<void> => {
     
-    this.navigateFunc(ROUTE.APP.SHARE.BLUETOOTH, BluetoothItemType.BLUETOOTH, this.receiveBluetooth);
-  }
+    this.navigateFunc(ROUTE.APP.SHARE.BLUETOOTH, ObjectType.bluetooth, this.receiveBluetooth);
+  };
   
   
-  private async createMaterial(): Promise<void> {
+  private createMaterial = async (): Promise<void> => {
     this.setState({isLoading: true});
     const res: CreateMaterialDto = await this.processService.createMaterial(
-      this.state.name, this.state.description, this.state.imageUri, null
+      this.state.name, this.state.description, this.state.imageUri, this.state.bluetooth
     );
     this.setState({isLoading: false});
     if (res.isSuccess) {
@@ -116,17 +116,17 @@ export default class AddMaterial extends BasesSreen<Props, State> {
     else {
       Utils.showErrorToast(res.message);
     }
-  }
+  };
   
   componentDidMount = async (): Promise<void> => {
     const data: any = {};
     data[PARAMS.HANDLE_RIGHT_HEADER_BUTTON] = this.createMaterial;
     this.setSellNavigateParam(data);
-  }
+  };
   
   private componentDidFocus = async (): Promise<void> => {
   
-  }
+  };
   
   render() {
     return (

@@ -1,25 +1,22 @@
 import * as React from 'react';
 import {Platform, RefreshControl} from 'react-native';
-import {Bluetooth, FactoryInjection, IBusinessService, LOGGER, PUBLIC_TYPES} from 'business_core_app_react';
+import {Bluetooth, FactoryInjection, IBusinessService, LOGGER, PUBLIC_TYPES, ObjectByCode, ObjectType,
+ListObjectsByIdsDto} from 'business_core_app_react';
 import BasesSreen from "../basescreen";
 import {BleError, BleManager, Device} from 'react-native-ble-plx';
-import {BluetoothItemType, PARAMS} from "../../common";
+import {PARAMS} from "../../common";
 import Utils from '../../common/utils';
 import * as Styles from "../../stylesheet";
 import {Button, Grid, Icon, List, ListItem, Row} from "native-base";
 import BluetoothItem from '../../components/listitem/bluetoothitem';
+import MaterialItem from "../../components/listitem/materialitem";
 
 interface Props {
 }
 
 interface State {
-  devices: BluetoothData[];
+  devices: ObjectByCode[];
   isLoading: boolean;
-}
-
-interface BluetoothData {
-  item: any;
-  type: BluetoothItemType
 }
 
 export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
@@ -49,34 +46,35 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
   
   componentWillMount = async (): Promise<void> => {
     this.bleManager = new BleManager();
-  }
+  };
   
   componentDidMount = async (): Promise<void> => {
     const data: any = {};
     data[PARAMS.HANDLE_RIGHT_HEADER_BUTTON] = this.startScan;
     this.setSellNavigateParam(data);
-  }
+  };
   
   componentWillUnmount = async (): Promise<void> => {
     this.bleManager.stopDeviceScan();
-  }
+  };
   
-  private clickListItem = async (item: BluetoothData, _index: number): Promise<void> => {
-    const type: BluetoothItemType = this.getParam<any>(PARAMS.ITEM, BluetoothItemType.ALL) as BluetoothItemType;
-    const callbackFunc: (data: any, type: BluetoothItemType, extraData: any | null) => Promise<void> | null = this.getParam<any>(PARAMS.CALLBACK_FUNCTION, null);
-    if (callbackFunc && (type === BluetoothItemType.ALL || type === item.type)) {
-      await callbackFunc(item.item, item.type, null);
+  private clickListItem = async (item: ObjectByCode, _index: number): Promise<void> => {
+    const type: ObjectType = this.getParam<any>(PARAMS.ITEM, ObjectType.unknown) as ObjectType;
+    const callbackFunc: (data: any, type: ObjectType, extraData: any | null) => Promise<void> | null = this.getParam<any>(PARAMS.CALLBACK_FUNCTION, null);
+    if (callbackFunc && (type === ObjectType.unknown || type === item.type)) {
       this.goBack();
+      await callbackFunc(item.item, item.type, null);
+      
     }
     
-  }
+  };
   
   private startScan = async (): Promise<void> => {
     
     const currentPosition = await this.businessService.getCurrentPosition();
-    this.setState({isLoading: true});
+    await this.setState({isLoading: true, devices: []});
     const devices: Device[] = [];
-    this.bleManager.startDeviceScan(null, null, (error: BleError, device: Device) => {
+    this.bleManager.startDeviceScan(null, null, async  (error: BleError, device: Device): Promise<void> => {
       LOGGER.log('Scanning ...');
       if (error) {
         LOGGER.log(error);
@@ -87,22 +85,77 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
         const deviceId: string = item.id;
         return deviceId == id;
       });
-      if (index < 0) {
+      if ( index < 0) {
+        // await this.stopScan();
         devices.push(device);
         console.log(device);
+        
+        // let serviceId: string = CONSTANTS.STR_EMPTY;
+        // const serviceData: any | null = device.serviceData;
+        // if (serviceData) {
+        //   const keys: string[] = Object.getOwnPropertyNames(serviceData);
+        //   if (keys.length > 0) {
+        //     serviceId = keys[0];
+        //   }
+        // }
+        // const connectedDevice = await this.bleManager.connectToDevice(device.id);
+        // console.log(connectedDevice);
+        //
+        // const services = await connectedDevice.discoverAllServicesAndCharacteristics();
+        // console.log(services);
+        //
+        // const characteristic = await this.getServicesAndCharacteristics(services);
+        //
+        //
+        // console.log(characteristic);
       }
     });
     
     this.timeout = setTimeout(async (): Promise<void> => {
       await this.stopScan();
       const bluetooths: Bluetooth[] = Utils.mappingBLEDevices(devices, currentPosition);
-      const list: BluetoothData[] = bluetooths.map((ble: Bluetooth): BluetoothData => {
-        return {item: ble, type: BluetoothItemType.BLUETOOTH};
+      const list: ObjectByCode[] = bluetooths.map((ble: Bluetooth): ObjectByCode => {
+        return {item: ble, type: ObjectType.bluetooth};
       });
-      this.setState({devices: list, isLoading: false});
+      
+      await this.setState({devices: list, isLoading: false});
+      await this.loadObjectsByIds(
+        bluetooths.map((bluetooth: Bluetooth): string =>{
+          return bluetooth.id;
+        })
+      );
+      
     }, 8000);
     
-  }
+  };
+  
+  private loadObjectsByIds = async (ids: string[]) : Promise<void> => {
+    await this.setState({isLoading: true});
+    const dto: ListObjectsByIdsDto = await  this.businessService.getObjectsByBluetoothIds(ids);
+    await this.setState((prev: State) => (
+      {
+        isLoading: false,
+        devices: [...dto.items, ...prev.devices ]
+      }
+    ));
+    
+  };
+  //
+  // getServicesAndCharacteristics(device) {
+  //   return new Promise((resolve, reject) => {
+  //     device.services().then(services => {
+  //       const characteristics : any[]= [];
+  //
+  //       services.forEach((service, i) => {
+  //         service.characteristics().then(c => {
+  //           characteristics.push(c);
+  //         });
+  //         resolve(characteristics);
+  //       })
+  //     })
+  //   })
+  // }
+  
   
   private componentDidFocus = async (): Promise<void> => {
     if (Platform.OS === 'ios') {
@@ -114,25 +167,30 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
     } else {
       await this.startScan()
     }
-  }
+  };
   
   private stopScan = async (): Promise<void> => {
     clearInterval(this.timeout);
     this.setState({isLoading: false})
     this.bleManager.stopDeviceScan();
     LOGGER.log('Stop scan');
-  }
+  };
   
-  private genListItem = (data: BluetoothData, index: number): any => {
-    if (data.type === BluetoothItemType.BLUETOOTH) {
+  private genListItem = (data: ObjectByCode, index: number): any => {
+    if (data.type === ObjectType.bluetooth) {
       return (
         <BluetoothItem item={data.item} index={index}/>
+      );
+    }
+    else if (data.type === ObjectType.material) {
+      return (
+        <MaterialItem item={data.item} index={index}/>
       );
     }
     else {
       return null;
     }
-  }
+  };
   
   render() {
     return (
@@ -154,7 +212,7 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
               disableLeftSwipe={true}
               disableRightSwipe={true}
               dataArray={this.state.devices}
-              renderRow={(data: BluetoothData, _sectionID: string | number, rowID: string | number, _rowMap?: any) => (
+              renderRow={(data: ObjectByCode, _sectionID: string | number, rowID: string | number, _rowMap?: any) => (
                 
                 <ListItem
                   onPress={() => {

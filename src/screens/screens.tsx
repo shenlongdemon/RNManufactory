@@ -16,11 +16,14 @@ import QRCodeScannerScreen from "./shared/qrcodescanner";
 import AddActivity from "./app/process/activities/addactivity";
 import Activitieslist from "./app/process/activities/activitieslist";
 import QRCodeDisplay from "./shared/qrcodedisplay";
+import GoodsList from "./app/goods/goodslist";
+import AddGoods from "./app/goods/addgoods";
 
 const manufactoryStack = RNN.createStackNavigator(
   {
     main: ManufactoryMain,
-    // goodses: GoodsScreen,
+    goodses: GoodsList,
+    addgoods: AddGoods,
     materials: {
       screen: MaterialList,
       navigationOptions: {

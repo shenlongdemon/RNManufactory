@@ -5,10 +5,10 @@ import BaseScreen from '../basescreen';
 import * as Styles from '../../stylesheet';
 import {ROUTE} from '../routes';
 import * as IMAGES from '../../assets';
-import {PARAMS, BluetoothItemType} from '../../common';
+import {PARAMS} from '../../common';
 import {
   Bluetooth,
-  Material
+  Material, ObjectType
 } from 'business_core_app_react';
 
 interface Props {
@@ -34,31 +34,24 @@ export default class ManufactoryMain extends BaseScreen<Props, State> {
   }
   
   
-  receive = async (data: any, type: BluetoothItemType, _extraData: any | null): Promise<void> => {
-    if (type === BluetoothItemType.BLUETOOTH) {
+  receive = async (data: any, type: ObjectType, _extraData: any | null): Promise<void> => {
+    if (type === ObjectType.bluetooth) {
       const bluetooth: Bluetooth = data as Bluetooth;
       alert(bluetooth.id);
-    } else if (type === BluetoothItemType.MATERIAL) {
-      const material: Material = data as Material;
-      const patam: any = {};
-      parent[PARAMS.ITEM] = material;
-      this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.DEFAULT, patam);
+    } else if (type === ObjectType.material) {
+      const item: Material = data as Material;
+      const d: any = {};
+      d[PARAMS.ITEM] = item;
+  
+      this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.DEFAULT, d)
     }
   };
   
   private gotoBluetooth = async (): Promise<void> => {
-    this.navigateFunc(ROUTE.APP.MANUFACTORY.BLUETOOTH, BluetoothItemType.ALL, this.receive);
+    this.navigateFunc(ROUTE.APP.MANUFACTORY.BLUETOOTH, ObjectType.unknown, this.receive);
   };
   private gotoGoods = async (): Promise<void> => {
-    const data: any = {
-      materialId: '5930806e-575c-4b92-b1ec-d58a0de048be',
-      processId: '78d3948c-156f-4a4a-94cf-adbf09267b0e',
-      workerId: 'b748cb28-df2b-4a75-b817-c0b6835de3ac'
-    };
-    const param: any = {};
-    param[PARAMS.ITEM] = data;
-    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.WORKERS.ACTIVITIES.ADD_ACTIVITY, param)
-    // this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.DEFAULT);
+    this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.DEFAULT);
   };
   private gotoProcesses = async (): Promise<void> => {
     this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.DEFAULT);

@@ -7,13 +7,15 @@ import {
   Material,
   PUBLIC_TYPES,
   IProcessService, MaterialDetailDto,
-  Process
+  Process,
+  IBusinessService,
+  Activity
 } from 'business_core_app_react';
 import {PARAMS} from "../../../common";
 import {ROUTE} from "../../routes";
 import * as Styles from "../../../stylesheet";
 import {RefreshControl} from "react-native";
-import {Col, List, ListItem, View} from "native-base";
+import {Col, List, ListItem, Thumbnail, View, Text} from "native-base";
 import ProcessItem from "../../../components/listitem/processitem";
 import MaterialCodeItem from "../../../components/listitem/materialcodeitem";
 import * as Progress from 'react-native-progress';
@@ -42,6 +44,7 @@ interface TemplateItem {
  */
 export default class MaterialDetail extends BasesSreen<Props, State> {
   private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
+  private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
   static navigationOptions = ({navigation}) => {
     const material: Material | null = navigation.getParam(PARAMS.ITEM);
     const title: string = material ? material.name : '';
@@ -70,7 +73,7 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
   
   private loadData = async (): Promise<void> => {
     this.setState({doneProcess: 0.0})
-  
+    
     if (this.state.isLoading) {
       return;
     }
@@ -135,13 +138,24 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
   
   render() {
     const list: TemplateItem[] = this.genTemplateItems();
+    const materialImagelink: string = this.businessService.getLink(this.state.material.imageUrl);
+    const updateAt: string = `${this.businessService.toDateString(this.state.material.updatedAt)} - ${this.businessService.toTimeString(this.state.material.updatedAt)}`;
+    const totalActivities: Activity[] = this.businessService.getActivities(this.state.material);
     return (
       <BasesSreen {...{...this.props, isLoading: this.state.isLoading, componentDidFocus: this.componentDidFocus}}>
         <Grid>
           <Row style={{height: 100}}>
             <Grid>
-              <Col></Col>
-              <Col style={{width:100, justifyContent: 'center'}}>
+              <Col style={{flexDirection: 'row'}}>
+                <View style={{height: 100, width: 60, justifyContent: 'center'}}>
+                  <Thumbnail style={{width: 50, height: 50}} source={{uri: materialImagelink}}/>
+                </View>
+                <View style={{flexDirection: 'column', justifyContent: 'center'}}>
+                  <Text style={{color: Styles.color.Text}}>{totalActivities.length} activities</Text>
+                  <Text style={{color: Styles.color.Text}}>{updateAt}</Text>
+                </View>
+              </Col>
+              <Col style={{width: 100, justifyContent: 'center'}}>
                 <Progress.Circle
                   showsText={true}
                   progress={this.state.doneProcess}
@@ -151,8 +165,8 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
                   thickness={3}/>
               </Col>
             </Grid>
-            
-
+          
+          
           </Row>
           <Row>
             <List

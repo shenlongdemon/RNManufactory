@@ -51,6 +51,7 @@ export default class GoodsList extends BasesSreen<Props, State> {
   }
   
   private clickAddGoods = async (): Promise<void> => {
+    
     this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.ADD_iTEM.DEFAULT)
   
   };

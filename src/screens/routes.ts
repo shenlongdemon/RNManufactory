@@ -20,7 +20,7 @@ export const ROUTE = {
           DEFAULT: 'addgoods'
         },
         ITEM: {
-          DEFAULT: 'goodsdetail'
+          DEFAULT: 'itemdetail'
         }
       },
       MATERIALS: {

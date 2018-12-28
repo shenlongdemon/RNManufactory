@@ -182,21 +182,7 @@ export default class AddGoods extends BasesSreen<Props, State> {
         <Content>
           <ScrollView style={{flex: 1}}>
             <Grid>
-              <Row style={{height: 60}}>
-                
-                <Grid>
-                  <Col size={1} style={{justifyContent: 'center'}}>
-                    <Text style={[Styles.styleSheet.label, {alignSelf: 'center', width: '100%'}]}>Category </Text>
-                  </Col>
-                  <Col size={2}>
-                    <Button full transparent onPress={this.showCombobox} iconRight>
-                      <Text uppercase={false}
-                            style={{color: Styles.color.Text}}>{this.state.category ? this.state.category.value : CONSTANTS.STR_EMPTY}</Text>
-                      <Icon style={{color: Styles.color.Icon}} name={'arrow-dropdown'}/>
-                    </Button>
-                  </Col>
-                </Grid>
-              </Row>
+              
               
               <Row style={{height: 20}}></Row>
               <Row style={{height: 100}}>
@@ -213,6 +199,19 @@ export default class AddGoods extends BasesSreen<Props, State> {
                   </Col>
                 </Grid>
               </Row>
+  
+              <Row style={{height: 60, justifyContent: 'center'}}>
+                <Item inlineLabel style={{flex: 1, flexDirection: 'row', justifyContent:'space-between'}}>
+                  <Label>Category </Label>
+                  <Button style={{width:'70%', marginTop: 10}} transparent onPress={this.showCombobox} iconRight>
+                    <Text uppercase={false}
+                          style={{color: Styles.color.Text}}>{this.state.category ? this.state.category.value : 'Please select category'}</Text>
+                    <Icon style={{color: Styles.color.Icon}} name={'arrow-dropdown'}/>
+                  </Button>
+                </Item>
+                
+              </Row>
+              
               <Row style={{height: Styles.styles.row.height}}>
                 <Item inlineLabel style={{flex: 1}}>
                   <Label>Name</Label>
@@ -229,6 +228,7 @@ export default class AddGoods extends BasesSreen<Props, State> {
                 <Item inlineLabel style={{flex: 1}}>
                   <Label>Price</Label>
                   <Input
+                    keyboardType={'numeric'}
                     value={`${this.state.price}`}
                     onChangeText={(text: string) => {
                       this.setState({price: Number(text)});
@@ -241,9 +241,9 @@ export default class AddGoods extends BasesSreen<Props, State> {
               {/* LINK BLUETOOTH */}
               <Row style={{height: Styles.styles.row.height}}>
                 <Grid>
-                  <Col style={{justifyContent: 'center', flex: 1, flexDirection: 'column', alignItems: 'center'}}>
-                    <Text style={Styles.styleSheet.label}>
-                      Select Bluetooth what will follow this material
+                  <Col style={{justifyContent: 'center'}}>
+                    <Text style={[Styles.styleSheet.label, {width: '100%'}]}>
+                      Select bluetooth to attach into this item
                     </Text>
                   </Col>
                   <Col style={{width: 50}}>
@@ -271,9 +271,9 @@ export default class AddGoods extends BasesSreen<Props, State> {
               {/* LINK MATERIAL */}
               <Row style={{height: Styles.styles.row.height}}>
                 <Grid>
-                  <Col style={{justifyContent: 'center', flex: 1, flexDirection: 'column', alignItems: 'center'}}>
-                    <Text style={Styles.styleSheet.label}>
-                      Select Bluetooth what will follow this material
+                  <Col style={{justifyContent: 'center'}}>
+                    <Text style={[Styles.styleSheet.label, {width: '100%'}]}>
+                     Select material by scanning bluetooth chip
                     </Text>
                   </Col>
                   <Col style={{width: 50}}>

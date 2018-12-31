@@ -9,7 +9,7 @@ import {
   FactoryInjection,
   IBusinessService,
   IProcessService,
-  Process, ProcessStatus,
+  Process,
   PUBLIC_TYPES,
   UpdateProcessDto,
   ProcessDto,
@@ -28,7 +28,7 @@ interface Props {
 }
 
 interface State {
-  item: Process;
+  item: Process | null;
   isLoading: boolean;
   data: any;
 }
@@ -43,18 +43,18 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
   private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
   static navigationOptions = ({navigation}) => {
     const process: Process | null = navigation.getParam(PARAMS.ITEM);
-    const title: string = process ? process.name : '';
-    return {
-      title: title,
+    return process ? {
+      title: process.name,
       headerRight: (
         <Button onPress={navigation.getParam(PARAMS.HANDLE_RIGHT_HEADER_BUTTON)}>
           <Icon name={'save'} type={'FontAwesome'} style={{color: Styles.color.Icon, fontSize: 35}}/>
         </Button>
       ),
-    };
+    } : null;
   };
   private materialId: string = CONSTANTS.STR_EMPTY;
   private processId: string = CONSTANTS.STR_EMPTY;
+  
   constructor(props: Props) {
     super(props);
     const param: Param | null = this.getParam<Param>(PARAMS.ITEM, null);
@@ -63,17 +63,7 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     const d: any = {};
     
     this.state = {
-      item: {
-        index: 0,
-        id: CONSTANTS.STR_EMPTY,
-        name: CONSTANTS.STR_EMPTY,
-        code: CONSTANTS.STR_EMPTY,
-        status: ProcessStatus.TODO,
-        workers: [],
-        activities: [],
-        updateAt: 0,
-        dynProperties: []
-      },
+      item: null,
       isLoading: false,
       data: d
     };
@@ -102,10 +92,10 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     await this.setState({isLoading: true});
     const dto: ProcessDto = await this.processService.getProcess(this.materialId, this.processId);
     await this.setState({isLoading: false});
-  
+    
     if (dto.isSuccess && dto.process) {
       const d: any = {};
-  
+      
       dto.process!.dynProperties.forEach((p: DynProperty) => {
         const data: string[] = this.separateItems(p);
         if (p.type === DynPropertyType.CHECKBOX) {
@@ -133,10 +123,13 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
   };
   
   private save = async (): Promise<void> => {
-    this.setState({isLoading: true});
+    if (!this.state.item) {
+      return;
+    }
+    await this.setState({isLoading: true});
     const process: Process = this.buildUpProcess();
     const dto: UpdateProcessDto = await this.processService.updateProcessDynProperties(this.materialId, process.id, process.dynProperties);
-    this.setState({isLoading: false});
+    await this.setState({isLoading: false});
     if (dto.isSuccess) {
       this.goBack();
     }
@@ -159,13 +152,13 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     const param: any = {};
     param[PARAMS.ITEM] = {
       materialId: this.materialId,
-      processId: this.state.item.id
+      processId: this.processId
     };
     this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.WORKERS.DEFAULT, param);
   };
   
   private buildUpProcess = (): Process => {
-    const process: Process = this.state.item;
+    const process: Process = this.state.item!;
     
     process.dynProperties.forEach((p: DynProperty): void => {
       if (p.type === DynPropertyType.TEXT) {
@@ -450,9 +443,8 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     );
     return row;
   };
-  
-  render() {
-    const controls: any[] = this.state.item.dynProperties.map((p: DynProperty) => {
+  private renderControls = (): any => {
+    const controls: any[] = this.state.item!.dynProperties.map((p: DynProperty) => {
       if (p.type === DynPropertyType.TEXT) {
         return this.genText(p);
       } else if (p.type === DynPropertyType.COMBOBOX) {
@@ -463,60 +455,74 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
         return this.genRadio(p);
       }
     });
-    const files: any = this.state.item.dynProperties.map((p: DynProperty) => {
+    return controls;
+  };
+  private renderFiles = (): any => {
+    const files: any = this.state.item!.dynProperties.map((p: DynProperty) => {
       if (p.type === DynPropertyType.FILE) {
         return this.genFile(p);
       }
     });
-    const images: any = this.state.item.dynProperties.map((p: DynProperty) => {
+    return files;
+  };
+  private renderImages = (): any => {
+    const images: any = this.state.item!.dynProperties.map((p: DynProperty) => {
       if (p.type === DynPropertyType.IMAGE) {
         return this.genFile(p);
       }
     });
+    return images;
+  };
+  
+  render() {
+    
     
     return (
       <BaseScreen {...{...this.props, componentDidFocus: this.componentDidFocus, isLoading: this.state.isLoading}}>
-        <Content>
-          <Grid style={{flex: 1}}>
-            <Row style={{height: 70}}>
-              <Grid>
-                <Row>
-                </Row>
-                <Row style={{height: Styles.styles.row.heightControl}}>
-                  <Grid>
-                    <Col>
-                      <Button onPress={this.doneTask} iconLeft full bordered light>
-                        <Icon name={'checkmark-circle'} style={{color: Styles.color.Done}}/>
-                        <Text uppercase={false} style={{widht: '100%', textAlign: 'center'}}>
-                          Close {this.state.item.name}
-                        </Text>
-                      </Button>
-                    </Col>
-                    <Col style={{width: 90, flexDirection: 'row', justifyContent: 'center'}}>
-                      <Button onPress={this.workerClick} badge={true} style={{width: 70}}>
-                        <Icon name={'person'} style={{color: Styles.color.Icon, fontSize: 50}}/>
-                        {this.state.item.workers.length > 0 &&
-                        <Badge style={{backgroundColor: Styles.color.Background, marginLeft: -30, marginTop: -10}}>
-                          <Text style={{color: Styles.color.Text}}>{this.state.item.workers.length}</Text>
-                        </Badge>}
-                      </Button>
-                    </Col>
-                  </Grid>
-                </Row>
-              </Grid>
-            </Row>
-            <Row style={{height: 50}}></Row>
-            <Row>
-              <ScrollView>
+        {
+          this.state.item &&
+          <Content>
+            <Grid style={{flex: 1}}>
+              <Row style={{height: 70}}>
                 <Grid>
-                  {controls}
-                  {files}
-                  {images}
+                  <Row>
+                  </Row>
+                  <Row style={{height: Styles.styles.row.heightControl}}>
+                    <Grid>
+                      <Col>
+                        <Button onPress={this.doneTask} iconLeft full bordered light>
+                          <Icon name={'checkmark-circle'} style={{color: Styles.color.Done}}/>
+                          <Text uppercase={false} style={{widht: '100%', textAlign: 'center'}}>
+                            Close {this.state.item.name}
+                          </Text>
+                        </Button>
+                      </Col>
+                      <Col style={{width: 90, flexDirection: 'row', justifyContent: 'center'}}>
+                        <Button onPress={this.workerClick} badge={true} style={{width: 70}}>
+                          <Icon name={'person'} style={{color: Styles.color.Icon, fontSize: 50}}/>
+                          {this.state.item.workers.length > 0 &&
+                          <Badge style={{backgroundColor: Styles.color.Background, marginLeft: -30, marginTop: -10}}>
+                            <Text style={{color: Styles.color.Text}}>{this.state.item.workers.length}</Text>
+                          </Badge>}
+                        </Button>
+                      </Col>
+                    </Grid>
+                  </Row>
                 </Grid>
-              </ScrollView>
-            </Row>
-          </Grid>
-        </Content>
+              </Row>
+              <Row style={{height: 50}}></Row>
+              <Row>
+                <ScrollView>
+                  <Grid>
+                    {this.renderControls()}
+                    {this.renderFiles()}
+                    {this.renderImages()}
+                  </Grid>
+                </ScrollView>
+              </Row>
+            </Grid>
+          </Content>
+        }
       </BaseScreen>
     );
   }

@@ -1,5 +1,5 @@
 import BasesSreen from "../../..//basescreen";
-import {Grid, Row} from "native-base";
+import {Col, Grid, List, ListItem, Row} from "native-base";
 import * as React from "react";
 import {PARAMS} from "../../../../common";
 
@@ -15,6 +15,9 @@ import {Image, TouchableOpacity} from "react-native";
 import * as Styles from "../../../../stylesheet";
 import * as IMAGES from "../../../../assets";
 import {ROUTE} from "../../../routes";
+import ActivityItem from "../../../../components/listitem/ActivityItem";
+import MapBox from '@mapbox/react-native-mapbox-gl';
+
 interface Props {
 }
 
@@ -39,6 +42,7 @@ export default class Activitieslist extends BasesSreen<Props, State> {
   private materialId: string = CONSTANTS.STR_EMPTY;
   private processId: string = CONSTANTS.STR_EMPTY;
   private workerId: string = CONSTANTS.STR_EMPTY;
+  private mapView :MapBox.MapView;
   
   private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
   
@@ -52,6 +56,7 @@ export default class Activitieslist extends BasesSreen<Props, State> {
     };
     this.componentDidFocus = this.componentDidFocus.bind(this);
     this.clickAddActivity = this.clickAddActivity.bind(this);
+    this.clickListItem = this.clickListItem.bind(this);
     
   }
   private initParam(materialId: string, processId: string, workerId: string) {
@@ -71,7 +76,7 @@ export default class Activitieslist extends BasesSreen<Props, State> {
   }
   
   private componentDidFocus = async (): Promise<void> => {
-    await this.loadData();;
+    await this.loadData();
   }
   
   private loadData = async (): Promise<void> => {
@@ -87,18 +92,58 @@ export default class Activitieslist extends BasesSreen<Props, State> {
     const data: any = {
       materialId: this.materialId,
       processId: this.processId,
-      workerId: this.workerId
+      itemId: CONSTANTS.STR_EMPTY
     };
     const param: any = {};
     param[PARAMS.ITEM] = data;
-    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.WORKERS.ACTIVITIES.ADD_ACTIVITY, data)
+    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.WORKERS.ACTIVITIES.ADD_ACTIVITY, param)
+  };
+  private clickListItem = (item: Activity, _index: number): void => {
+    const data: any = {};
+    data[PARAMS.ITEM] = item;
+    
+    this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.ITEM.DEFAULT, data)
   };
   render() {
     return (
       <BasesSreen {...{...this.props, isLoading: this.state.isLoading, componentDidFocus: this.componentDidFocus}}>
         <Grid>
+          <Row style={{height: 300}}>
+            <MapBox.MapView
+              ref={(m: MapBox.MapView) => {this.mapView = m;}}
+              style={{flex: 1}}
+              styleURL={MapBox.StyleURL.Dark}
+              centerCoordinate={[-73.970895, 40.723279]}/>
+          </Row>
           <Row>
-          
+            <List
+              style={{flex: 1, backgroundColor: Styles.color.Background}}
+              keyboardShouldPersistTaps={'handled'}
+              swipeToOpenPercent={80}
+              disableLeftSwipe={true}
+              disableRightSwipe={true}
+              dataArray={this.state.activities}
+              renderRow={(item: Activity, _sectionID: string | number, rowID: string | number, _rowMap?: any) => (
+        
+                <ListItem
+                  onPress={() => {
+                    this.clickListItem(item, Number(rowID));
+                  }}
+                  key={item.id}
+                  style={{
+                    paddingRight: 0, paddingLeft: 0,
+                    backgroundColor: Number(rowID) % 2 === 0 ? Styles.color.Background : 'rgba(255, 255, 255, 0.1)'
+                  }}
+                >
+                  <Grid>
+                    <Col>
+                      <ActivityItem item={item} index={Number(rowID)}/>
+                    </Col>
+                  </Grid>
+                </ListItem>
+              )}
+    
+            />
           </Row>
         </Grid>
         <TouchableOpacity style={Styles.styleSheet.floatTouchable} onPress={this.clickAddActivity}>

@@ -7,11 +7,12 @@ import {
   FactoryInjection,
   IBusinessService,
   Item, PUBLIC_TYPES,
-  ItemDetailDto
+  ItemDetailDto, CONSTANTS
 } from "business_core_app_react";
 import {PARAMS} from "../../../common";
 import AttachFileItemTab from "./itemtabs/AttachFileItemTab";
 import HistoryItemTab from "./itemtabs/HistoryItemTab";
+import {ROUTE} from "../../routes";
 
 interface Props {
 }
@@ -40,6 +41,7 @@ export default class ItemDetail extends BasesSreen<Props, State> {
       
     };
     this.componentDidFocus = this.componentDidFocus.bind(this);
+    this.clickAddMaintain = this.clickAddMaintain.bind(this);
     
   }
   
@@ -67,7 +69,16 @@ export default class ItemDetail extends BasesSreen<Props, State> {
     }
     await this.setState({item: dto.item!});
   };
-  
+  private clickAddMaintain = async (): Promise<void> => {
+    const data: any = {
+      materialId: CONSTANTS.STR_EMPTY,
+      processId: CONSTANTS.STR_EMPTY,
+      itemId: this.state.item!.id
+    };
+    const param: any = {};
+    param[PARAMS.ITEM] = data;
+    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.WORKERS.ACTIVITIES.ADD_ACTIVITY, param)
+  };
   render() {
     return (
       <BasesSreen {...{...this.props, isLoading: this.state.isLoading, componentDidFocus: this.componentDidFocus}}>
@@ -79,7 +90,7 @@ export default class ItemDetail extends BasesSreen<Props, State> {
               <InfoItemTab item={this.state.item}/>
             </Tab>
             <Tab style={{backgroundColor:Styles.color.Background}} heading={<TabHeading><Icon name={'pulse'}/><Text>Histories</Text></TabHeading>}>
-              <HistoryItemTab item={this.state.item}/>
+              <HistoryItemTab clickAddMaintain={this.clickAddMaintain} item={this.state.item}/>
             </Tab>
             <Tab style={{backgroundColor:Styles.color.Background}} heading={<TabHeading><Icon name={'attach'}/><Text>Files</Text></TabHeading>}>
               <AttachFileItemTab item={this.state.item}/>

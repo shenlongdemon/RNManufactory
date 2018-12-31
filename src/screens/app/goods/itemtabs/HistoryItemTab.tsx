@@ -4,7 +4,7 @@ import {
   Item, Activity, IBusinessService, FactoryInjection, PUBLIC_TYPES
 } from "business_core_app_react";
 import * as Styles from "../../../../stylesheet";
-import HistoryItem from "../../../../components/listitem/MaintainItem";
+import ActivityItem from "../../../../components/listitem/ActivityItem";
 import {PARAMS} from "../../../../common";
 import MapBox from '@mapbox/react-native-mapbox-gl';
 import {Image, TouchableOpacity} from "react-native";
@@ -12,6 +12,7 @@ import * as IMAGES from "../../../../assets";
 
 interface Props {
   item: Item;
+  clickAddMaintain: () => Promise<void>;
 }
 
 interface State {
@@ -21,7 +22,6 @@ interface State {
 
 export default class HistoryItemTab extends React.Component<Props, State> {
   private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
-  private activities: Activity[] = this.businessService.getAllActivities(this.props.item);
   private mapView :MapBox.MapView;
   constructor(props) {
     super(props);
@@ -45,7 +45,7 @@ export default class HistoryItemTab extends React.Component<Props, State> {
   }
   
   private componentDidFocus = async (): Promise<void> => {
-    this.mapView.fitBound();
+  
   }
   private clickListItem = (item: Activity, _index: number): void => {
     const data: any = {};
@@ -56,10 +56,11 @@ export default class HistoryItemTab extends React.Component<Props, State> {
   
   
   render() {
+    const activities: Activity[] =  this.businessService.getAllActivities(this.props.item)
     return (
       <View style={{flex: 1}}>
         <Grid style={{flex: 1, backgroundColor: Styles.color.Background}}>
-          <Row style={{height: 300, backgroundColor: '#ffffff'}}>
+          <Row style={{height: 300}}>
             <MapBox.MapView
               ref={(m: MapBox.MapView) => {this.mapView = m;}}
               style={{flex: 1}}
@@ -73,7 +74,7 @@ export default class HistoryItemTab extends React.Component<Props, State> {
               swipeToOpenPercent={80}
               disableLeftSwipe={true}
               disableRightSwipe={true}
-              dataArray={this.activities}
+              dataArray={activities}
               renderRow={(item: Activity, _sectionID: string | number, rowID: string | number, _rowMap?: any) => (
                 
                 <ListItem
@@ -88,7 +89,7 @@ export default class HistoryItemTab extends React.Component<Props, State> {
                 >
                   <Grid>
                     <Col>
-                      <HistoryItem item={item} index={Number(rowID)}/>
+                      <ActivityItem item={item} index={Number(rowID)}/>
                     </Col>
                   </Grid>
                 </ListItem>
@@ -98,8 +99,7 @@ export default class HistoryItemTab extends React.Component<Props, State> {
           </Row>
         
         </Grid>
-        <TouchableOpacity style={Styles.styleSheet.floatTouchable} onPress={() => {
-        }}>
+        <TouchableOpacity style={Styles.styleSheet.floatTouchable} onPress={this.props.clickAddMaintain}>
           <Image style={{width: 70, height: 70, alignSelf: 'flex-end'}} resizeMode={'contain'} source={IMAGES.grayAdd}/>
         </TouchableOpacity>
       </View>

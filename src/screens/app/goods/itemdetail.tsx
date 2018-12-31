@@ -10,13 +10,16 @@ import {
   ItemDetailDto
 } from "business_core_app_react";
 import {PARAMS} from "../../../common";
+import AttachFileItemTab from "./itemtabs/AttachFileItemTab";
+import MaintainceItemTab from "./itemtabs/MaintainceItemTab";
 
 interface Props {
 }
 
 interface State {
   isLoading: boolean;
-  item: Item
+  item: Item | null;
+  itemId: string;
 }
 
 export default class ItemDetail extends BasesSreen<Props, State> {
@@ -32,7 +35,9 @@ export default class ItemDetail extends BasesSreen<Props, State> {
     const item: Item | null = this.getParam<Item>(PARAMS.ITEM, null);
     this.state = {
       isLoading: false,
-      item: item!
+      item: null,
+      itemId: item!.id,
+      
     };
     this.componentDidFocus = this.componentDidFocus.bind(this);
     
@@ -54,7 +59,7 @@ export default class ItemDetail extends BasesSreen<Props, State> {
   
   private loadData = async (): Promise<void> => {
     await this.setState({isLoading: true});
-    const dto: ItemDetailDto = await this.businessService.getItem(this.state.item.id);
+    const dto: ItemDetailDto = await this.businessService.getItem(this.state.itemId);
     await this.setState({isLoading: false});
     if (!dto.isSuccess) {
       this.goBack();
@@ -68,17 +73,16 @@ export default class ItemDetail extends BasesSreen<Props, State> {
       <BasesSreen {...{...this.props, isLoading: this.state.isLoading, componentDidFocus: this.componentDidFocus}}>
         {
           this.state.item &&
-          <Tabs tabBarBackgroundColor={Styles.color.Background} tabBarUnderlineStyle={{borderBottomWidth:1, borderColor:'rgba(255,255,255,0.3)'}}>
+          <Tabs locked={true} tabBarBackgroundColor={Styles.color.Background} tabBarUnderlineStyle={{borderBottomWidth:1, borderColor:'rgba(255,255,255,0.3)'}}>
             <Tab style={{backgroundColor:Styles.color.Background}}
                  heading={<TabHeading><Icon name="information-circle"/><Text>Info</Text></TabHeading>}>
               <InfoItemTab item={this.state.item}/>
             </Tab>
             <Tab style={{backgroundColor:Styles.color.Background}} heading={<TabHeading><Icon name={'pulse'}/><Text>Maintains</Text></TabHeading>}>
-            
+              <MaintainceItemTab item={this.state.item}/>
             </Tab>
-            
             <Tab style={{backgroundColor:Styles.color.Background}} heading={<TabHeading><Icon name={'attach'}/><Text>Files</Text></TabHeading>}>
-            
+              <AttachFileItemTab item={this.state.item}/>
             </Tab>
           </Tabs>}
       </BasesSreen>

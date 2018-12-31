@@ -11,7 +11,7 @@ import {
 } from "business_core_app_react";
 import {PARAMS} from "../../../common";
 import AttachFileItemTab from "./itemtabs/AttachFileItemTab";
-import MaintainceItemTab from "./itemtabs/MaintainceItemTab";
+import HistoryItemTab from "./itemtabs/HistoryItemTab";
 
 interface Props {
 }
@@ -78,8 +78,8 @@ export default class ItemDetail extends BasesSreen<Props, State> {
                  heading={<TabHeading><Icon name="information-circle"/><Text>Info</Text></TabHeading>}>
               <InfoItemTab item={this.state.item}/>
             </Tab>
-            <Tab style={{backgroundColor:Styles.color.Background}} heading={<TabHeading><Icon name={'pulse'}/><Text>Maintains</Text></TabHeading>}>
-              <MaintainceItemTab item={this.state.item}/>
+            <Tab style={{backgroundColor:Styles.color.Background}} heading={<TabHeading><Icon name={'pulse'}/><Text>Histories</Text></TabHeading>}>
+              <HistoryItemTab item={this.state.item}/>
             </Tab>
             <Tab style={{backgroundColor:Styles.color.Background}} heading={<TabHeading><Icon name={'attach'}/><Text>Files</Text></TabHeading>}>
               <AttachFileItemTab item={this.state.item}/>

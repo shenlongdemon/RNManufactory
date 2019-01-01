@@ -2,6 +2,7 @@ const profile = require('./profile.png');
 const background = require('./background.jpg');
 const materialIcon = require('./material_icon.png');
 const icoCircle = require('./ico_circle.png');
+const icoCircleRoatate = require('./ico_circle_rotate.png');
 const icoProjects = require('./ico_projects.png');
 const icoQRcode = require('./ico_qrcode.png');
 const iconBluetooth = require('./ico_bluetooth.png');
@@ -17,6 +18,7 @@ export {
   profile,
   materialIcon,
   icoCircle,
+  icoCircleRoatate,
   icoProjects,
   icoQRcode,
   iconBluetooth,

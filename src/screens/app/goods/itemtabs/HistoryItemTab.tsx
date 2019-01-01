@@ -22,7 +22,7 @@ interface State {
 
 export default class HistoryItemTab extends React.Component<Props, State> {
   private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
-  private mapView :MapBox.MapView;
+  // private mapView :MapBox.MapView;
   constructor(props) {
     super(props);
     
@@ -62,7 +62,7 @@ export default class HistoryItemTab extends React.Component<Props, State> {
         <Grid style={{flex: 1, backgroundColor: Styles.color.Background}}>
           <Row style={{height: 300}}>
             <MapBox.MapView
-              ref={(m: MapBox.MapView) => {this.mapView = m;}}
+              // ref={(m: MapBox.MapView) => {this.mapView = m;}}
               style={{flex: 1}}
               styleURL={MapBox.StyleURL.Dark}
               centerCoordinate={[-73.970895, 40.723279]}/>

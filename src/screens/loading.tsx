@@ -2,6 +2,7 @@ import * as React from 'react';
 import { PUBLIC_TYPES, IAuthService, FactoryInjection } from 'business_core_app_react';
 import BasesSreen from './basescreen';
 import { ROUTE } from './routes';
+import {Grid,Row} from "native-base";
 
 interface Props {}
 
@@ -28,6 +29,14 @@ export default class Loading extends BasesSreen<Props, State> {
   }
 
   render() {
-    return <BasesSreen {...{ ...this.props, componentDidFocus: this.componentDidFocus }} />;
+    return <BasesSreen {...{ ...this.props, componentDidFocus: this.componentDidFocus }} >
+      <Grid>
+        <Row size={1}></Row>
+        <Row size={2}>
+        
+        </Row>
+        <Row size={1}></Row>
+      </Grid>
+    </BasesSreen>;
   }
 }

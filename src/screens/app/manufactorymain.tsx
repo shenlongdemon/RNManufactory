@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Image, ImageStyle, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {Animated, Easing, Image, ImageBackground, ImageStyle, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {Col, Grid, Row} from 'native-base';
 import BaseScreen from '../basescreen';
 import * as Styles from '../../stylesheet';
@@ -18,9 +18,12 @@ interface State {
 }
 
 export default class ManufactoryMain extends BaseScreen<Props, State> {
-  
+  private animatedValue: Animated.Value;
   constructor(props: Props) {
     super(props);
+    this.animatedValue = new Animated.Value(0)
+  
+    this.componentDidFocus = this.componentDidFocus.bind(this);
     this.gotoGoods = this.gotoGoods.bind(this);
     this.gotoProcesses = this.gotoProcesses.bind(this);
     this.scanQRCode = this.scanQRCode.bind(this);
@@ -42,27 +45,54 @@ export default class ManufactoryMain extends BaseScreen<Props, State> {
       const item: Material = data as Material;
       const d: any = {};
       d[PARAMS.ITEM] = item;
-  
+      
       this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.DEFAULT, d)
     }
   };
   
   private gotoBluetooth = async (): Promise<void> => {
-    this.navigateFunc(ROUTE.APP.MANUFACTORY.BLUETOOTH, ObjectType.unknown, this.receive);
+    this.animate(0.87, () => {
+      this.navigateFunc(ROUTE.APP.MANUFACTORY.BLUETOOTH, ObjectType.unknown, this.receive);
+    });
   };
   private gotoGoods = async (): Promise<void> => {
-    this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.DEFAULT);
+    this.animate(0.62, () => {
+      this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.DEFAULT);
+    });
+    
   };
   private gotoProcesses = async (): Promise<void> => {
-    this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.DEFAULT);
+    this.animate(0, () => { this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.DEFAULT);});
   };
   private scanQRCode = async (): Promise<void> => {
-    this.navigate(ROUTE.APP.MANUFACTORY.SCANQRCODE);
+    this.animate(0.12, () => {
+      this.navigate(ROUTE.APP.MANUFACTORY.SCANQRCODE);
+    });
+  
+  };
+  componentDidFocus = async (): Promise<void> => {
+  
   };
   
+  animate = (degree: number, callback: () => void): void => {
+    Animated.timing(
+      this.animatedValue,
+      {
+        toValue: degree,
+        duration: 700,
+        easing: Easing.linear,
+        useNativeDriver: true
+      }
+    ).start(callback);
+  }
+  
   render() {
+    const spin = this.animatedValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg']
+    })
     return (
-      <BaseScreen {...{...this.props}}>
+      <BaseScreen {...{...this.props,componentDidFocus: this.componentDidFocus}}>
         <Grid style={{flex: 1}}>
           <Row size={1.7}>
             <Col size={1} style={{justifyContent: 'flex-end'}}>
@@ -90,11 +120,13 @@ export default class ManufactoryMain extends BaseScreen<Props, State> {
             <Grid>
               <Col size={1}/>
               <Col size={2} style={{justifyContent: 'center'}}>
-                <Image
-                  resizeMode={'contain'}
-                  source={IMAGES.icoCircle}
-                  style={{height: 200, width: 200, alignSelf: 'center'}}
-                />
+                <ImageBackground source={IMAGES.icoCircle} style={{height: 200, width: 200, alignSelf: 'center'}}>
+                  <Animated.Image
+                    resizeMode={'contain'}
+                    source={IMAGES.icoCircleRoatate}
+                    style={{transform: [{rotate: spin}], height: 200, width: 200, alignSelf: 'center'}}
+                  />
+                </ImageBackground>
               </Col>
               <Col size={1}/>
             </Grid>

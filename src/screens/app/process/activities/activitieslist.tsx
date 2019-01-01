@@ -42,7 +42,6 @@ export default class Activitieslist extends BasesSreen<Props, State> {
   private materialId: string = CONSTANTS.STR_EMPTY;
   private processId: string = CONSTANTS.STR_EMPTY;
   private workerId: string = CONSTANTS.STR_EMPTY;
-  private mapView :MapBox.MapView;
   
   private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
   
@@ -110,7 +109,7 @@ export default class Activitieslist extends BasesSreen<Props, State> {
         <Grid>
           <Row style={{height: 300}}>
             <MapBox.MapView
-              ref={(m: MapBox.MapView) => {this.mapView = m;}}
+              // ref={(m: MapBox.MapView) => {this.mapView = m;}}
               style={{flex: 1}}
               styleURL={MapBox.StyleURL.Dark}
               centerCoordinate={[-73.970895, 40.723279]}/>

@@ -23,7 +23,9 @@ export default class QRCodeScanner extends BasesSreen<Props, State> {
     this.componentDidFocus = this.componentDidFocus.bind(this);
     
   }
+  componentDidUpdate = async (_prevProp: Props, _prevState: State): Promise<void> => {
   
+  };
   componentWillMount = async (): Promise<void> => {
   }
   

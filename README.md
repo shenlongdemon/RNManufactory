@@ -18,6 +18,11 @@ So We need to create pod project and manage them after `npm install`
 - Go to project -> target -> General -> `Linked Frameworks and Libraries` -> Add `lib<package>.a`
 - Run `npm install`  -> `react-native link` -> go to `/ios` folder and run `pod install` 
 
+## Install map with MapBox
+
+  Follow the link <https://www.mapbox.com/>
+  Using email Japarxch@gmail.com to login with same password
+
 ## Install business-core-app package
 
 * Setup SSH

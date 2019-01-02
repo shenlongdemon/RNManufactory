@@ -17,6 +17,9 @@
   "dependencies": {
     "@babel/plugin-proposal-decorators": "7.2.0",
     "@mapbox/react-native-mapbox-gl": "^6.1.3",
+    "@turf/buffer": "^5.1.5",
+    "@turf/helpers": "^6.1.4",
+    "@turf/turf": "^5.1.6",
     "business_core_app_react": "git+https://git@github.com/shenlongdemon/business_core_app_react.git#dassee",
     "i": "^0.3.6",
     "inversify": "5.0.1",

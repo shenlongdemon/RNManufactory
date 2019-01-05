@@ -4,7 +4,7 @@ import * as React from 'react';
 import {Col} from 'react-native-easy-grid';
 import * as Styles from '../../../../stylesheet';
 import {Image, ImageStyle, StyleSheet, TouchableOpacity} from 'react-native';
-import {CONSTANTS, FactoryInjection, IProcessService, PUBLIC_TYPES, BaseDto} from 'business_core_app_react';
+import {CONSTANTS, FactoryInjection, IProcessService, PUBLIC_TYPES, BaseDto, IItemService} from 'business_core_app_react';
 import * as IMAGE from '../../../../assets';
 import {DocumentPicker, DocumentPickerUtil} from 'react-native-document-picker';
 import {FileType, PARAMS} from '../../../../common';
@@ -41,6 +41,7 @@ export default class AddActivity extends BasesSreen<Props, State> {
   private processId: string = CONSTANTS.STR_EMPTY;
   private itemId: string = CONSTANTS.STR_EMPTY;
   private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
+  private itemService: IItemService = FactoryInjection.get<IItemService>(PUBLIC_TYPES.IItemService);
   
   constructor(props) {
     super(props);
@@ -93,7 +94,7 @@ export default class AddActivity extends BasesSreen<Props, State> {
       );
     }
     else {
-      dto = await this.processService.addMaintain(
+      dto = await this.itemService.addMaintain(
         this.itemId,
         this.state.title,
         this.state.description,

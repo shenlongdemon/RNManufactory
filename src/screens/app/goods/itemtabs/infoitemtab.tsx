@@ -5,31 +5,47 @@ import {
   FactoryInjection,
   IBusinessService,
   Item,
+  ITEM_ACTION,
   Process,
-  PUBLIC_TYPES
+  PUBLIC_TYPES,
+  CONSTANTS,
+  ItemAction,
+  ItemActionDto,
+  IItemService
 } from "business_core_app_react";
 import * as Styles from "../../../../stylesheet";
-import {Image, ScrollView} from 'react-native';
+import {Image, ScrollView, TouchableOpacity} from 'react-native';
 
 interface Props {
   item: Item;
+  navigateForAction: (action: ITEM_ACTION, newItem: Item) => void;
 }
 
 
 interface State {
   isLoading: boolean;
+  itemAction: {
+    action: ITEM_ACTION,
+    text: string,
+    color: string
+  };
 }
 
 export default class InfoItemTab extends React.Component<Props, State> {
   private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
+  private itemService: IItemService = FactoryInjection.get<IItemService>(PUBLIC_TYPES.IItemService);
   
   constructor(props) {
     super(props);
-    
+    this.doItemAction = this.doItemAction.bind(this);
     this.state = {
-      isLoading: false
+      isLoading: false,
+      itemAction: {
+        action : ITEM_ACTION.NONE,
+        text: CONSTANTS.STR_EMPTY,
+        color: '#ff'
+      }
     };
-    this.componentDidFocus = this.componentDidFocus.bind(this);
     
   }
   
@@ -37,14 +53,19 @@ export default class InfoItemTab extends React.Component<Props, State> {
   };
   
   componentDidMount = async (): Promise<void> => {
-  
+    const itemAction: ItemAction = await this.businessService.getItemAction(this.props.item);
+    await this.setState({itemAction});
   };
   
   componentWillUnmount = async (): Promise<void> => {
   };
   
-  private componentDidFocus = async (): Promise<void> => {
-  
+  private doItemAction = async (): Promise<void> => {
+    const action: ITEM_ACTION = this.state.itemAction.action;
+    const dto: ItemActionDto = await this.itemService.doItemAction(this.props.item.id, action);
+    if (dto.isSuccess && dto.item) {
+      this.props.navigateForAction(action, dto.item!);
+    }
   };
   
   private renderProcess = (p: Process): any[] => {
@@ -101,14 +122,14 @@ export default class InfoItemTab extends React.Component<Props, State> {
                       height: 150,
                       resizeMode: 'contain',
                       backgroundColor: Styles.color.Background
-                    }} source={{uri:item}}/>
+                    }} source={{uri: item}}/>
                   </CardItem>
                 </Card>
               }
             />
           </View>
         </Row>
-        <Row style={{height:30}}></Row>
+        <Row style={{height: 30}} />
         <Row>
           <ScrollView>
             <Grid>
@@ -123,8 +144,22 @@ export default class InfoItemTab extends React.Component<Props, State> {
               {
                 this.renderMaterial()
               }
+              <Row style={{height: 100}} />
             </Grid>
           </ScrollView>
+          {
+            this.state.itemAction.action !== ITEM_ACTION.NONE &&
+            <TouchableOpacity style={[Styles.styleSheet.ItemAction, {}]} onPress={this.doItemAction}>
+              <Text style={{
+                borderRadius: 20,
+                paddingLeft: 20,
+                paddingRight: 20,
+                backgroundColor: this.state.itemAction.color,
+                fontSize: 26}}>
+                {this.state.itemAction.text}
+              </Text>
+            </TouchableOpacity>
+          }
         </Row>
       </Grid>
     );

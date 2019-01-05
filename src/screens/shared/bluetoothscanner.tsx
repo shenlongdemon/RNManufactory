@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {Platform, RefreshControl} from 'react-native';
 import {
-  Bluetooth, FactoryInjection, IBusinessService, LOGGER, PUBLIC_TYPES, ObjectByCode, ObjectType, CONSTANTS,
+  Bluetooth, FactoryInjection, IBusinessService, LOGGER, PUBLIC_TYPES, ObjectByCode, ObjectType,
   ListObjectsByIdsDto
 } from 'business_core_app_react';
 import BasesSreen from "../basescreen";
-import {BleError, BleManager, Device, Characteristic, ConnectionPriority} from 'react-native-ble-plx';
+import {BleError, BleManager, Device, Characteristic} from 'react-native-ble-plx';
 import {PARAMS} from "../../common";
 import Utils from '../../common/utils';
 import * as Styles from "../../stylesheet";
@@ -83,34 +83,35 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
         LOGGER.log(error);
         return;
       }
+      console.log(device);
       const id: string = device.id;
       const index = devices.findIndex((item: Device, _index: number): boolean => {
         const deviceId: string = item.id;
         return deviceId == id;
       });
-      if (index < 0 && device.name.startsWith('The')) {
-        await this.stopScan();
+      if (index < 0) {
+        // await this.stopScan();
         devices.push(device);
         console.log(device);
         
-        let serviceId: string = CONSTANTS.STR_EMPTY;
-        const serviceData: any | null = device.serviceData;
-        if (serviceData) {
-          const keys: string[] = Object.getOwnPropertyNames(serviceData);
-          if (keys.length > 0) {
-            serviceId = keys[0];
-          }
-        }
-        console.log('serviceId' + serviceId);
-  
-        const connectedDevice: Device = await this.bleManager.requestConnectionPriorityForDevice(device.id, ConnectionPriority.LowPower);
-        console.log(connectedDevice);
-        
-        const services: Device = await connectedDevice.discoverAllServicesAndCharacteristics();
-        console.log(services);
-        
-        const all: any = await this.getServicesAndCharacteristics(connectedDevice, serviceId);
-        console.log(all);
+        // let serviceId: string = CONSTANTS.STR_EMPTY;
+        // const serviceData: any | null = device.serviceData;
+        // if (serviceData) {
+        //   const keys: string[] = Object.getOwnPropertyNames(serviceData);
+        //   if (keys.length > 0) {
+        //     serviceId = keys[0];
+        //   }
+        // }
+        // console.log('serviceId' + serviceId);
+        //
+        // const connectedDevice: Device = await this.bleManager.connectToDevice(device.id);
+        // console.log(connectedDevice);
+        //
+        // const services: Device = await connectedDevice.discoverAllServicesAndCharacteristics();
+        // console.log(services);
+        //
+        // const all: any = await this.getServicesAndCharacteristics(connectedDevice, serviceId);
+        // console.log(all);
         
       }
     });
@@ -145,69 +146,71 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
     
   };
   
-  getServicesAndCharacteristics = async (device, serviceId): Promise<any> => {
+  getServicesAndCharacteristics = async (device, _serviceId): Promise<any> => {
     //const all: any[] = [];
     const services = await device.services();
     console.log(services);
     
     
     services.forEach(async (service: any): Promise<void> => {
-      const ccss: Characteristic[] = await  device.characteristicsForService(service.uuid);
-      ccss.forEach(async (characteristic: Characteristic): Promise<void> => {
-        try {
-          const a = await this.bleManager.readCharacteristicForDevice(device.id, serviceId, characteristic.uuid);
-          console.log(a);
-          console.log(atob(a.value) + a.value);
-        } catch (e) {
-    
-        }
-        try {
-          const a = await device.readCharacteristicForService(serviceId, characteristic.uuid);
-          console.log(a);
-          console.log(atob(a.value) + a.value);
-        } catch (e) {
-    
-        }
-        try {
-          const a = await this.bleManager.readCharacteristicForDevice(device.id, service.uuid, characteristic.uuid);
-          console.log(a);
-          console.log(atob(a.value) + a.value);
-        } catch (e) {
-    
-        }
+      // const ccss: Characteristic[] = await  device.characteristicsForService(service.uuid);
+      // console.log(ccss);
   
-        try {
-          const a = await this.bleManager.readCharacteristicForDevice(device.id, characteristic.serviceUUID, characteristic.uuid);
-          console.log(a);
-          console.log(atob(a.value) + a.value);
-        } catch (e) {
-    
-        }
-  
-        try {
-          const a = await device.readCharacteristicForService(service.uuid, characteristic.uuid);
-          console.log(a);
-          console.log(atob(a.value) + a.value);
-        } catch (e) {
-    
-        }
-  
-        try {
-          const a = await service.readCharacteristic(characteristic.uuid);
-          console.log(a);
-          console.log(atob(a.value) + a.value);
-        } catch (e) {
-    
-        }
-  
-        try {
-          const a = await characteristic.read();
-          console.log(a);
-          console.log(atob(a.value) + a.value);
-        } catch (e) {
-    
-        }
-      });
+      // ccss.forEach(async (characteristic: Characteristic): Promise<void> => {
+      //   try {
+      //     const a = await this.bleManager.readCharacteristicForDevice(device.id, serviceId, characteristic.uuid);
+      //     console.log(a);
+      //     console.log(atob(a.value) + a.value);
+      //   } catch (e) {
+      //
+      //   }
+      //   try {
+      //     const a = await device.readCharacteristicForService(serviceId, characteristic.uuid);
+      //     console.log(a);
+      //     console.log(atob(a.value) + a.value);
+      //   } catch (e) {
+      //
+      //   }
+      //   try {
+      //     const a = await this.bleManager.readCharacteristicForDevice(device.id, service.uuid, characteristic.uuid);
+      //     console.log(a);
+      //     console.log(atob(a.value) + a.value);
+      //   } catch (e) {
+      //
+      //   }
+      //
+      //   try {
+      //     const a = await this.bleManager.readCharacteristicForDevice(device.id, characteristic.serviceUUID, characteristic.uuid);
+      //     console.log(a);
+      //     console.log(atob(a.value) + a.value);
+      //   } catch (e) {
+      //
+      //   }
+      //
+      //   try {
+      //     const a = await device.readCharacteristicForService(service.uuid, characteristic.uuid);
+      //     console.log(a);
+      //     console.log(atob(a.value) + a.value);
+      //   } catch (e) {
+      //
+      //   }
+      //
+      //   try {
+      //     const a = await service.readCharacteristic(characteristic.uuid);
+      //     console.log(a);
+      //     console.log(atob(a.value) + a.value);
+      //   } catch (e) {
+      //
+      //   }
+      //
+      //   try {
+      //     const a = await characteristic.read();
+      //     console.log(a);
+      //     console.log(atob(a.value) + a.value);
+      //   } catch (e) {
+      //
+      //   }
+      // });
       
       
       
@@ -219,58 +222,64 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
       }
       
       cs.forEach(async (characteristic: Characteristic): Promise<void> => {
+        // try {
+        //   const a = await this.bleManager.readCharacteristicForDevice(device.id, serviceId, characteristic.uuid);
+        //   console.log(a);
+        //   console.log(atob(a.value) + a.value);
+        // } catch (e) {
+        //
+        // }
+        // try {
+        //   const a = await device.readCharacteristicForService(serviceId, characteristic.uuid);
+        //   console.log(a);
+        //   console.log(atob(a.value) + a.value);
+        // } catch (e) {
+        //
+        // }
+        // try {
+        //   const a = await this.bleManager.readCharacteristicForDevice(device.id, service.uuid, characteristic.uuid);
+        //   console.log(a);
+        //   console.log(atob(a.value) + a.value);
+        // } catch (e) {
+        //
+        // }
+        //
+        // try {
+        //   const a = await this.bleManager.readCharacteristicForDevice(device.id, characteristic.serviceUUID, characteristic.uuid);
+        //   console.log(a);
+        //   console.log(atob(a.value) + a.value);
+        // } catch (e) {
+        //
+        // }
         try {
-          const a = await this.bleManager.readCharacteristicForDevice(device.id, serviceId, characteristic.uuid);
+          const a = await device.readCharacteristicForService(characteristic.serviceUUID, characteristic.uuid);
           console.log(a);
           console.log(atob(a.value) + a.value);
         } catch (e) {
     
         }
-        try {
-          const a = await device.readCharacteristicForService(serviceId, characteristic.uuid);
-          console.log(a);
-          console.log(atob(a.value) + a.value);
-        } catch (e) {
-    
-        }
-        try {
-          const a = await this.bleManager.readCharacteristicForDevice(device.id, service.uuid, characteristic.uuid);
-          console.log(a);
-          console.log(atob(a.value) + a.value);
-        } catch (e) {
-    
-        }
-  
-        try {
-          const a = await this.bleManager.readCharacteristicForDevice(device.id, characteristic.serviceUUID, characteristic.uuid);
-          console.log(a);
-          console.log(atob(a.value) + a.value);
-        } catch (e) {
-    
-        }
-  
         try {
           const a = await device.readCharacteristicForService(service.uuid, characteristic.uuid);
           console.log(a);
           console.log(atob(a.value) + a.value);
         } catch (e) {
-    
+
         }
-  
+
         try {
           const a = await service.readCharacteristic(characteristic.uuid);
           console.log(a);
           console.log(atob(a.value) + a.value);
         } catch (e) {
-    
+
         }
-  
+
         try {
           const a = await characteristic.read();
           console.log(a);
           console.log(atob(a.value) + a.value);
         } catch (e) {
-    
+
         }
       });
       

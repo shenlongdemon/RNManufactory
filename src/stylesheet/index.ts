@@ -78,6 +78,13 @@ const styleSheet = StyleSheet.create({
     width: 70,
     height: 70
   },
+  ItemAction: {
+    justifyContent: 'flex-end',
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    height: 70
+  },
   rowControl: {
     flex: 1,
     height: 60,

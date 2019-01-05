@@ -1,13 +1,16 @@
 import BasesSreen from "../../basescreen";
-import {Tabs, TabHeading, Tab, Icon, Text} from "native-base";
+import {Icon, Tab, TabHeading, Tabs, Text} from "native-base";
 import * as React from "react";
 import * as Styles from "../../../stylesheet";
 import InfoItemTab from "./itemtabs/infoitemtab";
 import {
+  CONSTANTS,
   FactoryInjection,
   IBusinessService,
-  Item, PUBLIC_TYPES,
-  ItemDetailDto, CONSTANTS
+  Item,
+  ITEM_ACTION,
+  ItemDetailDto,
+  PUBLIC_TYPES
 } from "business_core_app_react";
 import {PARAMS} from "../../../common";
 import AttachFileItemTab from "./itemtabs/AttachFileItemTab";
@@ -42,6 +45,7 @@ export default class ItemDetail extends BasesSreen<Props, State> {
     };
     this.componentDidFocus = this.componentDidFocus.bind(this);
     this.clickAddMaintain = this.clickAddMaintain.bind(this);
+    this.navigateForAction = this.navigateForAction.bind(this);
     
   }
   
@@ -54,6 +58,17 @@ export default class ItemDetail extends BasesSreen<Props, State> {
   
   componentWillUnmount = async (): Promise<void> => {
   }
+  
+  private navigateForAction = async (action: ITEM_ACTION, newItem: Item): Promise<void> => {
+    if (action === ITEM_ACTION.PUBLISH || action === ITEM_ACTION.CANCEL) {
+      this.goBack();
+    }
+    else {
+      const param: any = {};
+      param[PARAMS.ITEM] = {code: newItem.code};
+      this.navigate(ROUTE.APP.SHARE.QRCODEDISPLAY, param)
+    }
+  };
   
   private componentDidFocus = async (): Promise<void> => {
     await this.loadData();
@@ -87,7 +102,7 @@ export default class ItemDetail extends BasesSreen<Props, State> {
           <Tabs locked={true} tabBarBackgroundColor={Styles.color.Background} tabBarUnderlineStyle={{borderBottomWidth:1, borderColor:'rgba(255,255,255,0.3)'}}>
             <Tab style={{backgroundColor:Styles.color.Background}}
                  heading={<TabHeading><Icon name="information-circle"/><Text>Info</Text></TabHeading>}>
-              <InfoItemTab item={this.state.item}/>
+              <InfoItemTab item={this.state.item} navigateForAction={this.navigateForAction}/>
             </Tab>
             <Tab style={{backgroundColor:Styles.color.Background}} heading={<TabHeading><Icon name={'pulse'}/><Text>Histories</Text></TabHeading>}>
               <HistoryItemTab clickAddMaintain={this.clickAddMaintain} item={this.state.item}/>

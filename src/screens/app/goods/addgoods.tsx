@@ -9,7 +9,7 @@ import {
   CONSTANTS,
   BaseDto,
   FactoryInjection,
-  IProcessService,
+  IItemService,
   Material,
   ObjectType, PUBLIC_TYPES, Category, IBusinessService, GetCategoriesDto
 } from "business_core_app_react";
@@ -48,7 +48,7 @@ export default class AddGoods extends BasesSreen<Props, State> {
       ),
     };
   };
-  private processService: IProcessService = FactoryInjection.get<IProcessService>(PUBLIC_TYPES.IProcessService);
+  private itemService: IItemService = FactoryInjection.get<IItemService>(PUBLIC_TYPES.IItemService);
   private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
   
   constructor(props) {
@@ -87,7 +87,7 @@ export default class AddGoods extends BasesSreen<Props, State> {
   
   private createItem = async (): Promise<void> => {
     this.setState({isLoading: true});
-    const res: BaseDto = await this.processService.createItem(this.state.category!,
+    const res: BaseDto = await this.itemService.createItem(this.state.category!,
       this.state.name, this.state.price, this.state.description, this.state.imageUri, this.state.bluetooth, this.state.material
     );
     this.setState({isLoading: false});

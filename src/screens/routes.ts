@@ -16,6 +16,7 @@ export const ROUTE = {
       DEFAULT: 'manufactory',
       GOODSES: {
         DEFAULT: 'goodses',
+        PAYMENT: 'payment',
         ADD_iTEM: {
           DEFAULT: 'addgoods'
         },

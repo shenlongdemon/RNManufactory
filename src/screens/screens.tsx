@@ -19,6 +19,7 @@ import QRCodeDisplay from "./shared/qrcodedisplay";
 import GoodsList from "./app/goods/goodslist";
 import AddGoods from "./app/goods/addgoods";
 import ItemDetail from "./app/goods/itemdetail";
+import PaymentScreen from "./app/goods/PaymentScreen";
 
 const manufactoryStack = RNN.createStackNavigator(
   {
@@ -26,6 +27,8 @@ const manufactoryStack = RNN.createStackNavigator(
     goodses: GoodsList,
     addgoods: AddGoods,
     itemdetail: ItemDetail ,
+    payment: PaymentScreen ,
+    
     materials: {
       screen: MaterialList,
       navigationOptions: {

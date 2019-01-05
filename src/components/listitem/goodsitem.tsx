@@ -42,6 +42,7 @@ export default class GoodsItem extends BaseItem<Item, State> {
           <Col size={5} style={{justifyContent:'center'}}>
             <Text style={[Styles.styleSheet.label, {width:'100%', textAlign:'center'}]}>{this.props.item.name}</Text>
           </Col>
+          
           <Col size={3} style={{justifyContent:'center'}}>
             <Text style={[Styles.styleSheet.label, {marginLeft: 10}]}>{`${this.props.item.price}`}</Text>
           </Col>

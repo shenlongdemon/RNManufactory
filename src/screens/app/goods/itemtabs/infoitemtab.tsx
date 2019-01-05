@@ -1,17 +1,17 @@
 import {Card, CardItem, DeckSwiper, Grid, Row, Text, View} from "native-base";
 import * as React from "react";
 import {
+  CONSTANTS,
   DynProperty,
   FactoryInjection,
   IBusinessService,
+  IItemService,
   Item,
   ITEM_ACTION,
-  Process,
-  PUBLIC_TYPES,
-  CONSTANTS,
   ItemAction,
   ItemActionDto,
-  IItemService
+  Process,
+  PUBLIC_TYPES
 } from "business_core_app_react";
 import * as Styles from "../../../../stylesheet";
 import {Image, ScrollView, TouchableOpacity} from 'react-native';
@@ -41,7 +41,7 @@ export default class InfoItemTab extends React.Component<Props, State> {
     this.state = {
       isLoading: false,
       itemAction: {
-        action : ITEM_ACTION.NONE,
+        action: ITEM_ACTION.NONE,
         text: CONSTANTS.STR_EMPTY,
         color: '#ff'
       }
@@ -62,9 +62,14 @@ export default class InfoItemTab extends React.Component<Props, State> {
   
   private doItemAction = async (): Promise<void> => {
     const action: ITEM_ACTION = this.state.itemAction.action;
-    const dto: ItemActionDto = await this.itemService.doItemAction(this.props.item.id, action);
-    if (dto.isSuccess && dto.item) {
-      this.props.navigateForAction(action, dto.item!);
+    if (action === ITEM_ACTION.BUY) {
+      this.props.navigateForAction(action, this.props.item!);
+    }
+    else {
+      const dto: ItemActionDto = await this.itemService.doItemAction(this.props.item.id, action);
+      if (dto.isSuccess && dto.item) {
+        this.props.navigateForAction(action, dto.item!);
+      }
     }
   };
   
@@ -101,7 +106,7 @@ export default class InfoItemTab extends React.Component<Props, State> {
   };
   
   render() {
-    const imageLinks: string [] = this.businessService.getImages(this.props.item);
+    const imageLinks: string[] = this.businessService.getImages(this.props.item);
     const updateTime: string = `${this.businessService.toDateString(this.props.item.time)} ${this.businessService.toTimeString(this.props.item.time)}`;
     return (
       <Grid style={{flex: 1, backgroundColor: Styles.color.Background}}>
@@ -129,7 +134,7 @@ export default class InfoItemTab extends React.Component<Props, State> {
             />
           </View>
         </Row>
-        <Row style={{height: 30}} />
+        <Row style={{height: 30}}/>
         <Row>
           <ScrollView>
             <Grid>
@@ -144,7 +149,7 @@ export default class InfoItemTab extends React.Component<Props, State> {
               {
                 this.renderMaterial()
               }
-              <Row style={{height: 100}} />
+              <Row style={{height: 100}}/>
             </Grid>
           </ScrollView>
           {
@@ -155,7 +160,8 @@ export default class InfoItemTab extends React.Component<Props, State> {
                 paddingLeft: 20,
                 paddingRight: 20,
                 backgroundColor: this.state.itemAction.color,
-                fontSize: 26}}>
+                fontSize: 26
+              }}>
                 {this.state.itemAction.text}
               </Text>
             </TouchableOpacity>

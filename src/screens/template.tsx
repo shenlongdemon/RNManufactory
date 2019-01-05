@@ -1,6 +1,7 @@
 import BasesSreen from "./basescreen";
-import {Grid, Row} from "native-base";
+import {Button, Grid, Icon, Row, Text} from "native-base";
 import * as React from "react";
+import * as Styles from "../stylesheet";
 
 interface Props {
 }
@@ -27,19 +28,18 @@ export default class QRCodeScanner extends BasesSreen<Props, State> {
   
   };
   componentWillMount = async (): Promise<void> => {
-  }
+  };
   
   componentDidMount = async (): Promise<void> => {
 
-  }
+  };
   
   componentWillUnmount = async (): Promise<void> => {
-  }
+  };
   
   private componentDidFocus = async (): Promise<void> => {
   
-  }
-  
+  };
   
   render() {
     return (

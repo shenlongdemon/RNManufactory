@@ -29,7 +29,7 @@ interface State {
 export default class ItemDetail extends BasesSreen<Props, State> {
   static navigationOptions = ({}) => {
     return {
-      title: ''
+      title: 'Information'
     };
   };
   private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
@@ -62,6 +62,11 @@ export default class ItemDetail extends BasesSreen<Props, State> {
   private navigateForAction = async (action: ITEM_ACTION, newItem: Item): Promise<void> => {
     if (action === ITEM_ACTION.PUBLISH || action === ITEM_ACTION.CANCEL) {
       this.goBack();
+    }
+    else if (action === ITEM_ACTION.BUY) {
+      const param: any = {};
+      param[PARAMS.ITEM] = {item: newItem};
+      this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.PAYMENT, param)
     }
     else {
       const param: any = {};

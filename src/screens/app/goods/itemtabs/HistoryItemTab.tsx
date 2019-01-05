@@ -21,6 +21,7 @@ interface Props {
 interface State {
   isLoading: boolean;
   lineOnMap: any | null;
+  isMine: boolean;
 }
 
 
@@ -34,11 +35,10 @@ export default class HistoryItemTab extends React.Component<Props, State> {
     
     this.state = {
       isLoading: false,
-      lineOnMap: null
+      lineOnMap: null,
+      isMine: false
     };
     this.clickListItem = this.clickListItem.bind(this);
-    this.fitMap = this.fitMap.bind(this);
-    
   }
   
   componentWillMount = async (): Promise<void> => {
@@ -47,7 +47,9 @@ export default class HistoryItemTab extends React.Component<Props, State> {
   componentDidMount = async (): Promise<void> => {
     setTimeout(() => {
       this.fitMap()
-    }, 1000);
+    }, 3000);
+    const isMine: boolean = await this.businessService.isMyItem(this.props.item);
+    this.setState({isMine});
   };
   
   componentWillUnmount = async (): Promise<void> => {
@@ -162,9 +164,9 @@ export default class HistoryItemTab extends React.Component<Props, State> {
           </Row>
         
         </Grid>
-        <TouchableOpacity style={Styles.styleSheet.floatTouchable} onPress={this.props.clickAddMaintain}>
+        { this.state.isMine && <TouchableOpacity style={Styles.styleSheet.floatTouchable} onPress={this.props.clickAddMaintain}>
           <Image style={{width: 70, height: 70, alignSelf: 'flex-end'}} resizeMode={'contain'} source={IMAGES.grayAdd}/>
-        </TouchableOpacity>
+        </TouchableOpacity>}
       </View>
     );
   }

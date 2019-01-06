@@ -66,7 +66,9 @@ export default class InfoItemTab extends React.Component<Props, State> {
       this.props.navigateForAction(action, this.props.item!);
     }
     else {
+      await this.setState({isLoading: true});
       const dto: ItemActionDto = await this.itemService.doItemAction(this.props.item.id, action);
+      await this.setState({isLoading: false});
       if (dto.isSuccess && dto.item) {
         this.props.navigateForAction(action, dto.item!);
       }

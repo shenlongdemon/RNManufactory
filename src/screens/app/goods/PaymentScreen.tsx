@@ -4,6 +4,7 @@ import * as React from "react";
 import * as Styles from "../../../stylesheet";
 import {FactoryInjection, IItemService, Item, ITEM_ACTION, ItemActionDto, PUBLIC_TYPES} from "business_core_app_react";
 import {PARAMS} from "../../../common";
+import {ROUTE} from "../../routes";
 
 interface Props {
 }
@@ -52,9 +53,11 @@ export default class PaymentScreen extends BasesSreen<Props, State> {
   
   };
   private payment = async (): Promise<void> => {
+    await this.setState({isLoading: true});
     const dto: ItemActionDto = await this.itemService.doItemAction(this.item.id, ITEM_ACTION.BUY);
+    await this.setState({isLoading: false});
     if (dto.isSuccess) {
-    
+      this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.DEFAULT);
     }
   };
   

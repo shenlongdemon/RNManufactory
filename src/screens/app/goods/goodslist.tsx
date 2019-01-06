@@ -70,7 +70,7 @@ export default class GoodsList extends BasesSreen<Props, State> {
     data[PARAMS.ITEM] = item;
     
     this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.ITEM.DEFAULT, data)
-  }
+  };
   
   render() {
     return (

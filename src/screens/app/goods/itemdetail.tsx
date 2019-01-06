@@ -41,25 +41,23 @@ export default class ItemDetail extends BasesSreen<Props, State> {
       isLoading: false,
       item: null,
       itemId: item!.id,
-      
     };
     this.componentDidFocus = this.componentDidFocus.bind(this);
     this.clickAddMaintain = this.clickAddMaintain.bind(this);
     this.navigateForAction = this.navigateForAction.bind(this);
-    
   }
   
   componentWillMount = async (): Promise<void> => {
-  }
+  };
   
   componentDidMount = async (): Promise<void> => {
   
-  }
+  };
   
   componentWillUnmount = async (): Promise<void> => {
-  }
+  };
   
-  private navigateForAction = async (action: ITEM_ACTION, newItem: Item): Promise<void> => {
+  private readonly navigateForAction = async (action: ITEM_ACTION, newItem: Item): Promise<void> => {
     if (action === ITEM_ACTION.PUBLISH || action === ITEM_ACTION.CANCEL) {
       this.goBack();
     }
@@ -75,9 +73,9 @@ export default class ItemDetail extends BasesSreen<Props, State> {
     }
   };
   
-  private componentDidFocus = async (): Promise<void> => {
+  private readonly componentDidFocus = async (): Promise<void> => {
     await this.loadData();
-  }
+  };
   
   private loadData = async (): Promise<void> => {
     await this.setState({isLoading: true});
@@ -89,7 +87,8 @@ export default class ItemDetail extends BasesSreen<Props, State> {
     }
     await this.setState({item: dto.item!});
   };
-  private clickAddMaintain = async (): Promise<void> => {
+  
+  private readonly clickAddMaintain = async (): Promise<void> => {
     const data: any = {
       materialId: CONSTANTS.STR_EMPTY,
       processId: CONSTANTS.STR_EMPTY,
@@ -99,20 +98,24 @@ export default class ItemDetail extends BasesSreen<Props, State> {
     param[PARAMS.ITEM] = data;
     this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.WORKERS.ACTIVITIES.ADD_ACTIVITY, param)
   };
+  
   render() {
     return (
       <BasesSreen {...{...this.props, isLoading: this.state.isLoading, componentDidFocus: this.componentDidFocus}}>
         {
           this.state.item &&
-          <Tabs locked={true} tabBarBackgroundColor={Styles.color.Background} tabBarUnderlineStyle={{borderBottomWidth:1, borderColor:'rgba(255,255,255,0.3)'}}>
-            <Tab style={{backgroundColor:Styles.color.Background}}
+          <Tabs locked={true} tabBarBackgroundColor={Styles.color.Background}
+                tabBarUnderlineStyle={{borderBottomWidth: 1, borderColor: 'rgba(255,255,255,0.3)'}}>
+            <Tab style={{backgroundColor: Styles.color.Background}}
                  heading={<TabHeading><Icon name="information-circle"/><Text>Info</Text></TabHeading>}>
               <InfoItemTab item={this.state.item} navigateForAction={this.navigateForAction}/>
             </Tab>
-            <Tab style={{backgroundColor:Styles.color.Background}} heading={<TabHeading><Icon name={'pulse'}/><Text>Histories</Text></TabHeading>}>
+            <Tab style={{backgroundColor: Styles.color.Background}}
+                 heading={<TabHeading><Icon name={'pulse'}/><Text>Histories</Text></TabHeading>}>
               <HistoryItemTab clickAddMaintain={this.clickAddMaintain} item={this.state.item}/>
             </Tab>
-            <Tab style={{backgroundColor:Styles.color.Background}} heading={<TabHeading><Icon name={'attach'}/><Text>Files</Text></TabHeading>}>
+            <Tab style={{backgroundColor: Styles.color.Background}}
+                 heading={<TabHeading><Icon name={'attach'}/><Text>Files</Text></TabHeading>}>
               <AttachFileItemTab item={this.state.item}/>
             </Tab>
           </Tabs>}

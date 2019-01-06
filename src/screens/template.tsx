@@ -1,7 +1,7 @@
 import BasesSreen from "./basescreen";
-import {Button, Grid, Icon, Row, Text} from "native-base";
+import {Grid, Row} from "native-base";
 import * as React from "react";
-import * as Styles from "../stylesheet";
+// import * as Styles from "../stylesheet";
 
 interface Props {
 }
@@ -10,7 +10,7 @@ interface State {
   isLoading: boolean;
 }
 
-export default class QRCodeScanner extends BasesSreen<Props, State> {
+export default class TemplateScreen extends BasesSreen<Props, State> {
   static navigationOptions = ({}) => {
     return {
       title: 'Scanning QR Code'

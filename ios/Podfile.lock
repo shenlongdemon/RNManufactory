@@ -52,6 +52,9 @@ PODS:
     - React/Core
   - React/RCTBlob (0.57.7):
     - React/Core
+  - React/RCTImage (0.57.7):
+    - React/Core
+    - React/RCTNetwork
   - React/RCTNetwork (0.57.7):
     - React/Core
   - React/RCTText (0.57.7):
@@ -83,6 +86,7 @@ DEPENDENCIES:
   - React/CxxBridge (from `../node_modules/react-native`)
   - React/DevSupport (from `../node_modules/react-native`)
   - React/RCTAnimation (from `../node_modules/react-native`)
+  - React/RCTImage (from `../node_modules/react-native`)
   - React/RCTNetwork (from `../node_modules/react-native`)
   - React/RCTText (from `../node_modules/react-native`)
   - React/RCTWebSocket (from `../node_modules/react-native`)
@@ -142,6 +146,6 @@ SPEC CHECKSUMS:
   RNVectorIcons: c0dbfbf6068fefa240c37b0f71bd03b45dddac44
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: d60f93e523700043a142e44bccbd1b19c44fcf78
+PODFILE CHECKSUM: 621f7f6b1cd1572c83c9fd879785838ba8ecf38b
 
 COCOAPODS: 1.5.3

@@ -38,7 +38,11 @@ export default class AssignedWorkers extends BaseScreen<Props, State> {
   private assignUser: User | null = null;
   private processId: string = CONSTANTS.STR_EMPTY;
   private materialId: string = CONSTANTS.STR_EMPTY;
-
+  static navigationOptions = ({}) => {
+    return {
+      title: 'Workers'
+    };
+  };
   constructor(props: Props) {
     super(props);
     this.state = {

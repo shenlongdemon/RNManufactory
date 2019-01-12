@@ -3,6 +3,7 @@ import MaterialList from "./app/process/materiallist";
 const RNN = require('react-navigation');
 import * as Styles from '../stylesheet';
 import Loading from './loading';
+import {View} from 'native-base';
 import Login from './auth/login';
 import SwitchFeature from './switctfeature';
 
@@ -20,6 +21,10 @@ import GoodsList from "./app/goods/goodslist";
 import AddGoods from "./app/goods/addgoods";
 import ItemDetail from "./app/goods/itemdetail";
 import PaymentScreen from "./app/goods/PaymentScreen";
+import ProductsScreen from "./app/ProductsScreen";
+import ProfilesScreen from "./app/ProfilesScreen";
+import {ActivityDetail} from "./app/process/activities/ActivityDetail";
+import * as React from "react";
 
 const manufactoryStack = RNN.createStackNavigator(
   {
@@ -28,6 +33,8 @@ const manufactoryStack = RNN.createStackNavigator(
     addgoods: AddGoods,
     itemdetail: ItemDetail ,
     payment: PaymentScreen ,
+    products: ProductsScreen ,
+    profile: ProfilesScreen ,
     
     materials: {
       screen: MaterialList,
@@ -39,6 +46,7 @@ const manufactoryStack = RNN.createStackNavigator(
     taskdetail: TaskDetailScreen,
     addmaterial: AddMaterial,
     activities: Activitieslist,
+    activitydetail: ActivityDetail,
     bluetooth: {
       screen: BluetoothScannerScreen
     },
@@ -66,12 +74,12 @@ const manufactoryStack = RNN.createStackNavigator(
       },
       headerTintColor: Styles.color.Navigation.Tint,
       headerTitleStyle: {
-        textAlign: 'center',
-        alignSelf: 'center',
-        justifyContent: 'center',
         fontWeight: Styles.styles.Navigation.FontWeight,
-        width: '90%'
-      }
+        textAlign: 'center',
+        alignSelf:'center',
+        flex:1
+      },
+      headerRight: (<View />)
     }
   }
 );

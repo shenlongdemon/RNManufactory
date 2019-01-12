@@ -60,9 +60,8 @@ export default class MaterialList extends BaseScreen<Props, State> {
   private loadProcesses = async (): Promise<void> => {
     this.setState({isLoading: true});
     const processListDto: ProcessListDto = await this.processService.getProcesses();
-    await this.setState({materials: processListDto.materials});
-    
-    this.setState({isLoading: false});
+    await this.setState({materials: []});
+    this.setState({isLoading: false, materials: processListDto.materials});
   }
   
   private clickAddProcess(): void {

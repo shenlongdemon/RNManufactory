@@ -29,7 +29,7 @@ interface State {
 export default class ProductsScreen extends BasesSreen<Props, State> {
   static navigationOptions = ({}) => {
     return {
-      title: 'Scanning QR Code'
+      title: 'Products'
     };
   };
   private itemService: IItemService = FactoryInjection.get<IItemService>(PUBLIC_TYPES.IItemService);
@@ -53,6 +53,7 @@ export default class ProductsScreen extends BasesSreen<Props, State> {
   
   componentWillMount = async (): Promise<void> => {
     await this.loadCategories();
+    await this.loadData();
   };
   
   componentDidMount = async (): Promise<void> => {

@@ -13,6 +13,7 @@ import {
 } from "business_core_app_react";
 import GoodsItem from "../../../components/listitem/goodsitem";
 import {PARAMS} from "../../../common";
+
 interface Props {
 
 }
@@ -53,16 +54,18 @@ export default class GoodsList extends BasesSreen<Props, State> {
   private clickAddGoods = async (): Promise<void> => {
     
     this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.ADD_iTEM.DEFAULT)
-  
+    
   };
   
   private componentDidFocus = async (): Promise<void> => {
     await this.loadData();
   }
   
-  private loadData = async () : Promise<void> => {
+  private loadData = async (): Promise<void> => {
     await this.setState({isLoading: true});
     const dto: ItemListDto = await this.businessService.getItems();
+    
+    await this.setState({items: []});
     await this.setState({isLoading: false, items: dto.items});
   };
   private clickListItem = (item: Item, _index: number): void => {
@@ -78,7 +81,7 @@ export default class GoodsList extends BasesSreen<Props, State> {
         <Grid>
           <Row>
             <List
-              style={{flex:1, backgroundColor: Styles.color.Background}}
+              style={{flex: 1, backgroundColor: Styles.color.Background}}
               refreshControl={
                 <RefreshControl
                   refreshing={this.state.isLoading}
@@ -93,25 +96,26 @@ export default class GoodsList extends BasesSreen<Props, State> {
               disableRightSwipe={true}
               dataArray={this.state.items}
               renderRow={(data: Item, _sectionID: string | number, rowID: string | number, _rowMap?: any) => (
-      
+                
                 <ListItem
                   onPress={() => {
                     this.clickListItem(data!, Number(rowID));
                   }}
                   key={data!.id}
-                  style={{ paddingRight: 0,paddingLeft: 0,
+                  style={{
+                    paddingRight: 0, paddingLeft: 0,
                     backgroundColor: Number(rowID) % 2 === 0 ? Styles.color.Background : 'rgba(255, 255, 255, 0.1)'
                   }}
                 >
                   <Grid>
                     <Col>
                       <GoodsItem item={data} index={Number(rowID)}
-                                    onClickHandle={this.clickListItem}/>
+                                 onClickHandle={this.clickListItem}/>
                     </Col>
                   </Grid>
                 </ListItem>
               )}
-  
+            
             />
           </Row>
         </Grid>

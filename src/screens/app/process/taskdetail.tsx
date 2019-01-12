@@ -16,7 +16,7 @@ import {
   BaseDto
 } from 'business_core_app_react';
 import {PARAMS} from '../../../common';
-import {ActionSheet, Badge, Button, Content, Icon, Input, Item, Label, Text} from 'native-base';
+import {ActionSheet, Badge, Button, Content, Icon, Input, Item, Label, Text, View} from 'native-base';
 import * as Styles from '../../../stylesheet';
 // import ImagePicker from 'react-native-image-picker';
 // import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
@@ -50,7 +50,7 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
           <Icon name={'save'} type={'FontAwesome'} style={{color: Styles.color.Icon, fontSize: 35}}/>
         </Button>
       ),
-    } : null;
+    } : <View/>;
   };
   private materialId: string = CONSTANTS.STR_EMPTY;
   private processId: string = CONSTANTS.STR_EMPTY;
@@ -80,10 +80,15 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
   };
   
   componentDidMount = async (): Promise<void> => {
+  
+  };
+  
+  private setHeader = (): void => {
     const data: any = {};
     data[PARAMS.HANDLE_RIGHT_HEADER_BUTTON] = this.save;
+    data[PARAMS.ITEM] = this.state.item;
     this.setSellNavigateParam(data);
-  }
+  };
   
   private loadProcess = async (): Promise<void> => {
     if (this.state.isLoading) {
@@ -92,7 +97,7 @@ export default class TaskDetailScreen extends BaseScreen<Props, State> {
     await this.setState({isLoading: true});
     const dto: ProcessDto = await this.processService.getProcess(this.materialId, this.processId);
     await this.setState({isLoading: false});
-    
+    this.setHeader();
     if (dto.isSuccess && dto.process) {
       const d: any = {};
       

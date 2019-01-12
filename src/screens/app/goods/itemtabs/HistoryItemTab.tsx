@@ -1,21 +1,23 @@
 import {Col, Grid, List, ListItem, Row, View} from "native-base";
 import * as React from "react";
 import {
-  Item, Activity, IBusinessService, FactoryInjection, PUBLIC_TYPES
+  Item, Activity, IBusinessService, FactoryInjection, PUBLIC_TYPES, CONSTANTS
 } from "business_core_app_react";
 import * as Styles from "../../../../stylesheet";
 import ActivityItem from "../../../../components/listitem/ActivityItem";
 import {PARAMS} from "../../../../common";
-import MapBpx from '@mapbox/react-native-mapbox-gl';
 import {Image, TouchableOpacity} from "react-native";
 import * as IMAGES from "../../../../assets";
 import * as turf from '@turf/turf';
 import {Feature, lineString as makeLineString, Point} from '@turf/helpers';
+import MapBpx from '@mapbox/react-native-mapbox-gl';
+import {Param as ActivityDetailParam} from "../../process/activities/ActivityDetail";
 
 
 interface Props {
   item: Item;
   clickAddMaintain: () => Promise<void>;
+  navigateToActivity: (param: any) => void;
 }
 
 interface State {
@@ -57,10 +59,16 @@ export default class HistoryItemTab extends React.Component<Props, State> {
   
   
   private clickListItem = (item: Activity, _index: number): void => {
-    const data: any = {};
-    data[PARAMS.ITEM] = item;
-    
-    // this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.ITEM.DEFAULT, data)
+    const data: ActivityDetailParam = {
+      activityId: item.id,
+      materialId: CONSTANTS.STR_EMPTY,
+      processId:  CONSTANTS.STR_EMPTY,
+      itemId: this.props.item.id
+    };
+    const param: any = {};
+    param[PARAMS.ITEM] = data;
+  
+    this.props.navigateToActivity(param);
     
   };
   
@@ -78,7 +86,7 @@ export default class HistoryItemTab extends React.Component<Props, State> {
     const bboxPolygon = turf.bboxPolygon(bbox);
     
     this.mapView.fitBounds(bboxPolygon.geometry!.coordinates[0][2], bboxPolygon.geometry!.coordinates[0][0], 50, 3000);
-  }
+  };
   
   private renderPoints = (): any => {
     const points: Feature<Point | null>[] = this.businessService.getActivitiesPositions(this.props.item);

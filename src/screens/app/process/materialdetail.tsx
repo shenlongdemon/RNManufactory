@@ -9,7 +9,8 @@ import {
   IProcessService, MaterialDetailDto,
   Process,
   IBusinessService,
-  Activity
+  Activity,
+  User
 } from 'business_core_app_react';
 import {PARAMS} from "../../../common";
 import {ROUTE} from "../../routes";
@@ -64,12 +65,12 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
   
   componentWillMount = async (): Promise<void> => {
   
-  }
+  };
   
   
   componentDidMount = async (): Promise<void> => {
   
-  }
+  };
   
   private loadData = async (): Promise<void> => {
     this.setState({doneProcess: 0.0})
@@ -90,12 +91,30 @@ export default class MaterialDetail extends BasesSreen<Props, State> {
     }
   }
   
-  private clickListItem = (item: TemplateItem, _index: number): void => {
+  private clickListItem = async (item: TemplateItem, _index: number): Promise<void> => {
     if (item.type === TemplateItemType.PROCESS) {
       const process: Process = item.item as Process;
-      const param: any = {};
-      param[PARAMS.ITEM] = {processId: process.id, materialId: this.state.material.id};
-      this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.DEFAULT, param);
+      const isMyProcess: boolean = await this.processService.isMyProcess(this.state.material, process);
+      if (!isMyProcess) {
+        return;
+      }
+      const isOwner: boolean = await  this.processService.isOwnerMaterial(this.state.material);
+      if (isOwner) {
+        const param: any = {};
+        param[PARAMS.ITEM] = {processId: process.id, materialId: this.state.material.id};
+        this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.DEFAULT, param);
+      }
+      else {
+        const user: User = await this.businessService.getUser();
+        const data: any = {
+          materialId: this.state.material.id,
+          processId: process.id,
+          workerId: user.id
+        };
+        const param: any = {};
+        param[PARAMS.ITEM] = data;
+        this.navigate(ROUTE.APP.MANUFACTORY.MATERIALS.ITEM.PROCESS.TASK.WORKERS.ACTIVITIES.DEFAULT, param);
+      }
     }
     else if (item.type === TemplateItemType.MATERIAL) {
       const material: Material = item.item as Material;

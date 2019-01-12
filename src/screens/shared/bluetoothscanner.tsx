@@ -12,6 +12,7 @@ import * as Styles from "../../stylesheet";
 import {Button, Grid, Icon, List, ListItem, Row} from "native-base";
 import BluetoothItem from '../../components/listitem/bluetoothitem';
 import MaterialItem from "../../components/listitem/materialitem";
+import GoodsItem from "../../components/listitem/goodsitem";
 
 interface Props {
 }
@@ -65,9 +66,8 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
     const type: ObjectType = this.getParam<any>(PARAMS.ITEM, ObjectType.unknown) as ObjectType;
     const callbackFunc: (data: any, type: ObjectType, extraData: any | null) => Promise<void> | null = this.getParam<any>(PARAMS.CALLBACK_FUNCTION, null);
     if (callbackFunc && (type === ObjectType.unknown || type === item.type)) {
+      callbackFunc(item.item, item.type, null);
       this.goBack();
-      await callbackFunc(item.item, item.type, null);
-      
     }
     
   };
@@ -155,7 +155,7 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
     services.forEach(async (service: any): Promise<void> => {
       // const ccss: Characteristic[] = await  device.characteristicsForService(service.uuid);
       // console.log(ccss);
-  
+      
       // ccss.forEach(async (characteristic: Characteristic): Promise<void> => {
       //   try {
       //     const a = await this.bleManager.readCharacteristicForDevice(device.id, serviceId, characteristic.uuid);
@@ -213,8 +213,6 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
       // });
       
       
-      
-      
       const cs: Characteristic[] = await service.characteristics();
       console.log(cs);
       if (cs.length === 0) {
@@ -256,30 +254,30 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
           console.log(a);
           console.log(atob(a.value) + a.value);
         } catch (e) {
-    
+        
         }
         try {
           const a = await device.readCharacteristicForService(service.uuid, characteristic.uuid);
           console.log(a);
           console.log(atob(a.value) + a.value);
         } catch (e) {
-
+        
         }
-
+        
         try {
           const a = await service.readCharacteristic(characteristic.uuid);
           console.log(a);
           console.log(atob(a.value) + a.value);
         } catch (e) {
-
+        
         }
-
+        
         try {
           const a = await characteristic.read();
           console.log(a);
           console.log(atob(a.value) + a.value);
         } catch (e) {
-
+        
         }
       });
       
@@ -319,6 +317,11 @@ export default class BluetoothScannerScreen extends BasesSreen<Props, State> {
     else if (data.type === ObjectType.material) {
       return (
         <MaterialItem item={data.item} index={index}/>
+      );
+    }
+    else if (data.type === ObjectType.item) {
+      return (
+        <GoodsItem item={data.item} index={index}/>
       );
     }
     else {

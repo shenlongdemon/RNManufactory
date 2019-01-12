@@ -106,14 +106,24 @@ export default class ItemDetail extends BasesSreen<Props, State> {
           this.state.item &&
           <Tabs locked={true} tabBarBackgroundColor={Styles.color.Background}
                 tabBarUnderlineStyle={{borderBottomWidth: 1, borderColor: 'rgba(255,255,255,0.3)'}}>
+            {/*
+             // @ts-ignore */}
             <Tab style={{backgroundColor: Styles.color.Background}}
                  heading={<TabHeading><Icon name="information-circle"/><Text>Info</Text></TabHeading>}>
               <InfoItemTab item={this.state.item} navigateForAction={this.navigateForAction}/>
             </Tab>
+            {/*
+             // @ts-ignore */}
             <Tab style={{backgroundColor: Styles.color.Background}}
                  heading={<TabHeading><Icon name={'pulse'}/><Text>Histories</Text></TabHeading>}>
-              <HistoryItemTab clickAddMaintain={this.clickAddMaintain} item={this.state.item}/>
+              <HistoryItemTab
+                navigateToActivity={(param: any) => {
+                  this.navigate(ROUTE.APP.MANUFACTORY.ACTIVITIES.ITEM.DEFAULT, param);
+                }}
+                clickAddMaintain={this.clickAddMaintain} item={this.state.item}/>
             </Tab>
+            {/*
+             // @ts-ignore */}
             <Tab style={{backgroundColor: Styles.color.Background}}
                  heading={<TabHeading><Icon name={'attach'}/><Text>Files</Text></TabHeading>}>
               <AttachFileItemTab item={this.state.item}/>

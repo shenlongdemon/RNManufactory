@@ -85,18 +85,18 @@ export default class QRCodeScannerScreen extends BasesSreen<Props, State> {
   private clickListItem = async (item: any, _index: number): Promise<void> => {
     const callbackFunc: (data: any, type: ObjectType, extraData: any | null) => Promise<void> | null = this.getParam<any>(PARAMS.CALLBACK_FUNCTION, null);
     if (callbackFunc && (this.filterType === ObjectType.unknown || this.filterType === item.type)) {
-      await callbackFunc(item.item, item.type, null);
+      callbackFunc(item.item, item.type, null);
       this.goBack();
     }
     
-  }
+  };
   
   private renderObject = (): any => {
     let control: any = (<View/>);
     if (this.state.object) {
       if (this.state.object.type === ObjectType.material) {
         control = (
-          <MaterialItem item={this.state.object.item as Material} index={0} />
+          <MaterialItem onClickHandle={async () => await this.clickListItem(this.state.object, 0)} item={this.state.object.item as Material} index={0} />
         );
       }
       else if (this.state.object.type === ObjectType.user) {
@@ -122,7 +122,7 @@ export default class QRCodeScannerScreen extends BasesSreen<Props, State> {
           </Row>
           {
             this.state.object &&
-            <Row style={{height: 100, backgroundColor: 'blue'}}>
+            <Row style={{height: 100}}>
               {
                 this.renderObject()
               }

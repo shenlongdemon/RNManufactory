@@ -1,9 +1,10 @@
 import * as React from 'react';
-import {Grid, Col} from 'react-native-easy-grid';
+import {Grid, Row} from 'react-native-easy-grid';
 import BaseScreen from './basescreen';
 import {ROUTE} from "./routes";
-import {Icon} from "native-base";
+import {Icon, View} from "native-base";
 import * as Styles from '../stylesheet';
+
 interface Props {
 
 }
@@ -31,14 +32,16 @@ export default class SwitchFeature extends BaseScreen<Props, State> {
     return (
       <BaseScreen {...{...this.props}}>
         <Grid>
-          <Col style={{justifyContent: 'center'}}>
-            <Icon onPress={this.switchToUser}
-                  style={{fontSize: 90, color: Styles.color.Icon}}
-                  type={'FontAwesome'} name={'user'}/>
-          </Col>
-          <Col style={{justifyContent: 'center'}}>
-            <Icon onPress={this.switchToManufactory} style={{fontSize: 90, color: Styles.color.Icon}} type={'FontAwesome'} name={'industry'}/>
-          </Col>
+          <Row style={{justifyContent: 'center', flexDirection: 'column'}}>
+            <View style={{flexDirection: 'row', justifyContent: 'space-evenly', width: '100%', height: 200}}>
+              <Icon onPress={this.switchToUser}
+                    style={{fontSize: 90, color: Styles.color.Icon}}
+                    type={'FontAwesome'} name={'user'}/>
+              <Icon onPress={this.switchToManufactory} style={{fontSize: 90, color: Styles.color.Icon}}
+                    type={'FontAwesome'} name={'industry'}/>
+            </View>
+          </Row>
+        
         </Grid>
       </BaseScreen>
     );

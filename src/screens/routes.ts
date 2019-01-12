@@ -14,6 +14,11 @@ export const ROUTE = {
     },
     MANUFACTORY: {
       DEFAULT: 'manufactory',
+      ACTIVITIES: {
+        ITEM: {
+          DEFAULT: 'activitydetail'
+        }
+      },
       GOODSES: {
         DEFAULT: 'goodses',
         PAYMENT: 'payment',
@@ -23,6 +28,12 @@ export const ROUTE = {
         ITEM: {
           DEFAULT: 'itemdetail'
         }
+      },
+      PRODUCTS: {
+        DEFAULT: 'products',
+      },
+      PROFILE: {
+        DEFAULT: 'profile',
       },
       MATERIALS: {
         DEFAULT: 'materials',

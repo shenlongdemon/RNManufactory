@@ -31,7 +31,6 @@ export default class ActivityItem extends BaseItem<Activity, State> {
   render() {
     
     return (
-      // @ts-ignore
       <BaseItem {...this.props} >
         <Grid style={{height: 100}}>
           <Col size={3} >

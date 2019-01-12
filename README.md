@@ -215,3 +215,6 @@ And set some command at end of `Podfile`
   ```bash
   npm cache clean --force && react-native start --reset-cache
   ```
+  
+* Attempting to configurable attribute of unconfigurable property
+  Enable debugger 

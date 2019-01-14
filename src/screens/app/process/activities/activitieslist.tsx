@@ -100,7 +100,7 @@ export default class Activitieslist extends BasesSreen<Props, State> {
     
   };
   fitMap = (): void => {
-    if (!this.mapView) {
+    if (!this.mapView || this.state.activities.length  < 2) {
       return;
     }
     const points: Feature<Point | null>[] = this.businessService.getActivityPoints(this.state.activities);
@@ -139,6 +139,9 @@ export default class Activitieslist extends BasesSreen<Props, State> {
   };
   
   private renderPoints = (): any => {
+    if (this.state.activities.length === 0) {
+      return;
+    }
     const points: Feature<Point | null>[] = this.businessService.getActivityPoints(this.state.activities);
     return points.map((point: Feature<Point | null>): any => {
       return (
@@ -156,7 +159,7 @@ export default class Activitieslist extends BasesSreen<Props, State> {
   };
   private renderLines = (): any => {
     if (this.state.activities.length < 2) {
-      return null;
+      return;
     }
     const points: Feature<Point | null>[] = this.businessService.getActivityPoints(this.state.activities);
     return (
@@ -187,9 +190,8 @@ export default class Activitieslist extends BasesSreen<Props, State> {
               }}
               style={{flex: 1}}
               styleURL={MapBox.StyleURL.Dark}>
-              {this.renderPoints()}
-              {this.renderLines()
-                }
+              {this.state.activities.length > 0 && this.renderPoints()}
+              {this.state.activities.length > 1 && this.renderLines()}
             </MapBox.MapView>
           </Row>
           <Row>

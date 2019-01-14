@@ -1,6 +1,7 @@
 import {Card, CardItem, DeckSwiper, Grid, Row, Text, View} from "native-base";
 import * as React from "react";
 import {
+  CodeDescriptionDto,
   CONSTANTS,
   DynProperty,
   FactoryInjection,
@@ -14,7 +15,9 @@ import {
   PUBLIC_TYPES
 } from "business_core_app_react";
 import * as Styles from "../../../../stylesheet";
-import {Image, ScrollView, TouchableOpacity} from 'react-native';
+import {Image, ScrollView, TouchableHighlight, TouchableOpacity} from 'react-native';
+import QRCode from "react-native-qrcode-svg";
+import * as IMAGE from "../../../../assets";
 
 interface Props {
   item: Item;
@@ -38,6 +41,8 @@ export default class InfoItemTab extends React.Component<Props, State> {
   constructor(props) {
     super(props);
     this.doItemAction = this.doItemAction.bind(this);
+    this.showCodeDescription = this.showCodeDescription.bind(this);
+  
     this.state = {
       isLoading: false,
       itemAction: {
@@ -106,7 +111,10 @@ export default class InfoItemTab extends React.Component<Props, State> {
     
     return controls;
   };
-  
+  private showCodeDescription = async (code: string): Promise<void> => {
+    const dto: CodeDescriptionDto = await this.businessService.getCodeDescription(code);
+    alert(dto.description);
+  };
   render() {
     const imageLinks: string[] = this.businessService.getImages(this.props.item);
     const updateTime: string = `${this.businessService.toDateString(this.props.item.time)} ${this.businessService.toTimeString(this.props.item.time)}`;
@@ -146,8 +154,36 @@ export default class InfoItemTab extends React.Component<Props, State> {
               </Row>
               <Row style={{height: Styles.styles.row.heightDescription}}>
                 <Text style={{marginTop: 20}}>{this.props.item.description}</Text>
-              
               </Row>
+  
+              <Row style={{flexDirection: 'row', justifyContent: 'center', height: 150}}>
+                <TouchableHighlight onPress={ (): void => {alert(this.props.item.id); }}>
+  
+                <QRCode
+                  logo={IMAGE.logo}
+                  logoSize={30}
+                  size={100}
+                  value={this.props.item.id}
+                  color={'white'}
+                  backgroundColor={'black'}
+                />
+                </TouchableHighlight>
+
+              </Row>
+              
+              <Row style={{flexDirection: 'row', justifyContent: 'center', height: 300}}>
+                <TouchableHighlight onPress={async (): Promise<void> => { await this.showCodeDescription(this.props.item.code)}}>
+                <QRCode
+                  logo={IMAGE.logo}
+                  logoSize={50}
+                  size={250}
+                  value={this.props.item.code}
+                  color={'white'}
+                  backgroundColor={'black'}
+                />
+                </TouchableHighlight>
+              </Row>
+  
               {
                 this.renderMaterial()
               }

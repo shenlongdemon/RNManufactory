@@ -73,11 +73,11 @@ export default class HistoryItemTab extends React.Component<Props, State> {
   };
   
   fitMap = (): void => {
-    if (!this.mapView) {
+    
+    const points = this.businessService.getActivitiesPositions(this.props.item);
+    if (!this.mapView || points.length < 2) {
       return;
     }
-    const points = this.businessService.getActivitiesPositions(this.props.item);
-    
     const features = turf.featureCollection(points);
     const envelop = turf.envelope(features);
     
@@ -90,6 +90,9 @@ export default class HistoryItemTab extends React.Component<Props, State> {
   
   private renderPoints = (): any => {
     const points: Feature<Point | null>[] = this.businessService.getActivitiesPositions(this.props.item);
+    if (points.length === 0) {
+      return null;
+    }
     return points.map((point: Feature<Point | null>): any => {
       return (
         <MapBpx.PointAnnotation
@@ -105,7 +108,10 @@ export default class HistoryItemTab extends React.Component<Props, State> {
     });
   };
   private renderLines = (): any => {
-    const points = this.businessService.getActivitiesPositions(this.props.item)
+    const points = this.businessService.getActivitiesPositions(this.props.item);
+    if (points.length < 2) {
+      return null;
+    }
     return (
       <MapBpx.ShapeSource id="routeSource" shape={makeLineString(points.map((point: Feature<Point | null>): number[] => {
         return point.geometry!.coordinates

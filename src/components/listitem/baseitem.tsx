@@ -13,7 +13,7 @@ export default class BaseItem<TItem, S> extends React.Component<IBaseItem<TItem>
     if (this.props.onClickHandle) {
       this.props.onClickHandle(this.props.item, this.props.index);
     }
-  }
+  };
   
   render() {
     return (

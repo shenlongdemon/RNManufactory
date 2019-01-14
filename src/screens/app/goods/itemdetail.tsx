@@ -1,5 +1,5 @@
 import BasesSreen from "../../basescreen";
-import {Icon, Tab, TabHeading, Tabs, Text} from "native-base";
+import {Icon, ScrollableTab, Tab, TabHeading, Tabs, Text} from "native-base";
 import * as React from "react";
 import * as Styles from "../../../stylesheet";
 import InfoItemTab from "./itemtabs/infoitemtab";
@@ -16,6 +16,7 @@ import {PARAMS} from "../../../common";
 import AttachFileItemTab from "./itemtabs/AttachFileItemTab";
 import HistoryItemTab from "./itemtabs/HistoryItemTab";
 import {ROUTE} from "../../routes";
+import TransactionsTab from "./itemtabs/TransactionsTab";
 
 interface Props {
 }
@@ -67,9 +68,7 @@ export default class ItemDetail extends BasesSreen<Props, State> {
       this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.PAYMENT, param)
     }
     else {
-      const param: any = {};
-      param[PARAMS.ITEM] = {code: newItem.code};
-      this.navigate(ROUTE.APP.SHARE.QRCODEDISPLAY, param)
+      this.goBack();
     }
   };
   
@@ -104,7 +103,7 @@ export default class ItemDetail extends BasesSreen<Props, State> {
       <BasesSreen {...{...this.props, isLoading: this.state.isLoading, componentDidFocus: this.componentDidFocus}}>
         {
           this.state.item &&
-          <Tabs locked={true} tabBarBackgroundColor={Styles.color.Background}
+          <Tabs locked={true} renderTabBar={()=> <ScrollableTab />} tabBarBackgroundColor={Styles.color.Background}
                 tabBarUnderlineStyle={{borderBottomWidth: 1, borderColor: 'rgba(255,255,255,0.3)'}}>
             {/*
              // @ts-ignore */}
@@ -115,7 +114,7 @@ export default class ItemDetail extends BasesSreen<Props, State> {
             {/*
              // @ts-ignore */}
             <Tab style={{backgroundColor: Styles.color.Background}}
-                 heading={<TabHeading><Icon name={'pulse'}/><Text>Histories</Text></TabHeading>}>
+                 heading={<TabHeading><Icon name={'pulse'}/><Text>Activities</Text></TabHeading>}>
               <HistoryItemTab
                 navigateToActivity={(param: any) => {
                   this.navigate(ROUTE.APP.MANUFACTORY.ACTIVITIES.ITEM.DEFAULT, param);
@@ -125,9 +124,17 @@ export default class ItemDetail extends BasesSreen<Props, State> {
             {/*
              // @ts-ignore */}
             <Tab style={{backgroundColor: Styles.color.Background}}
+                 heading={<TabHeading><Icon name={'done-all'}/><Text>Histories</Text></TabHeading>}>
+              <TransactionsTab item={this.state.item}/>
+            </Tab>
+            {/*
+             // @ts-ignore */}
+            <Tab style={{backgroundColor: Styles.color.Background}}
                  heading={<TabHeading><Icon name={'attach'}/><Text>Files</Text></TabHeading>}>
               <AttachFileItemTab item={this.state.item}/>
             </Tab>
+  
+           
           </Tabs>}
       </BasesSreen>
     );

@@ -71,7 +71,8 @@ export default class ProductsScreen extends BasesSreen<Props, State> {
     const categoryId: string = this.state.category ? this.state.category.id : CONSTANTS.STR_EMPTY;
     await this.setState({isLoading: true});
     const dto: ItemListDto = await this.itemService.getProducts(categoryId);
-    await this.setState({isLoading: false, items: dto.items});
+    await this.setState({isLoading: false, items: []});
+    await this.setState({items: dto.items});
   };
   
   private clickListItem = (item: Item, _index: number): void => {

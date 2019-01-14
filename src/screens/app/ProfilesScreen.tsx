@@ -1,9 +1,19 @@
 import BasesSreen from "../basescreen";
-import {Grid, Row, Thumbnail} from "native-base";
+import {Button, Grid, Icon, Row, Thumbnail} from "native-base";
 import * as React from "react";
-import {FactoryInjection, IBusinessService, PUBLIC_TYPES,User, CONSTANTS} from "business_core_app_react";
+import {
+  FactoryInjection,
+  IBusinessService,
+  PUBLIC_TYPES,
+  User,
+  CONSTANTS,
+  IAuthService
+} from "business_core_app_react";
 import * as IMAGE from "../../assets";
 import QRCode from "react-native-qrcode-svg";
+import {PARAMS} from "../../common";
+import * as Styles from "../../stylesheet";
+import {ROUTE} from "../routes";
 
 interface Props {
 }
@@ -15,13 +25,18 @@ interface State {
 
 export default class ProfilesScreen extends BasesSreen<Props, State> {
   
-  static navigationOptions = ({}) => {
+  static navigationOptions = ({navigation}) => {
     return {
-      title: 'My Profile'
+      title: 'My Profile',
+      headerRight: (
+        <Button onPress={navigation.getParam(PARAMS.HANDLE_RIGHT_HEADER_BUTTON)}>
+          <Icon name={'power'} style={{color: Styles.color.Icon, fontSize: 35}}/>
+        </Button>
+      ),
     };
   };
-  
   private businessService: IBusinessService = FactoryInjection.get<IBusinessService>(PUBLIC_TYPES.IBusinessService);
+  private authService: IAuthService = FactoryInjection.get<IAuthService>(PUBLIC_TYPES.IAuthService);
   
   constructor(props) {
     super(props);
@@ -36,13 +51,23 @@ export default class ProfilesScreen extends BasesSreen<Props, State> {
   
   };
   componentWillMount = async (): Promise<void> => {
-  
+    this.setHeader();
   };
   
   componentDidMount = async (): Promise<void> => {
   
   };
   
+  private setHeader = (): void => {
+    const data: any = {};
+    data[PARAMS.HANDLE_RIGHT_HEADER_BUTTON] = this.logout;
+    this.setSellNavigateParam(data);
+  };
+  
+  private logout = async () : Promise<void> => {
+    await this.authService.logout();
+    this.navigate(ROUTE.LOGIN)
+  };
   componentWillUnmount = async (): Promise<void> => {
   };
   

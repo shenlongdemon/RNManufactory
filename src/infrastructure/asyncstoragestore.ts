@@ -9,12 +9,17 @@ export class AsyncStorageStore implements IStore {
   
   saveUser = async (user: User): Promise<void> => {
     await this.saveItem(STORAGE_KEYS.USER, user);
-  }
+  };
   
   getUser = async (): Promise<User | null> => {
     const user: User | null = await this.getObject<User>(STORAGE_KEYS.USER);
     return user;
-  }
+  };
+  
+  removeUser = async (): Promise<void> => {
+    await AsyncStorage.removeItem(STORAGE_KEYS.USER);
+  };
+  
   
   getCurrentPosition = async (): Promise<Position> => {
     const position: Position | null = await this.getObject<Position>(STORAGE_KEYS.CURRENT_POSITION);
@@ -55,6 +60,7 @@ export class AsyncStorageStore implements IStore {
     return null;
   }
   
+
   
   
 }

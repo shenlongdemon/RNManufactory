@@ -31,12 +31,14 @@ interface INavitation {
 
 interface Props {
   componentDidFocus?: (() => Promise<void>) | null;
+  componentDidBlur?: (() => Promise<void>) | null;
   navigation?: INavitation | null;
   isLoading?: boolean;
 }
 
 export default class Basescreen<T extends Props, S> extends React.Component<Props, S> {
   private didBlurSubscription?: EmitterSubscription | null;
+  private didForcusSubscription?: EmitterSubscription | null;
   
   constructor(props: T) {
     super(props);
@@ -56,25 +58,25 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
       param[PARAMS.ITEM] = data;
       this.props.navigation.navigate(routeName, param);
     }
-  }
+  };
   
   navigate = (routeName: string, data: any | null = null): void => {
     if (this.props.navigation) {
       this.props.navigation.navigate(routeName, data);
     }
-  }
+  };
   
   push = (routeName: string): void => {
     if (this.props.navigation) {
       this.props.navigation.push(routeName);
     }
-  }
+  };
   
   goBack = (): void => {
     if (this.props.navigation) {
       this.props.navigation.goBack();
     }
-  }
+  };
   componentDidMount = (): void => {
     this.extendEvents();
   };
@@ -83,7 +85,11 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
     if (this.didBlurSubscription) {
       this.didBlurSubscription.remove();
     }
-  }
+    if (this.didForcusSubscription) {
+      this.didForcusSubscription.remove();
+    }
+    
+  };
   
   getParam = <Q extends {}>(key: string, defaultValue: Q | null): Q | null => {
     
@@ -109,11 +115,21 @@ export default class Basescreen<T extends Props, S> extends React.Component<Prop
     // @ts-ignore
     if (this.props.navigation) {
       // @ts-ignore
-      this.didBlurSubscription = this.props.navigation.addListener(
+      this.didForcusSubscription = this.props.navigation.addListener(
         'didFocus',
         (_payload: any) => {
           if (this.props.componentDidFocus) {
             this.props.componentDidFocus();
+          }
+        }
+      );
+      
+      // @ts-ignore
+      this.didBlurSubscription = this.props.navigation.addListener(
+        'didBlur',
+        (_payload: any) => {
+          if (this.props.componentDidBlur) {
+            this.props.componentDidBlur();
           }
         }
       );

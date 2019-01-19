@@ -21,7 +21,7 @@ import GoodsList from "./app/goods/goodslist";
 import AddGoods from "./app/goods/addgoods";
 import ItemDetail from "./app/goods/itemdetail";
 import PaymentScreen from "./app/goods/PaymentScreen";
-import ProductsScreen from "./app/ProductsScreen";
+import ProductsScreen from "./app/products/ProductsScreen";
 import ProfilesScreen from "./app/ProfilesScreen";
 import {ActivityDetail} from "./app/process/activities/ActivityDetail";
 import * as React from "react";

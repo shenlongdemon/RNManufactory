@@ -1,7 +1,7 @@
-import BasesSreen from "../basescreen";
+import BasesSreen from "../../../basescreen";
 import {ActionSheet, Button, Col, Grid, Icon, Label, List, ListItem, Row, Text, Item as NBItem} from "native-base";
 import * as React from "react";
-import * as Styles from "../../stylesheet";
+import * as Styles from "../../../../stylesheet";
 import {RefreshControl} from "react-native";
 import {
   Item,
@@ -12,9 +12,9 @@ import {
   PUBLIC_TYPES,
   GetCategoriesDto, IBusinessService, Category
 } from "business_core_app_react";
-import GoodsItem from "../../components/listitem/goodsitem";
-import {PARAMS} from "../../common";
-import {ROUTE} from "../routes";
+import GoodsItem from "../../../../components/listitem/goodsitem";
+import {PARAMS} from "../../../../common";
+import {ROUTE} from "../../../routes";
 
 interface Props {
 }
@@ -26,7 +26,7 @@ interface State {
   category: Category | null;
 }
 
-export default class ProductsScreen extends BasesSreen<Props, State> {
+export default class ByCategoryTab extends BasesSreen<Props, State> {
   static navigationOptions = ({}) => {
     return {
       title: 'Products'
@@ -46,10 +46,6 @@ export default class ProductsScreen extends BasesSreen<Props, State> {
     this.componentDidFocus = this.componentDidFocus.bind(this);
     
   }
-  
-  componentDidUpdate = async (_prevProp: Props, _prevState: State): Promise<void> => {
-  
-  };
   
   componentWillMount = async (): Promise<void> => {
     await this.loadCategories();

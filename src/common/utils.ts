@@ -24,7 +24,7 @@ export default class Utils {
   
   static getBLEBeaconDistance = (RSSI: number): number => {
     const rssi: number = RSSI;
-    if (rssi == 0) {
+    if (rssi === 0) {
       return -1.0; // if we cannot determine accuracy, return -1.
     }
     
@@ -57,7 +57,8 @@ export default class Utils {
         id: id,
         name: device.name || (device.localName || device.manufacturerData),
         proximityUUID: proximityUUID,
-        position: {...currentPosition, distance: distance}
+        position: {...currentPosition, distance: distance},
+        data: device
       };
       return blu;
     });

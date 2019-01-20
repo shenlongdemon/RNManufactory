@@ -11,6 +11,9 @@ import * as React from 'react';
 import * as Styles from '../../../stylesheet';
 import ByCategoryTab from './tabs/ByCategoryTab';
 import BLEAroundTab from './tabs/BLEAroundTab';
+import {Item} from 'business_core_app_react';
+import {PARAMS} from "../../../common";
+import {ROUTE} from "../../routes";
 
 interface Props {}
 
@@ -27,6 +30,7 @@ export default class ProductsScreen extends BasesSreen<Props, State> {
   constructor(props) {
     super(props);
     this.componentDidFocus = this.componentDidFocus.bind(this);
+    this.onProductClick = this.onProductClick.bind(this);
   }
 
 
@@ -39,6 +43,12 @@ export default class ProductsScreen extends BasesSreen<Props, State> {
   componentWillUnmount = async (): Promise<void> => {};
 
   private componentDidFocus = async (): Promise<void> => {};
+  private onProductClick = async (item: Item): Promise<void> => {
+    const data: any = {};
+    data[PARAMS.ITEM] = item;
+  
+    this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.ITEM.DEFAULT, data)
+  };
 
 
   render() {
@@ -62,7 +72,7 @@ export default class ProductsScreen extends BasesSreen<Props, State> {
                 </TabHeading>
               }
             >
-              <ByCategoryTab />
+              <ByCategoryTab onItemClick={this.onProductClick} />
             </Tab>
             {/*
              // @ts-ignore */}
@@ -75,7 +85,7 @@ export default class ProductsScreen extends BasesSreen<Props, State> {
                 </TabHeading>
               }
             >
-              <BLEAroundTab />
+              <BLEAroundTab onItemClick={this.onProductClick} />
             </Tab>
           </Tabs>
         }

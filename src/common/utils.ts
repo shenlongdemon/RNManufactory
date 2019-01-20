@@ -57,8 +57,7 @@ export default class Utils {
         id: id,
         name: device.name || (device.localName || device.manufacturerData),
         proximityUUID: proximityUUID,
-        position: {...currentPosition, distance: distance},
-        data: device
+        position: {...currentPosition, distance: distance}
       };
       return blu;
     });

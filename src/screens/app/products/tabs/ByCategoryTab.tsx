@@ -13,10 +13,9 @@ import {
   GetCategoriesDto, IBusinessService, Category
 } from "business_core_app_react";
 import GoodsItem from "../../../../components/listitem/goodsitem";
-import {PARAMS} from "../../../../common";
-import {ROUTE} from "../../../routes";
 
 interface Props {
+  onItemClick: (item: Item) => Promise<void>;
 }
 
 interface State {
@@ -26,7 +25,7 @@ interface State {
   category: Category | null;
 }
 
-export default class ByCategoryTab extends BasesSreen<Props, State> {
+export default class ByCategoryTab extends React.Component<Props, State> {
   static navigationOptions = ({}) => {
     return {
       title: 'Products'
@@ -43,8 +42,6 @@ export default class ByCategoryTab extends BasesSreen<Props, State> {
       categories: [],
       category: null
     };
-    this.componentDidFocus = this.componentDidFocus.bind(this);
-    
   }
   
   componentWillMount = async (): Promise<void> => {
@@ -59,10 +56,7 @@ export default class ByCategoryTab extends BasesSreen<Props, State> {
   componentWillUnmount = async (): Promise<void> => {
   };
   
-  private componentDidFocus = async (): Promise<void> => {
-  
-  };
-  
+ 
   private loadData = async (): Promise<void> => {
     const categoryId: string = this.state.category ? this.state.category.id : CONSTANTS.STR_EMPTY;
     await this.setState({isLoading: true});
@@ -70,14 +64,7 @@ export default class ByCategoryTab extends BasesSreen<Props, State> {
     await this.setState({isLoading: false, items: []});
     await this.setState({items: dto.items});
   };
-  
-  private clickListItem = (item: Item, _index: number): void => {
-    const data: any = {};
-    data[PARAMS.ITEM] = item;
-    
-    this.navigate(ROUTE.APP.MANUFACTORY.GOODSES.ITEM.DEFAULT, data)
-  };
-  
+ 
   private loadCategories = async (): Promise<void> => {
     this.setState({isLoading: true});
     const dto: GetCategoriesDto = await this.businessService.getCategories();
@@ -109,7 +96,7 @@ export default class ByCategoryTab extends BasesSreen<Props, State> {
   
   render() {
     return (
-      <BasesSreen {...{...this.props, isLoading: this.state.isLoading, componentDidFocus: this.componentDidFocus}}>
+      <BasesSreen {...{...this.props, isLoading: this.state.isLoading}}>
         <Grid>
           <Row style={{height: 60, justifyContent: 'center'}}>
             <NBItem inlineLabel style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -141,8 +128,8 @@ export default class ByCategoryTab extends BasesSreen<Props, State> {
               renderRow={(data: Item, _sectionID: string | number, rowID: string | number, _rowMap?: any) => (
                 
                 <ListItem
-                  onPress={() => {
-                    this.clickListItem(data!, Number(rowID));
+                  onPress={async () => {
+                    await this.props.onItemClick(data);
                   }}
                   key={data.id}
                   style={{
@@ -153,7 +140,9 @@ export default class ByCategoryTab extends BasesSreen<Props, State> {
                   <Grid>
                     <Col>
                       <GoodsItem item={data} index={Number(rowID)}
-                                 onClickHandle={this.clickListItem}/>
+                                 onClickHandle={async () => {
+                                   await this.props.onItemClick(data);
+                                 }}/>
                     </Col>
                   </Grid>
                 </ListItem>
